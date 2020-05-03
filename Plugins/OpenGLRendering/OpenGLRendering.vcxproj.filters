@@ -16,6 +16,9 @@
     <Filter Include="GLAD">
       <UniqueIdentifier>{e669ac8b-58c8-4551-a749-592f750c170f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="assimpModel">
+      <UniqueIdentifier>{4342844e-3f6e-4d3b-ae6d-862c3e550bab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OGLRenderer.h">
@@ -32,6 +35,12 @@
     </ClInclude>
     <ClInclude Include="OGLComputeShader.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>assimpModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>assimpModel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -53,5 +62,14 @@
     <ClCompile Include="OGLComputeShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>assimpModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>assimpModel</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

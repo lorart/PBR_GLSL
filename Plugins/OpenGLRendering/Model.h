@@ -20,6 +20,7 @@ namespace NCL {
 		{
 
 		public:
+			
 			vector<Mesh>   meshes;
 			std::string directory;
 			bool gammaCorrection;
@@ -29,7 +30,7 @@ namespace NCL {
 			{
 				loadModel(path);
 			}
-
+			//TODO:texture
 		private:
 			// loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
 			void loadModel(std::string const& path)
@@ -75,13 +76,16 @@ namespace NCL {
 
 			Mesh processMesh(aiMesh* mesh, const aiScene* scene)
 			{
-				//TODO
+				//TODO:
+
 				std::cout << "Process Mesh" << std::endl;
 
 
 
 
 			}
+
+			//TODO:texture
 		};
 	}
 };

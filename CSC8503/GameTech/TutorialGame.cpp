@@ -21,6 +21,7 @@ TutorialGame::TutorialGame()	{
 	inSelectionMode = false;*/
 #pragma endregion physic
 
+
 	Debug::SetRenderer(renderer);
 
 	InitialiseAssets();
@@ -40,13 +41,10 @@ void TutorialGame::InitialiseAssets() {
 		(*into)->UploadToGPU();
 	};
 
+	//TODO:DELETE
 	loadFunc("cube.msh"		 , &cubeMesh);
-	loadFunc("sphere.msh"	 , &sphereMesh);
-	loadFunc("goose.msh"	 , &gooseMesh);
-	loadFunc("CharacterA.msh", &keeperMesh);
-	loadFunc("CharacterM.msh", &charA);
-	loadFunc("CharacterF.msh", &charB);
-	loadFunc("Apple.msh"	 , &appleMesh);
+
+
 
 	basicTex	= (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
 	basicShader = new OGLShader("GameTechVert.glsl", "GameTechFrag.glsl");
@@ -57,8 +55,7 @@ void TutorialGame::InitialiseAssets() {
 
 TutorialGame::~TutorialGame()	{
 	delete cubeMesh;
-	delete sphereMesh;
-	delete gooseMesh;
+
 	delete basicTex;
 	delete basicShader;
 #pragma region
@@ -303,71 +300,15 @@ void TutorialGame::InitCamera() {
 
 void TutorialGame::InitWorld() {
 	world->ClearAndErase();
+	AddCubeToWorld(Vector3(0, 0, 0), Vector3(10, 10, 10), 0);
 	//physics->Clear();
 
-	InitMixedGridWorld(10, 10, 3.5f, 3.5f);
-	AddGooseToWorld(Vector3(30, 2, 0));
-	AddAppleToWorld(Vector3(35, 2, 0));
-
-	AddParkKeeperToWorld(Vector3(40, 2, 0));
-	AddCharacterToWorld(Vector3(45, 2, 0));
-
-	AddFloorToWorld(Vector3(0, -2, 0));
 }
 
 //From here on it's functions to add in objects to the world!
 
-/*
 
-A single function to add a large immoveable cube to the bottom of our world
 
-*/
-GameObject* TutorialGame::AddFloorToWorld(const Vector3& position) {
-	GameObject* floor = new GameObject();
-
-	Vector3 floorSize = Vector3(100, 2, 100);
-	AABBVolume* volume = new AABBVolume(floorSize);
-	floor->SetBoundingVolume((CollisionVolume*)volume);
-	floor->GetTransform().SetWorldScale(floorSize);
-	floor->GetTransform().SetWorldPosition(position);
-
-	floor->SetRenderObject(new RenderObject(&floor->GetTransform(), cubeMesh, basicTex, basicShader));
-	floor->SetPhysicsObject(new PhysicsObject(&floor->GetTransform(), floor->GetBoundingVolume()));
-
-	floor->GetPhysicsObject()->SetInverseMass(0);
-	floor->GetPhysicsObject()->InitCubeInertia();
-
-	world->AddGameObject(floor);
-
-	return floor;
-}
-
-/*
-
-Builds a game object that uses a sphere mesh for its graphics, and a bounding sphere for its
-rigid body representation. This and the cube function will let you build a lot of 'simple' 
-physics worlds. You'll probably need another function for the creation of OBB cubes too.
-
-*/
-GameObject* TutorialGame::AddSphereToWorld(const Vector3& position, float radius, float inverseMass) {
-	GameObject* sphere = new GameObject();
-
-	Vector3 sphereSize = Vector3(radius, radius, radius);
-	SphereVolume* volume = new SphereVolume(radius);
-	sphere->SetBoundingVolume((CollisionVolume*)volume);
-	sphere->GetTransform().SetWorldScale(sphereSize);
-	sphere->GetTransform().SetWorldPosition(position);
-
-	sphere->SetRenderObject(new RenderObject(&sphere->GetTransform(), sphereMesh, basicTex, basicShader));
-	sphere->SetPhysicsObject(new PhysicsObject(&sphere->GetTransform(), sphere->GetBoundingVolume()));
-
-	sphere->GetPhysicsObject()->SetInverseMass(inverseMass);
-	sphere->GetPhysicsObject()->InitSphereInertia();
-
-	world->AddGameObject(sphere);
-
-	return sphere;
-}
 
 GameObject* TutorialGame::AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass) {
 	GameObject* cube = new GameObject();
@@ -390,188 +331,4 @@ GameObject* TutorialGame::AddCubeToWorld(const Vector3& position, Vector3 dimens
 	return cube;
 }
 
-GameObject* TutorialGame::AddGooseToWorld(const Vector3& position)
-{
-	float size			= 1.0f;
-	float inverseMass	= 1.0f;
-
-	GameObject* goose = new GameObject();
-
-
-	SphereVolume* volume = new SphereVolume(size);
-	goose->SetBoundingVolume((CollisionVolume*)volume);
-
-	goose->GetTransform().SetWorldScale(Vector3(size,size,size) );
-	goose->GetTransform().SetWorldPosition(position);
-
-	goose->SetRenderObject(new RenderObject(&goose->GetTransform(), gooseMesh, nullptr, basicShader));
-	goose->SetPhysicsObject(new PhysicsObject(&goose->GetTransform(), goose->GetBoundingVolume()));
-
-	goose->GetPhysicsObject()->SetInverseMass(inverseMass);
-	goose->GetPhysicsObject()->InitSphereInertia();
-
-	world->AddGameObject(goose);
-
-	return goose;
-}
-
-GameObject* TutorialGame::AddParkKeeperToWorld(const Vector3& position)
-{
-	float meshSize = 4.0f;
-	float inverseMass = 0.5f;
-
-	GameObject* keeper = new GameObject();
-
-	AABBVolume* volume = new AABBVolume(Vector3(0.3, 0.9f, 0.3) * meshSize);
-	keeper->SetBoundingVolume((CollisionVolume*)volume);
-
-	keeper->GetTransform().SetWorldScale(Vector3(meshSize, meshSize, meshSize));
-	keeper->GetTransform().SetWorldPosition(position);
-
-	keeper->SetRenderObject(new RenderObject(&keeper->GetTransform(), keeperMesh, nullptr, basicShader));
-	keeper->SetPhysicsObject(new PhysicsObject(&keeper->GetTransform(), keeper->GetBoundingVolume()));
-
-	keeper->GetPhysicsObject()->SetInverseMass(inverseMass);
-	keeper->GetPhysicsObject()->InitCubeInertia();
-
-	world->AddGameObject(keeper);
-
-	return keeper;
-}
-
-GameObject* TutorialGame::AddCharacterToWorld(const Vector3& position) {
-	float meshSize = 4.0f;
-	float inverseMass = 0.5f;
-
-	auto pos = keeperMesh->GetPositionData();
-
-	Vector3 minVal = pos[0];
-	Vector3 maxVal = pos[0];
-
-	for (auto& i : pos) {
-		maxVal.y = max(maxVal.y, i.y);
-		minVal.y = min(minVal.y, i.y);
-	}
-
-	GameObject* character = new GameObject();
-
-	float r = rand() / (float)RAND_MAX;
-
-
-	AABBVolume* volume = new AABBVolume(Vector3(0.3, 0.9f, 0.3) * meshSize);
-	character->SetBoundingVolume((CollisionVolume*)volume);
-
-	character->GetTransform().SetWorldScale(Vector3(meshSize, meshSize, meshSize));
-	character->GetTransform().SetWorldPosition(position);
-
-	character->SetRenderObject(new RenderObject(&character->GetTransform(), r > 0.5f ? charA : charB, nullptr, basicShader));
-	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
-
-	character->GetPhysicsObject()->SetInverseMass(inverseMass);
-	character->GetPhysicsObject()->InitCubeInertia();
-
-	world->AddGameObject(character);
-
-	return character;
-}
-
-GameObject* TutorialGame::AddAppleToWorld(const Vector3& position) {
-	GameObject* apple = new GameObject();
-
-	SphereVolume* volume = new SphereVolume(0.7f);
-	apple->SetBoundingVolume((CollisionVolume*)volume);
-	apple->GetTransform().SetWorldScale(Vector3(4, 4, 4));
-	apple->GetTransform().SetWorldPosition(position);
-
-	apple->SetRenderObject(new RenderObject(&apple->GetTransform(), appleMesh, nullptr, basicShader));
-	apple->SetPhysicsObject(new PhysicsObject(&apple->GetTransform(), apple->GetBoundingVolume()));
-
-	apple->GetPhysicsObject()->SetInverseMass(1.0f);
-	apple->GetPhysicsObject()->InitSphereInertia();
-
-	world->AddGameObject(apple);
-
-	return apple;
-}
-
-void TutorialGame::InitSphereGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, float radius) {
-	for (int x = 0; x < numCols; ++x) {
-		for (int z = 0; z < numRows; ++z) {
-			Vector3 position = Vector3(x * colSpacing, 10.0f, z * rowSpacing);
-			AddSphereToWorld(position, radius, 1.0f);
-		}
-	}
-	AddFloorToWorld(Vector3(0, -2, 0));
-}
-
-void TutorialGame::InitMixedGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing) {
-	float sphereRadius = 1.0f;
-	Vector3 cubeDims = Vector3(1, 1, 1);
-
-	for (int x = 0; x < numCols; ++x) {
-		for (int z = 0; z < numRows; ++z) {
-			Vector3 position = Vector3(x * colSpacing, 10.0f, z * rowSpacing);
-
-			if (rand() % 2) {
-				AddCubeToWorld(position, cubeDims);
-			}
-			else {
-				AddSphereToWorld(position, sphereRadius);
-			}
-		}
-	}
-	AddFloorToWorld(Vector3(0, -2, 0));
-}
-
-void TutorialGame::InitCubeGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, const Vector3& cubeDims) {
-	for (int x = 1; x < numCols+1; ++x) {
-		for (int z = 1; z < numRows+1; ++z) {
-			Vector3 position = Vector3(x * colSpacing, 10.0f, z * rowSpacing);
-			AddCubeToWorld(position, cubeDims, 1.0f);
-		}
-	}
-	AddFloorToWorld(Vector3(0, -2, 0));
-}
-
-void TutorialGame::BridgeConstraintTest() {
-	Vector3 cubeSize = Vector3(8, 8, 8);
-
-	float	invCubeMass = 5;
-	int		numLinks	= 25;
-	float	maxDistance	= 30;
-	float	cubeDistance = 20;
-
-	Vector3 startPos = Vector3(500, 1000, 500);
-
-	GameObject* start = AddCubeToWorld(startPos + Vector3(0, 0, 0), cubeSize, 0);
-
-	GameObject* end = AddCubeToWorld(startPos + Vector3((numLinks + 2) * cubeDistance, 0, 0), cubeSize, 0);
-
-	GameObject* previous = start;
-
-	for (int i = 0; i < numLinks; ++i) {
-		GameObject* block = AddCubeToWorld(startPos + Vector3((i + 1) * cubeDistance, 0, 0), cubeSize, invCubeMass);
-		PositionConstraint* constraint = new PositionConstraint(previous, block, maxDistance);
-		world->AddConstraint(constraint);
-		previous = block;
-	}
-
-	PositionConstraint* constraint = new PositionConstraint(previous, end, maxDistance);
-	world->AddConstraint(constraint);
-}
-
-void TutorialGame::SimpleGJKTest() {
-	Vector3 dimensions		= Vector3(5, 5, 5);
-	Vector3 floorDimensions = Vector3(100, 2, 100);
-
-	GameObject* fallingCube = AddCubeToWorld(Vector3(0, 20, 0), dimensions, 10.0f);
-	GameObject* newFloor	= AddCubeToWorld(Vector3(0, 0, 0), floorDimensions, 0.0f);
-
-	delete fallingCube->GetBoundingVolume();
-	delete newFloor->GetBoundingVolume();
-
-	fallingCube->SetBoundingVolume((CollisionVolume*)new OBBVolume(dimensions));
-	newFloor->SetBoundingVolume((CollisionVolume*)new OBBVolume(floorDimensions));
-
-}
 

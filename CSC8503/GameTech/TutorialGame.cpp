@@ -6,6 +6,7 @@
 #include "../../Common/TextureLoader.h"
 
 #include "../CSC8503Common/PositionConstraint.h"
+#include "../../Plugins/OpenGLRendering/Model.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -42,8 +43,8 @@ void TutorialGame::InitialiseAssets() {
 	};
 
 	//TODO:DELETE
-	loadFunc("cube.msh"		 , &cubeMesh);
-
+	loadFunc("cube.msh"	 , &cubeMesh);
+	//testmodel = new Model("../../Assets/Meshes/CylinderHoleWithPlne.obj",0);
 
 
 	basicTex	= (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");

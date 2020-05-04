@@ -6,6 +6,10 @@ Use as you see fit!
 Comments and queries to: richard-gordon.davison AT ncl.ac.uk
 https://research.ncl.ac.uk/game/
 */
+/*
+reference:
+https://learnopengl.com/Model-Loading/Mesh
+*/
 #pragma once
 #include "../../Common/MeshGeometry.h"
 #include "glad\glad.h"
@@ -14,10 +18,30 @@ https://research.ncl.ac.uk/game/
 
 namespace NCL {
 	namespace Rendering {
+		struct Vertex {
+			// position
+			Vector3 Position;
+			// normal
+			Vector3 Normal;
+			// texCoords
+			Vector2 TexCoords;
+			// tangent
+			Vector3 Tangent;
+			// bitangent
+			Vector3 Bitangent;
+		};
+
+		struct Texture {
+			unsigned int id;
+			std::string type;
+			std::string path;
+		};
+
 		class OGLMesh : public NCL::MeshGeometry
 		{
 		public:
 			enum MeshBuffer {
+				COMBINE_BUFFER,
 				VERTEX_BUFFER,
 				COLOUR_BUFFER,
 				TEXTURE_BUFFER,
@@ -32,6 +56,7 @@ namespace NCL {
 			friend class OGLRenderer;
 			OGLMesh();
 			OGLMesh(const std::string&filename);
+		
 			~OGLMesh();
 
 			void RecalculateNormals();
@@ -48,9 +73,24 @@ namespace NCL {
 
 			int		subCount;
 
+			GLuint ebo;
 			GLuint vao;
 			GLuint oglType;
 			GLuint buffers[MAX_BUFFER];
+
+
+			//for assimp library
+		public:
+			// mesh Data
+			vector<Vertex>       vertices;
+			vector<unsigned int> indices;
+			vector<Texture>      textures;
+			//todo: unsigned int VAO;
+			OGLMesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures);
+		private:
+			
+			bool IsAsimmp;
+
 		};
 	}
 }

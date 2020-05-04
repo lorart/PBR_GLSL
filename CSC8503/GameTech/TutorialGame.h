@@ -1,6 +1,7 @@
 #pragma once
 #include "GameTechRenderer.h"
 #include "../CSC8503Common/PhysicsSystem.h"
+#include "../../Plugins/OpenGLRendering/Model.h"
 
 
 namespace NCL {
@@ -52,6 +53,8 @@ namespace NCL {
 			OGLShader* basicShader = nullptr;
 			//TODO:DELETE
     		OGLMesh*	cubeMesh	= nullptr;
+			Model* testmodel = nullptr;
+
 
 			GameObject* lockedObject	= nullptr;
 			Vector3 lockedOffset		= Vector3(0, 14, 20);

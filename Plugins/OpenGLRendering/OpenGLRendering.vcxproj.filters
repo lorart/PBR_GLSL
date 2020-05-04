@@ -39,9 +39,6 @@
     <ClInclude Include="Model.h">
       <Filter>assimpModel</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>assimpModel</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OGLRenderer.cpp">
@@ -63,9 +60,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Model.cpp">
-      <Filter>assimpModel</Filter>
-    </ClCompile>
-    <ClCompile Include="Mesh.cpp">
       <Filter>assimpModel</Filter>
     </ClCompile>
   </ItemGroup>

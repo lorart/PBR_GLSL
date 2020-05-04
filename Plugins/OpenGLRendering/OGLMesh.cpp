@@ -18,6 +18,7 @@ using namespace NCL::Maths;
 OGLMesh::OGLMesh() {
 	vao			= 0;
 	subCount	= 1;
+	IsAsimmp = false;
 
 	for (int i = 0; i < MAX_BUFFER; ++i) {
 		buffers[i] = 0;
@@ -27,15 +28,42 @@ OGLMesh::OGLMesh() {
 OGLMesh::OGLMesh(const std::string&filename) : MeshGeometry(filename){
 	vao		 = 0;
 	subCount = 1;
-
+	IsAsimmp = false;
 	for (int i = 0; i < MAX_BUFFER; ++i) {
 		buffers[i] = 0;
 	}
 }
 
+
+OGLMesh::OGLMesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures)  {
+	vao = 0;
+	subCount = 1;
+	IsAsimmp = true;
+
+	for (int i = 0; i < MAX_BUFFER; ++i) {
+		buffers[i] = 0;
+	}
+
+
+	this->vertices = vertices;
+	this->indices = indices;
+	this->textures = textures;
+
+	// now that we have all the required data, set the vertex buffers and its attribute pointers.
+	UploadToGPU();
+}
+
+
 OGLMesh::~OGLMesh()	{
-	glDeleteVertexArrays(1, &vao);			//Delete our VAO
-	glDeleteBuffers(MAX_BUFFER, buffers);	//Delete our VBOs
+	if (IsAsimmp) {
+		glDeleteVertexArrays(1, &vao);			//Delete our VAO
+		glDeleteBuffers(1, &ebo);          //Delete EBO
+		glDeleteBuffers(MAX_BUFFER, buffers);	//Delete our VBOs
+	}
+	else {
+		glDeleteVertexArrays(1, &vao);			//Delete our VAO
+		glDeleteBuffers(MAX_BUFFER, buffers);	//Delete our VBOs
+	}
 }
 
 void CreateVertexBuffer(GLuint& buffer, int byteCount, char* data) {
@@ -53,6 +81,39 @@ void OGLMesh::BindVertexAttribute(int attribSlot, int buffer, int bindingID, int
 }
 
 void OGLMesh::UploadToGPU() {
+	if (IsAsimmp) {
+
+		//TODO:
+		 // create buffers/arrays
+		glGenVertexArrays(1, &vao);
+		glGenBuffers(1, &ebo);
+		glBindVertexArray(vao);
+	     //vbo
+		glGenBuffers(1, &buffers[COMBINE_BUFFER]);
+		glBindBuffer(GL_ARRAY_BUFFER, buffers[COMBINE_BUFFER]);
+		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+		//ebo
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+
+		// set the vertex attribute pointers
+		// vertex Positions
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+		// vertex normals
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
+		// vertex texture coords
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+		// vertex tangent
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
+		// vertex bitangent
+		glEnableVertexAttribArray(4);
+		glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
+	}
+	else{
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
@@ -88,6 +149,7 @@ void OGLMesh::UploadToGPU() {
 		glGenBuffers(1, &buffers[INDEX_BUFFER]);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[INDEX_BUFFER]);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(GLuint), (int*)GetIndexData().data(), GL_STATIC_DRAW);
+	}
 	}
 
 	glBindVertexArray(0);

@@ -55,6 +55,7 @@ void GameTechRenderer::RenderFrame() {
 	RenderShadowMap();
 	RenderCamera();
 	glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
+	//TODO: 
 }
 
 void GameTechRenderer::BuildObjectList() {
@@ -175,9 +176,10 @@ void GameTechRenderer::RenderCamera() {
 		Matrix4 fullShadowMat = shadowMatrix * modelMatrix;
 		glUniformMatrix4fv(shadowLocation, 1, false, (float*)&fullShadowMat);
 
-		glUniform4fv(colourLocation, 1, (float*)&i->GetColour());
+		//TODO:
+		//glUniform4fv(colourLocation, 1, (float*)&i->GetColour());
 
-		glUniform1i(hasVColLocation, !(*i).GetMesh()->GetColourData().empty());
+		//glUniform1i(hasVColLocation, !(*i).GetMesh()->GetColourData().empty());
 
 		glUniform1i(hasTexLocation, (OGLTexture*)(*i).GetDefaultTexture() ? 1:0);
 

@@ -39,6 +39,7 @@ OGLMesh::OGLMesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<T
 	vao = 0;
 	subCount = 1;
 	IsAsimmp = true;
+	primType = GeometryPrimitive::Triangles;
 
 	for (int i = 0; i < MAX_BUFFER; ++i) {
 		buffers[i] = 0;
@@ -47,6 +48,7 @@ OGLMesh::OGLMesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<T
 
 	this->vertices = vertices;
 	this->indices = indices;
+	MeshGeometry::indices = indices;
 	this->textures = textures;
 
 	// now that we have all the required data, set the vertex buffers and its attribute pointers.
@@ -101,17 +103,17 @@ void OGLMesh::UploadToGPU() {
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
 		// vertex normals
-		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(3);
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
 		// vertex texture coords
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
-		// vertex tangent
-		glEnableVertexAttribArray(3);
-		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
-		// vertex bitangent
-		glEnableVertexAttribArray(4);
-		glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
+		//// vertex tangent
+		//glEnableVertexAttribArray(3);
+		//glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
+		//// vertex bitangent
+		//glEnableVertexAttribArray(4);
+		//glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
 	}
 	else{
 	glGenVertexArrays(1, &vao);
@@ -126,10 +128,10 @@ void OGLMesh::UploadToGPU() {
 		BindVertexAttribute(VERTEX_BUFFER, buffers[VERTEX_BUFFER], VERTEX_BUFFER, 3, sizeof(Vector3), 0);
 	}
 
-	if (!GetColourData().empty()) {	//buffer colour data
-		CreateVertexBuffer(buffers[COLOUR_BUFFER], numVertices * sizeof(Vector4), (char*)GetColourData().data());
-		BindVertexAttribute(COLOUR_BUFFER, buffers[COLOUR_BUFFER], COLOUR_BUFFER, 4, sizeof(Vector4), 0);
-	}
+	//if (!GetColourData().empty()) {	//buffer colour data
+	//	CreateVertexBuffer(buffers[COLOUR_BUFFER], numVertices * sizeof(Vector4), (char*)GetColourData().data());
+	//	BindVertexAttribute(COLOUR_BUFFER, buffers[COLOUR_BUFFER], COLOUR_BUFFER, 4, sizeof(Vector4), 0);
+	//}
 	if (!GetTextureCoordData().empty()) {	//Buffer texture data
 		CreateVertexBuffer(buffers[TEXTURE_BUFFER], numVertices * sizeof(Vector2), (char*)GetTextureCoordData().data());
 		BindVertexAttribute(TEXTURE_BUFFER, buffers[TEXTURE_BUFFER], TEXTURE_BUFFER, 2, sizeof(Vector2), 0);
@@ -151,6 +153,7 @@ void OGLMesh::UploadToGPU() {
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(GLuint), (int*)GetIndexData().data(), GL_STATIC_DRAW);
 	}
 	}
+	glBindBuffer(GL_ARRAY_BUFFER, 0);//new
 
 	glBindVertexArray(0);
 }

@@ -44,7 +44,7 @@ void TutorialGame::InitialiseAssets() {
 
 	//TODO:DELETE
 	loadFunc("cube.msh"	 , &cubeMesh);
-	//testmodel = new Model("../../Assets/Meshes/CylinderHoleWithPlne.obj",0);
+	testmodel = new Model("../../Assets/Meshes/DownPlane.obj",0);
 
 
 	basicTex	= (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
@@ -56,6 +56,8 @@ void TutorialGame::InitialiseAssets() {
 
 TutorialGame::~TutorialGame()	{
 	delete cubeMesh;
+	
+	delete testmodel;
 
 	delete basicTex;
 	delete basicShader;
@@ -301,7 +303,8 @@ void TutorialGame::InitCamera() {
 
 void TutorialGame::InitWorld() {
 	world->ClearAndErase();
-	AddCubeToWorld(Vector3(0, 0, 0), Vector3(10, 10, 10), 0);
+	//AddCubeToWorld(Vector3(0, 0, 0), Vector3(10, 10, 10), 0);
+	AddModelToWorld(testmodel, Vector3(0, 0, 0), Vector3(10, 10, 10));
 	//physics->Clear();
 
 }
@@ -309,7 +312,26 @@ void TutorialGame::InitWorld() {
 //From here on it's functions to add in objects to the world!
 
 
+void TutorialGame::AddModelToWorld(Model* model,const Vector3& position, Vector3 dimensions) {
+	for (size_t i = 0; i < model->meshes.size(); i++)
+	{
+		GameObject* modelObject = new GameObject();
+		AABBVolume* volume = new AABBVolume(dimensions);
+		modelObject->SetBoundingVolume((CollisionVolume*)volume);
 
+		modelObject->GetTransform().SetWorldPosition(position);
+		modelObject->GetTransform().SetWorldScale(dimensions);
+
+		modelObject->SetRenderObject(new RenderObject(&modelObject->GetTransform(),&model->meshes[i], basicTex, basicShader));
+		modelObject->SetPhysicsObject(new PhysicsObject(&modelObject->GetTransform(), modelObject->GetBoundingVolume()));
+
+		modelObject->GetPhysicsObject()->SetInverseMass(0);
+		modelObject->GetPhysicsObject()->InitCubeInertia();
+
+		world->AddGameObject(modelObject);
+	}
+
+}
 
 GameObject* TutorialGame::AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass) {
 	GameObject* cube = new GameObject();
@@ -317,6 +339,7 @@ GameObject* TutorialGame::AddCubeToWorld(const Vector3& position, Vector3 dimens
 	AABBVolume* volume = new AABBVolume(dimensions);
 
 	cube->SetBoundingVolume((CollisionVolume*)volume);
+
 
 	cube->GetTransform().SetWorldPosition(position);
 	cube->GetTransform().SetWorldScale(dimensions);

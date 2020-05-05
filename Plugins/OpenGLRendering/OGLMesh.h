@@ -41,7 +41,6 @@ namespace NCL {
 		{
 		public:
 			enum MeshBuffer {
-				COMBINE_BUFFER,
 				VERTEX_BUFFER,
 				COLOUR_BUFFER,
 				TEXTURE_BUFFER,
@@ -50,6 +49,7 @@ namespace NCL {
 				INDEX_BUFFER,
 				SKELINDEX_BUFFER,
 				SKELWEIGHT_BUFFER,
+				COMBINE_BUFFER,
 				MAX_BUFFER
 			};
 

@@ -14,7 +14,7 @@ uniform bool hasTexture;
 
 in Vertex
 {
-	vec4 colour;
+	//vec4 colour;
 	vec2 texCoord;
 	vec4 shadowProj;
 	vec3 normal;
@@ -40,7 +40,7 @@ void main(void)
 	float rFactor = max (0.0 , dot ( halfDir , IN.normal ));
 	float sFactor = pow ( rFactor , 80.0 );
 	
-	vec4 albedo = IN.colour;
+	vec4 albedo = vec4(1,1,1,1);
 	
 	if(hasTexture) {
 	 albedo *= texture(mainTex, IN.texCoord);

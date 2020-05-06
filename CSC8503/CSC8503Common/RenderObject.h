@@ -10,15 +10,16 @@ namespace NCL {
 	using namespace NCL::Rendering;
 
 	//class MeshGeometry;
-    //class OGLMesh;
+	class OGLMesh;
 	namespace CSC8503 {
 		class Transform;
 		using namespace Maths;
 
 		class RenderObject
 		{
+			
 		public:
-			RenderObject(Transform* parentTransform, OGLMesh* mesh, TextureBase* tex, ShaderBase* shader);
+			RenderObject(Transform* parentTransform, NCL::Rendering::OGLMesh* mesh, TextureBase* tex, ShaderBase* shader);
 			~RenderObject();
 
 			void SetDefaultTexture(TextureBase* t) {
@@ -29,7 +30,7 @@ namespace NCL {
 				return texture;
 			}
 
-			OGLMesh*	GetMesh() const {
+			NCL::Rendering::OGLMesh*	GetMesh() const {
 				return mesh;
 			}
 
@@ -50,7 +51,7 @@ namespace NCL {
 			}
 
 		protected:
-			OGLMesh*	mesh;
+			NCL::Rendering::OGLMesh*	mesh;
 			TextureBase*	texture;
 			ShaderBase*		shader;
 			Transform*		transform;

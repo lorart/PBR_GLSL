@@ -1,10 +1,11 @@
 #include "RenderObject.h"
-#include "../../Common/MeshGeometry.h"
+//#include "../../Common/MeshGeometry.h"
+#include "../Plugins/OpenGLRendering/OGLMesh.h"
 
 using namespace NCL::CSC8503;
 using namespace NCL;
 
-RenderObject::RenderObject(Transform* parentTransform, OGLMesh* mesh, TextureBase* tex, ShaderBase* shader) {
+RenderObject::RenderObject(Transform* parentTransform, NCL::Rendering::OGLMesh* mesh, TextureBase* tex, ShaderBase* shader) {
 	this->transform	= parentTransform;
 	this->mesh		= mesh;
 	this->texture	= tex;

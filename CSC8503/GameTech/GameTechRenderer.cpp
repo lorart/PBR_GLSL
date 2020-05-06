@@ -120,8 +120,8 @@ void GameTechRenderer::RenderCamera() {
 	int projLocation	= 0;
 	int viewLocation	= 0;
 	int modelLocation	= 0;
-	int colourLocation  = 0;
-	int hasVColLocation = 0;
+	//int colourLocation  = 0;
+	//int hasVColLocation = 0;
 	int hasTexLocation  = 0;
 	int shadowLocation  = 0;
 
@@ -146,8 +146,8 @@ void GameTechRenderer::RenderCamera() {
 			viewLocation	= glGetUniformLocation(shader->GetProgramID(), "viewMatrix");
 			modelLocation	= glGetUniformLocation(shader->GetProgramID(), "modelMatrix");
 			shadowLocation  = glGetUniformLocation(shader->GetProgramID(), "shadowMatrix");
-			colourLocation  = glGetUniformLocation(shader->GetProgramID(), "objectColour");
-			hasVColLocation = glGetUniformLocation(shader->GetProgramID(), "hasVertexColours");
+		//	colourLocation  = glGetUniformLocation(shader->GetProgramID(), "objectColour");
+		//	hasVColLocation = glGetUniformLocation(shader->GetProgramID(), "hasVertexColours");
 			hasTexLocation  = glGetUniformLocation(shader->GetProgramID(), "hasTexture");
 
 			lightPosLocation	= glGetUniformLocation(shader->GetProgramID(), "lightPos");
@@ -181,7 +181,7 @@ void GameTechRenderer::RenderCamera() {
 
 		//glUniform1i(hasVColLocation,!(*i).GetMesh()->GetColourData().empty());
 
-		glUniform1i(hasTexLocation, ( *)(*i).GetDefaultTexture() ? 1:0);
+	   glUniform1i(hasTexLocation, (*i).GetDefaultTexture() ? 1:0);
 
 		BindMesh((*i).GetMesh());
 		DrawBoundMesh();

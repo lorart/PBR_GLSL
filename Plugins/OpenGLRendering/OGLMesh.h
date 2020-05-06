@@ -75,7 +75,7 @@ namespace NCL {
 
 			GLuint ebo;
 			GLuint vao;
-			GLuint oglType;
+			//GLuint oglType;
 			GLuint buffers[MAX_BUFFER];
 
 

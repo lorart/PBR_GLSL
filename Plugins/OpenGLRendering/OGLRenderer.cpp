@@ -154,7 +154,7 @@ void OGLRenderer::DrawBoundMesh(int subLayer, int numInstances) {
 	}
 
 	if (boundMesh->GetIndexCount() > 0) {
-		glDrawElements(mode, boundMesh->GetIndexCount(), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, boundMesh->GetIndexCount(), GL_UNSIGNED_INT, 0);
 	}
 	else {
 		glDrawArrays(mode, 0, boundMesh->GetVertexCount());

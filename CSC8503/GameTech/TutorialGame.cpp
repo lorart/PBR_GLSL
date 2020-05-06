@@ -44,7 +44,7 @@ void TutorialGame::InitialiseAssets() {
 
 	//TODO:DELETE
 	loadFunc("cube.msh"	 , &cubeMesh);
-	testmodel = new Model("../../Assets/Meshes/DownPlane.obj",0);
+	testmodel = new Model("../../Assets/Meshes/PLANE.obj",0);
 
 
 	basicTex	= (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");

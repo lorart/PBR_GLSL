@@ -181,7 +181,7 @@ void GameTechRenderer::RenderCamera() {
 
 		//glUniform1i(hasVColLocation, !(*i).GetMesh()->GetColourData().empty());
 
-		glUniform1i(hasTexLocation, (OGLTexture*)(*i).GetDefaultTexture() ? 1:0);
+		glUniform1i(hasTexLocation, ( *)(*i).GetDefaultTexture() ? 1:0);
 
 		BindMesh((*i).GetMesh());
 		DrawBoundMesh();

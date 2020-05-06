@@ -3,11 +3,14 @@
 #include "../../Common/TextureBase.h"
 #include "../../Common/ShaderBase.h"
 #include "../../Common/Vector4.h"
+#include "../Plugins/OpenGLRendering/OGLMesh.h"
+//#include "OGLMesh.h"
 
 namespace NCL {
 	using namespace NCL::Rendering;
 
-	class MeshGeometry;
+	//class MeshGeometry;
+    //class OGLMesh;
 	namespace CSC8503 {
 		class Transform;
 		using namespace Maths;
@@ -15,7 +18,7 @@ namespace NCL {
 		class RenderObject
 		{
 		public:
-			RenderObject(Transform* parentTransform, MeshGeometry* mesh, TextureBase* tex, ShaderBase* shader);
+			RenderObject(Transform* parentTransform, OGLMesh* mesh, TextureBase* tex, ShaderBase* shader);
 			~RenderObject();
 
 			void SetDefaultTexture(TextureBase* t) {
@@ -26,7 +29,7 @@ namespace NCL {
 				return texture;
 			}
 
-			MeshGeometry*	GetMesh() const {
+			OGLMesh*	GetMesh() const {
 				return mesh;
 			}
 
@@ -47,7 +50,7 @@ namespace NCL {
 			}
 
 		protected:
-			MeshGeometry*	mesh;
+			OGLMesh*	mesh;
 			TextureBase*	texture;
 			ShaderBase*		shader;
 			Transform*		transform;

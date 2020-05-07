@@ -11,7 +11,7 @@ https://research.ncl.ac.uk/game/
 #include "glad\glad.h"
 
 #include <string>
-
+//textureRelate
 namespace NCL {
 	namespace Rendering {
 		class OGLTexture : public TextureBase

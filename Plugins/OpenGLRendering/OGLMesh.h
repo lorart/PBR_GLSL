@@ -87,8 +87,10 @@ namespace NCL {
 			vector<Texture>      textures;
 			//todo: unsigned int VAO;
 			OGLMesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures);
+			bool getIsAsimmp() {
+				return this->IsAsimmp;
+			}
 		private:
-			
 			bool IsAsimmp;
 
 		};

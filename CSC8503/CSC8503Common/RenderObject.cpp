@@ -13,6 +13,15 @@ RenderObject::RenderObject(Transform* parentTransform, OGLMesh* mesh, TextureBas
 	this->colour	= Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
+RenderObject::RenderObject(Transform* parentTransform, OGLMesh* mesh, vector<TextureBase*> pbrTexArry, ShaderBase* shader) {
+	this->texture =nullptr;
+	this->transform = parentTransform;
+	this->mesh = mesh;
+	this->pbrTexArry = pbrTexArry;
+	this->shader = shader;
+	this->colour = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+}
+
 RenderObject::~RenderObject() {
 
 }

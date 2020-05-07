@@ -14,12 +14,23 @@ namespace NCL {
 	namespace CSC8503 {
 		class Transform;
 		using namespace Maths;
+		enum TextureType {
+			ALBEDO_MAP,
+			NORMAL_MAP,
+			METALLIC_MAP,
+			ROUGHNESS_MAP,
+			AO_MAP
+		};
 
 		class RenderObject
 		{
 			
 		public:
+
 			RenderObject(Transform* parentTransform, OGLMesh* mesh, TextureBase* tex, ShaderBase* shader);
+
+			RenderObject(Transform* parentTransform, OGLMesh* mesh, vector<TextureBase*> pbrTexArry, ShaderBase* shader);
+
 			~RenderObject();
 
 			void SetDefaultTexture(TextureBase* t) {
@@ -53,6 +64,7 @@ namespace NCL {
 		protected:
 			OGLMesh*	mesh;
 			TextureBase*	texture;
+			vector<TextureBase*> pbrTexArry;
 			ShaderBase*		shader;
 			Transform*		transform;
 			Vector4			colour;

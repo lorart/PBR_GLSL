@@ -115,17 +115,19 @@ void OGLRenderer::BindShader(ShaderBase*s) {
 	}
 }
 
-void OGLRenderer::BindMesh(MeshGeometry*m) {
+void OGLRenderer::BindMesh(OGLMesh*m) {
 	if (!m) {
 		glBindVertexArray(0);
 		boundMesh = nullptr;
 	}
-	else if (OGLMesh* oglMesh = dynamic_cast<OGLMesh*>(m)) {
-		if (oglMesh->GetVAO() == 0) {
+	else if ( m) {
+		if (m->GetVAO() == 0) {
 			std::cout << __FUNCTION__ << " has received invalid mesh?!" << std::endl;
 		}
-		glBindVertexArray(oglMesh->GetVAO());
-		boundMesh = oglMesh;
+
+		
+		glBindVertexArray(m->GetVAO());
+		boundMesh = m;
 	}
 	else {
 		std::cout << __FUNCTION__ << " has received invalid mesh?!" << std::endl;

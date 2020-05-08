@@ -120,7 +120,7 @@ void OGLRenderer::BindMesh(OGLMesh*m) {
 		glBindVertexArray(0);
 		boundMesh = nullptr;
 	}
-	else if ( m) {
+	else if (m) {
 		if (m->GetVAO() == 0) {
 			std::cout << __FUNCTION__ << " has received invalid mesh?!" << std::endl;
 		}

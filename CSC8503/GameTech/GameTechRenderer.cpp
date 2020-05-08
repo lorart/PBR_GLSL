@@ -135,25 +135,26 @@ void GameTechRenderer::RenderCamera() {
 	glActiveTexture(GL_TEXTURE0 + 1);
 	glBindTexture(GL_TEXTURE_2D, shadowTex);
 
-	for (const auto&i : activeObjects) {
-	
+	for (const auto& i : activeObjects) {
+
 		OGLShader* shader = (OGLShader*)(*i).GetShader();
 		BindShader(shader);
+		if (activeShader != shader) {
+			if ((*i).GetMesh()->getIsAsimmp()) {
+				//TODO: 
+			}
+			else {
+				BindTextureToShader((OGLTexture*)(*i).GetDefaultTexture(), "mainTex", 0);
+
+				hasTexLocation = glGetUniformLocation(shader->GetProgramID(), "hasTexture");
+
+			}
 		projLocation = glGetUniformLocation(shader->GetProgramID(), "projMatrix");
 		viewLocation = glGetUniformLocation(shader->GetProgramID(), "viewMatrix");
 		modelLocation = glGetUniformLocation(shader->GetProgramID(), "modelMatrix");
 		shadowLocation = glGetUniformLocation(shader->GetProgramID(), "shadowMatrix");
 		//	colourLocation  = glGetUniformLocation(shader->GetProgramID(), "objectColour");
 		//	hasVColLocation = glGetUniformLocation(shader->GetProgramID(), "hasVertexColours");
-		if ((*i).GetMesh()->getIsAsimmp()) {
-			//TODO: 
-		}
-		else {
-			BindTextureToShader((OGLTexture*)(*i).GetDefaultTexture(), "mainTex", 0);
-			if (activeShader != shader) {		
-				hasTexLocation = glGetUniformLocation(shader->GetProgramID(), "hasTexture");
-			}
-		}
 		lightPosLocation = glGetUniformLocation(shader->GetProgramID(), "lightPos");
 		lightColourLocation = glGetUniformLocation(shader->GetProgramID(), "lightColour");
 		lightRadiusLocation = glGetUniformLocation(shader->GetProgramID(), "lightRadius");
@@ -170,8 +171,9 @@ void GameTechRenderer::RenderCamera() {
 
 		int shadowTexLocation = glGetUniformLocation(shader->GetProgramID(), "shadowTex");
 		glUniform1i(shadowTexLocation, 1);
-
 		activeShader = shader;
+	}
+
 		//textureRelate
 		//?
 		Matrix4 modelMatrix = (*i).GetTransform()->GetWorldMatrix();
@@ -191,6 +193,7 @@ void GameTechRenderer::RenderCamera() {
 		DrawBoundMesh();
 	}
 }
+	
 
 void GameTechRenderer::SetupDebugMatrix(OGLShader*s) {
 	float screenAspect = (float)currentWidth / (float)currentHeight;

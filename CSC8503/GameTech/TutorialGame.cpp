@@ -44,7 +44,7 @@ void TutorialGame::InitialiseAssets() {
 
 	//TODO:DELETE
 	loadFunc("cube.msh"	 , &cubeMesh);
-	testmodel = new Model("../../Assets/Meshes/PLANE.obj",0);
+	testmodel = new Model("../../Assets/Meshes/twoBox.obj",0);
 
 
 	basicTex	= (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
@@ -322,7 +322,7 @@ void TutorialGame::AddModelToWorld(Model* model,const Vector3& position, Vector3
 		modelObject->GetTransform().SetWorldPosition(position);
 		modelObject->GetTransform().SetWorldScale(dimensions);
 
-		modelObject->SetRenderObject(new RenderObject(&modelObject->GetTransform(),&model->meshes[i], basicTex, basicShader));
+		modelObject->SetRenderObject(new RenderObject(&modelObject->GetTransform(), model->meshes[i], basicTex, basicShader));
 		modelObject->SetPhysicsObject(new PhysicsObject(&modelObject->GetTransform(), modelObject->GetBoundingVolume()));
 
 		modelObject->GetPhysicsObject()->SetInverseMass(0);

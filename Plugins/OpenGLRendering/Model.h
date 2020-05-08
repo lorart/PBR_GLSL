@@ -21,7 +21,7 @@ namespace NCL {
 
 		public:
 			
-			vector<OGLMesh>   meshes;
+			vector<OGLMesh*>   meshes;
 			std::string directory;
 			bool gammaCorrection;
 
@@ -33,7 +33,13 @@ namespace NCL {
 			//TODO:texture
 			vector<Texture> textures_loaded;
 
+			~Model() {
+				for (int i = 0; i < meshes.size(); i++)
+				{
+					delete meshes[i];
 
+				}
+			}
 
 		private:
 			// loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
@@ -78,7 +84,7 @@ namespace NCL {
 
 			}
 
-			OGLMesh processMesh(aiMesh* mesh, const aiScene* scene)
+			OGLMesh* processMesh(aiMesh* mesh, const aiScene* scene)
 			{
 				//TODO:delete
 				std::cout << "Process Mesh!" << std::endl;
@@ -144,8 +150,9 @@ namespace NCL {
 				//// 4. height maps
 				//std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
 				//textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
-
-				return OGLMesh(vertices, indices, textures);
+				OGLMesh* Temp = NULL;
+				Temp=new OGLMesh(vertices, indices, textures);
+				return Temp;
 			}
 
 			//TODO:texture

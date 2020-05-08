@@ -140,8 +140,13 @@ void GameTechRenderer::RenderCamera() {
 		OGLShader* shader = (OGLShader*)(*i).GetShader();
 		BindShader(shader);
 		if (activeShader != shader) {
-			if ((*i).GetMesh()->getIsAsimmp()) {
+			if ((*i).GetIsPBR()) {
 				//TODO: 
+				for (size_t j = 0; j < ((*i).GetPbrTexArry()).size(); j++)
+				{
+					BindTextureToShader((OGLTexture*)(*i).GetPbrTexArry()[j], , i);
+
+				}
 			}
 			else {
 				BindTextureToShader((OGLTexture*)(*i).GetDefaultTexture(), "mainTex", 0);
@@ -186,8 +191,13 @@ void GameTechRenderer::RenderCamera() {
 		//glUniform4fv(colourLocation, 1, (float*)&i->GetColour());
 
 		//glUniform1i(hasVColLocation,!(*i).GetMesh()->GetColourData().empty());
-
-	   glUniform1i(hasTexLocation, (*i).GetDefaultTexture() ? 1:0);
+		if((*i).GetMesh()->getIsAsimmp()){
+			//TODO:
+		}
+		else {
+			glUniform1i(hasTexLocation, (*i).GetDefaultTexture() ? 1 : 0);
+		}
+	  
 
 		BindMesh((*i).GetMesh());
 		DrawBoundMesh();

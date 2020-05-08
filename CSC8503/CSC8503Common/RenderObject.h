@@ -29,7 +29,7 @@ namespace NCL {
 
 			RenderObject(Transform* parentTransform, OGLMesh* mesh, TextureBase* tex, ShaderBase* shader);
 
-			RenderObject(Transform* parentTransform, OGLMesh* mesh, vector<TextureBase*> pbrTexArry, ShaderBase* shader);
+			RenderObject(Transform* parentTransform, OGLMesh* mesh, vector<TextureBase*> pbrTexArry, ShaderBase* shader,bool isPBR);
 
 			~RenderObject();
 
@@ -37,7 +37,7 @@ namespace NCL {
 				texture = t;
 			}
 
-			TextureBase* GetDefaultTexture() const {
+			TextureBase* GetDefaultTexture() const {	
 				return texture;
 			}
 
@@ -60,7 +60,13 @@ namespace NCL {
 			Vector4 GetColour() const {
 				return colour;
 			}
-
+			bool GetIsPBR() const {
+				return IsPBR;
+			}
+			vector<TextureBase*> GetPbrTexArry() const
+			{
+				return pbrTexArry;
+			}
 		protected:
 			OGLMesh*	mesh;
 			TextureBase*	texture;
@@ -68,6 +74,7 @@ namespace NCL {
 			ShaderBase*		shader;
 			Transform*		transform;
 			Vector4			colour;
+			bool IsPBR;
 		};
 	}
 }

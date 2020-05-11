@@ -155,18 +155,18 @@ void GameTechRenderer::RenderCamera() {
 				std::cout << "error: losing Pbr Texture!" << std::endl;
 					}
 				else {
-					BindTextureToShader((OGLTexture*)(*i).GetPbrTexArry()[j], "albedo_map", 0);
-					BindTextureToShader((OGLTexture*)(*i).GetPbrTexArry()[j], "normal_map", 0);
-					BindTextureToShader((OGLTexture*)(*i).GetPbrTexArry()[j], "metallic_map", 0);
-					BindTextureToShader((OGLTexture*)(*i).GetPbrTexArry()[j],"roughness_map", 0);
-					BindTextureToShader((OGLTexture*)(*i).GetPbrTexArry()[j], "ao_map", 0);
+					BindTextureToShader((OGLTexture*)(*i).GetPbrTexArry()[0], "albedo_map", 0);
+					BindTextureToShader((OGLTexture*)(*i).GetPbrTexArry()[1], "normal_map", 0);
+					BindTextureToShader((OGLTexture*)(*i).GetPbrTexArry()[2], "metallic_map", 0);
+					BindTextureToShader((OGLTexture*)(*i).GetPbrTexArry()[3],"roughness_map", 0);
+					BindTextureToShader((OGLTexture*)(*i).GetPbrTexArry()[4], "ao_map", 0);
 				}
 
-				albedoValueLocation = glGetUniformLocation(shader->GetProgramID(), "albedoValue");
-				normalValueLocation = glGetUniformLocation(shader->GetProgramID(), "normalValue");
-				metallicValueLocation = glGetUniformLocation(shader->GetProgramID(), "metallicValue");
-				roughnessValueLocation= glGetUniformLocation(shader->GetProgramID(), "roughnessValue");
-				aoValueLocation= glGetUniformLocation(shader->GetProgramID(), "aoValue");
+				albedoValueLocation = glGetUniformLocation(shader->GetProgramID(),		"albedoValue"	);
+				normalValueLocation = glGetUniformLocation(shader->GetProgramID(),		 "normalValue"	);
+				metallicValueLocation = glGetUniformLocation(shader->GetProgramID(),	 "metallicValue");
+				roughnessValueLocation= glGetUniformLocation(shader->GetProgramID(),	"roughnessValue");
+				aoValueLocation= glGetUniformLocation(shader->GetProgramID(),			"aoValue"		);
 
 				glUniform1f(shader->albedoValue,albedoValueLocation);
 				glUniform1f(shader->normalValue,normalValueLocation);

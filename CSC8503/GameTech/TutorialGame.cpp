@@ -48,7 +48,7 @@ void TutorialGame::InitialiseAssets() {
 
 
 	basicTex	= (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
-	basicShader = new OGLShader("GameTechVert.glsl", "GameTechFrag.glsl");
+	basicShader = new OGLShader("PBR_Vert.glsl", "PBR_Frag.glsl");
 
 	InitCamera();
 	InitWorld();

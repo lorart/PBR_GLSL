@@ -41,6 +41,10 @@ namespace NCL {
 			Vector4		lightColour;
 			float		lightRadius;
 			Vector3		lightPosition;
+
+
+
+
 		};
 	}
 }

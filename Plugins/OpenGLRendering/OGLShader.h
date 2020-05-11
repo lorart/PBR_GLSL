@@ -39,6 +39,12 @@ namespace NCL {
 			GLuint	shaderIDs[ShaderStages::SHADER_MAX];
 			int		shaderValid[ShaderStages::SHADER_MAX];
 			int		programValid;
+		public:
+			int albedoValue=0;
+			int normalValue=0;
+			int metallicValue=0;
+			int roughnessValue=0;
+			int aoValue=0;
 		};
 	}
 }

@@ -3,6 +3,8 @@
 #include "../../Common/Camera.h"
 #include "../../Common/Vector2.h"
 #include "../../Common/Vector3.h"
+
+
 using namespace NCL;
 using namespace Rendering;
 using namespace CSC8503;
@@ -129,6 +131,12 @@ void GameTechRenderer::RenderCamera() {
 	int lightColourLocation = 0;
 	int lightRadiusLocation = 0;
 
+	int albedoValueLocation = 0;
+	int normalValueLocation = 0;
+	int metallicValueLocation = 0;
+	int roughnessValueLocation = 0;
+	int aoValueLocation = 0;
+
 	int cameraLocation = 0;
 
 	//TODO - PUT IN FUNCTION
@@ -142,11 +150,31 @@ void GameTechRenderer::RenderCamera() {
 		if (activeShader != shader) {
 			if ((*i).GetIsPBR()) {
 				//TODO: 
-				for (size_t j = 0; j < ((*i).GetPbrTexArry()).size(); j++)
-				{
-					BindTextureToShader((OGLTexture*)(*i).GetPbrTexArry()[j], , i);
-
+			
+				if((*i).GetPbrTexArry().size()!=5){
+				std::cout << "error: losing Pbr Texture!" << std::endl;
+					}
+				else {
+					BindTextureToShader((OGLTexture*)(*i).GetPbrTexArry()[j], "albedo_map", 0);
+					BindTextureToShader((OGLTexture*)(*i).GetPbrTexArry()[j], "normal_map", 0);
+					BindTextureToShader((OGLTexture*)(*i).GetPbrTexArry()[j], "metallic_map", 0);
+					BindTextureToShader((OGLTexture*)(*i).GetPbrTexArry()[j],"roughness_map", 0);
+					BindTextureToShader((OGLTexture*)(*i).GetPbrTexArry()[j], "ao_map", 0);
 				}
+
+				albedoValueLocation = glGetUniformLocation(shader->GetProgramID(), "albedoValue");
+				normalValueLocation = glGetUniformLocation(shader->GetProgramID(), "normalValue");
+				metallicValueLocation = glGetUniformLocation(shader->GetProgramID(), "metallicValue");
+				roughnessValueLocation= glGetUniformLocation(shader->GetProgramID(), "roughnessValue");
+				aoValueLocation= glGetUniformLocation(shader->GetProgramID(), "aoValue");
+
+				glUniform1f(shader->albedoValue,albedoValueLocation);
+				glUniform1f(shader->normalValue,normalValueLocation);
+				glUniform1f(shader->metallicValue,metallicValueLocation);
+				glUniform1f(shader->roughnessValue,roughnessValueLocation);
+				glUniform1f(shader->aoValue,aoValueLocation);
+
+				
 			}
 			else {
 				BindTextureToShader((OGLTexture*)(*i).GetDefaultTexture(), "mainTex", 0);
@@ -154,6 +182,9 @@ void GameTechRenderer::RenderCamera() {
 				hasTexLocation = glGetUniformLocation(shader->GetProgramID(), "hasTexture");
 
 			}
+			
+
+
 		projLocation = glGetUniformLocation(shader->GetProgramID(), "projMatrix");
 		viewLocation = glGetUniformLocation(shader->GetProgramID(), "viewMatrix");
 		modelLocation = glGetUniformLocation(shader->GetProgramID(), "modelMatrix");
@@ -191,8 +222,8 @@ void GameTechRenderer::RenderCamera() {
 		//glUniform4fv(colourLocation, 1, (float*)&i->GetColour());
 
 		//glUniform1i(hasVColLocation,!(*i).GetMesh()->GetColourData().empty());
-		if((*i).GetMesh()->getIsAsimmp()){
-			//TODO:
+		if((*i).GetIsPBR()){
+			
 		}
 		else {
 			glUniform1i(hasTexLocation, (*i).GetDefaultTexture() ? 1 : 0);

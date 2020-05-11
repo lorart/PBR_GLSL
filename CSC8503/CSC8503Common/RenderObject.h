@@ -8,7 +8,7 @@
 
 namespace NCL {
 	using namespace NCL::Rendering;
-
+	
 	//class MeshGeometry;
 	//class OGLMesh;
 	namespace CSC8503 {

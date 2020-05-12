@@ -31,7 +31,8 @@ namespace NCL {
 				loadModel(path);
 			}
 			//TODO:texture
-			vector<Texture> textures_loaded;
+			vector<TextureBase*> pbrTexArry;
+			
 
 			~Model() {
 				for (int i = 0; i < meshes.size(); i++)

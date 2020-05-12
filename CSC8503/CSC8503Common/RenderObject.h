@@ -63,6 +63,7 @@ namespace NCL {
 			bool GetIsPBR() const {
 				return IsPBR;
 			}
+		
 			vector<TextureBase*> GetPbrTexArry() const
 			{
 				return pbrTexArry;

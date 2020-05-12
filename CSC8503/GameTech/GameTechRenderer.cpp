@@ -168,11 +168,11 @@ void GameTechRenderer::RenderCamera() {
 				roughnessValueLocation= glGetUniformLocation(shader->GetProgramID(),	"roughnessValue");
 				aoValueLocation= glGetUniformLocation(shader->GetProgramID(),			"aoValue"		);
 
-				glUniform1f(shader->albedoValue,albedoValueLocation);
-				glUniform1f(shader->normalValue,normalValueLocation);
-				glUniform1f(shader->metallicValue,metallicValueLocation);
-				glUniform1f(shader->roughnessValue,roughnessValueLocation);
-				glUniform1f(shader->aoValue,aoValueLocation);
+				glUniform3fv(albedoValueLocation,1, (float*)&(shader->albedoValue));
+				glUniform3fv(normalValueLocation,1, (float*)&(shader->normalValue));
+				glUniform1f(metallicValueLocation,shader->metallicValue);
+				glUniform1f(roughnessValueLocation,shader->roughnessValue);
+				glUniform1f(aoValueLocation,shader->aoValue);
 
 				
 			}

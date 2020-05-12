@@ -10,10 +10,10 @@ uniform vec4	lightColour;
 
 uniform vec3	cameraPos;
 
-//uniform bool hasTexture;
+uniform bool hasTexture;
 
-uniform float albedoValue;
-uniform float metallicValue;
+uniform vec3 albedoValue;
+uniform vec3 metallicValue;
 uniform float roughnessValue;
 uniform float aoValue;
 uniform float normalValue;

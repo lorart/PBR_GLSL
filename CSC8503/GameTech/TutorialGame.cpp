@@ -304,7 +304,8 @@ void TutorialGame::InitCamera() {
 void TutorialGame::InitWorld() {
 	world->ClearAndErase();
 	//AddCubeToWorld(Vector3(0, 0, 0), Vector3(10, 10, 10), 0);
-	AddModelToWorld(testmodel, Vector3(0, 0, 0), Vector3(10, 10, 10));
+	bool isPBR=true;
+	AddModelToWorld(testmodel, Vector3(0, 0, 0), Vector3(10, 10, 10), isPBR);
 	//physics->Clear();
 
 }
@@ -312,7 +313,7 @@ void TutorialGame::InitWorld() {
 //From here on it's functions to add in objects to the world!
 
 
-void TutorialGame::AddModelToWorld(Model* model,const Vector3& position, Vector3 dimensions) {
+void TutorialGame::AddModelToWorld(Model* model,const Vector3& position, Vector3 dimensions, bool ispbr) {
 	for (size_t i = 0; i < model->meshes.size(); i++)
 	{
 		GameObject* modelObject = new GameObject();
@@ -321,8 +322,16 @@ void TutorialGame::AddModelToWorld(Model* model,const Vector3& position, Vector3
 
 		modelObject->GetTransform().SetWorldPosition(position);
 		modelObject->GetTransform().SetWorldScale(dimensions);
-
-		modelObject->SetRenderObject(new RenderObject(&modelObject->GetTransform(), model->meshes[i], basicTex, basicShader));
+		if (ispbr)
+		{
+			//todo:texture arry
+			modelObject->SetRenderObject(new RenderObject(&modelObject->GetTransform(), model->meshes[i], basicTex, basicShader,true));
+		} 
+		else
+		{
+			modelObject->SetRenderObject(new RenderObject(&modelObject->GetTransform(), model->meshes[i], basicTex, basicShader));
+		}
+	
 		modelObject->SetPhysicsObject(new PhysicsObject(&modelObject->GetTransform(), modelObject->GetBoundingVolume()));
 
 		modelObject->GetPhysicsObject()->SetInverseMass(0);

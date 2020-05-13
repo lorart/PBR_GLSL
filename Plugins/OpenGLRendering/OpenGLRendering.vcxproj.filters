@@ -39,6 +39,9 @@
     <ClInclude Include="Model.h">
       <Filter>assimpModel</Filter>
     </ClInclude>
+    <ClInclude Include="OGLMaterial.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OGLRenderer.cpp">
@@ -61,6 +64,9 @@
     </ClCompile>
     <ClCompile Include="Model.cpp">
       <Filter>assimpModel</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLMaterial.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

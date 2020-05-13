@@ -4,7 +4,7 @@
 #include "../../Common/ShaderBase.h"
 #include "../../Common/Vector4.h"
 #include "..\..\Plugins\OpenGLRendering\OGLMesh.h"
-#include "..\..\Plugins\OpenGLRendering\OGLTexture.h"
+#include "..\..\Plugins\OpenGLRendering\OGLMaterial.h"
 
 
 namespace NCL {
@@ -30,7 +30,9 @@ namespace NCL {
 
 			RenderObject(Transform* parentTransform, OGLMesh* mesh, TextureBase* tex, ShaderBase* shader);
 
-			RenderObject(Transform* parentTransform, OGLMesh* mesh, vector<OGLTexture*> pbrTexArry, ShaderBase* shader,bool isPBR);
+			RenderObject(Transform* parentTransform, OGLMesh* mesh, OGLMaterial* meterial, ShaderBase* pbrShader, bool isPBR);
+
+			
 
 			~RenderObject();
 
@@ -65,14 +67,13 @@ namespace NCL {
 				return IsPBR;
 			}
 		
-			vector<OGLTexture*> GetPbrTexArry() const
-			{
-				return pbrTexArry;
+			OGLMaterial* GetOGLMaterial() const {
+				return material;
 			}
 		protected:
 			OGLMesh*	mesh;
 			TextureBase*	texture;
-			vector<OGLTexture*> pbrTexArry;
+			OGLMaterial* material;
 			ShaderBase*		shader;
 			Transform*		transform;
 			Vector4			colour;

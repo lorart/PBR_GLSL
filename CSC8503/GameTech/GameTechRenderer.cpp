@@ -151,15 +151,17 @@ void GameTechRenderer::RenderCamera() {
 			if ((*i).GetIsPBR()) {
 				//TODO: 
 			
-				if((*i).GetPbrTexArry().size()!=5){
+				//if((*i).GetPbrTexArry().size()!=5){
+				auto tempMaterial = (*i).GetOGLMaterial();
+				if (tempMaterial->pbrTexArry.size() != 5) {
 				std::cout << "error: losing Pbr Texture!" << std::endl;
 					}
 				else {
-					BindTextureToShader((OGLTexture*)(*i).GetPbrTexArry()[0], "albedo_map", 0);
-					BindTextureToShader((OGLTexture*)(*i).GetPbrTexArry()[1], "normal_map", 0);
-					BindTextureToShader((OGLTexture*)(*i).GetPbrTexArry()[2], "metallic_map", 0);
-					BindTextureToShader((OGLTexture*)(*i).GetPbrTexArry()[3],"roughness_map", 0);
-					BindTextureToShader((OGLTexture*)(*i).GetPbrTexArry()[4], "ao_map", 0);
+					BindTextureToShader((OGLTexture*)tempMaterial->pbrTexArry[0], "albedo_map", 0);
+					BindTextureToShader((OGLTexture*)tempMaterial->pbrTexArry[1], "normal_map", 0);
+					BindTextureToShader((OGLTexture*)tempMaterial->pbrTexArry[2], "metallic_map", 0);
+					BindTextureToShader((OGLTexture*)tempMaterial->pbrTexArry[3],"roughness_map", 0);
+					BindTextureToShader((OGLTexture*)tempMaterial->pbrTexArry[4], "ao_map", 0);
 				}
 
 				albedoValueLocation = glGetUniformLocation(shader->GetProgramID(),		"albedoValue"	);
@@ -168,11 +170,11 @@ void GameTechRenderer::RenderCamera() {
 				roughnessValueLocation= glGetUniformLocation(shader->GetProgramID(),	"roughnessValue");
 				aoValueLocation= glGetUniformLocation(shader->GetProgramID(),			"aoValue"		);
 
-				glUniform3fv(albedoValueLocation,1, (float*)&(shader->albedoValue));
-				glUniform3fv(normalValueLocation,1, (float*)&(shader->normalValue));
-				glUniform1f(metallicValueLocation,shader->metallicValue);
-				glUniform1f(roughnessValueLocation,shader->roughnessValue);
-				glUniform1f(aoValueLocation,shader->aoValue);
+				glUniform3fv(albedoValueLocation,1, (float*)&(tempMaterial->albedoValue));
+				glUniform3fv(normalValueLocation,1, (float*)&(tempMaterial->normalValue));
+				glUniform1f(metallicValueLocation, tempMaterial->metallicValue);
+				glUniform1f(roughnessValueLocation, tempMaterial->roughnessValue);
+				glUniform1f(aoValueLocation, tempMaterial->aoValue);
 
 				
 			}

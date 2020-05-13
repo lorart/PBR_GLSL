@@ -27,13 +27,15 @@ namespace NCL {
 
 			static TextureBase* RGBATextureFromFilename(const std::string&name);
 
-			static std::vector<OGLTexture*> PBRTexArryFromModelname(const std::string& Modelname);
+		
 
 			GLuint GetObjectID() const	{
 				return texID;
 			}
 		protected:						
 			GLuint texID;
+
+
 		};
 	}
 }

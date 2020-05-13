@@ -47,7 +47,7 @@ void TutorialGame::InitialiseAssets() {
 	loadFunc("cube.msh"	 , &cubeMesh);
 	string modelname = "twoBox";
 	testmodel = new Model(Assets::TEXTUREDIR +modelname+".obj",0);
-	std::vector<OGLTexture*> modelPbrTex = OGLTexture::PBRTexArryFromModelname(modelname);
+
 
 
 	basicTex	= (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
@@ -328,7 +328,7 @@ void TutorialGame::AddModelToWorld(Model* model,const Vector3& position, Vector3
 		if (ispbr)
 		{
 			//todo:texture arry
-			modelObject->SetRenderObject(new RenderObject(&modelObject->GetTransform(), model->meshes[i], modelPbrTex, basicShader,true));
+			modelObject->SetRenderObject(new RenderObject(&modelObject->GetTransform(), model->meshes[i], model->meshes[i]->material, basicShader,true));
 		} 
 		else
 		{

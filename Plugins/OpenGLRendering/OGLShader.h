@@ -41,11 +41,7 @@ namespace NCL {
 			int		shaderValid[ShaderStages::SHADER_MAX];
 			int		programValid;
 		public:
-			Vector3 albedoValue= Vector3(0,0,0);
-			Vector3 normalValue= Vector3(0,0,0);
-			int metallicValue=0;
-			int roughnessValue=0;
-			int aoValue=0;
+			
 		};
 	}
 }

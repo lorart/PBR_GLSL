@@ -15,7 +15,7 @@ https://learnopengl.com/Model-Loading/Mesh
 #include "glad\glad.h"
 
 #include <string>
-#include "OGLTexture.h"
+#include"OGLMaterial.h"
 
 namespace NCL {
 	namespace Rendering {
@@ -87,6 +87,7 @@ namespace NCL {
 			bool getIsAsimmp() {
 				return this->IsAsimmp;
 			}
+			OGLMaterial* material;
 		private:
 			bool IsAsimmp;
 

@@ -72,3 +72,12 @@ TextureBase* OGLTexture::RGBATextureFromFilename(const std::string&name) {
 
 	return glTex;
 }
+
+
+
+
+std::vector<OGLTexture*> NCL::Rendering::OGLTexture::PBRTexArryFromModelname(const std::string& Modelname)
+{
+
+}
+

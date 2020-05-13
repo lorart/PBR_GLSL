@@ -15,7 +15,7 @@ RenderObject::RenderObject(Transform* parentTransform, OGLMesh* mesh, TextureBas
 
 }
 
-RenderObject::RenderObject(Transform* parentTransform, OGLMesh* mesh, vector<TextureBase*> pbrTexArry, ShaderBase* pbrShader, bool isPBR) {
+RenderObject::RenderObject(Transform* parentTransform, OGLMesh* mesh, vector<OGLTexture*> pbrTexArry, ShaderBase* pbrShader, bool isPBR) {
 	this->IsPBR = isPBR;
 	if(isPBR){
 	this->texture =nullptr;

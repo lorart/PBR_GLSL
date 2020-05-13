@@ -61,6 +61,8 @@ namespace NCL {
     		OGLMesh*	cubeMesh	= nullptr;
 			Model* testmodel = nullptr;
 
+			std::vector<OGLTexture*> modelPbrTex;
+
 
 			GameObject* lockedObject	= nullptr;
 			Vector3 lockedOffset		= Vector3(0, 14, 20);

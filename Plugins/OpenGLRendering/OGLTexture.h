@@ -11,6 +11,7 @@ https://research.ncl.ac.uk/game/
 #include "glad\glad.h"
 
 #include <string>
+#include <vector>
 //textureRelate
 namespace NCL {
 	namespace Rendering {
@@ -25,6 +26,8 @@ namespace NCL {
 			static TextureBase* RGBATextureFromData(char* data, int width, int height, int channels);
 
 			static TextureBase* RGBATextureFromFilename(const std::string&name);
+
+			static std::vector<OGLTexture*> PBRTexArryFromModelname(const std::string& Modelname);
 
 			GLuint GetObjectID() const	{
 				return texID;

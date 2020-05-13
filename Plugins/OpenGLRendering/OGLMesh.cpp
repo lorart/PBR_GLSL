@@ -35,7 +35,7 @@ OGLMesh::OGLMesh(const std::string&filename) : MeshGeometry(filename){
 }
 
 
-OGLMesh::OGLMesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures)  {
+OGLMesh::OGLMesh(vector<Vertex> vertices, vector<unsigned int> indices)  {
 	vao = 0;
 	subCount = 1;
 	IsAsimmp = true;
@@ -49,7 +49,8 @@ OGLMesh::OGLMesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<T
 	this->vertices = vertices;
 	this->indices = indices;
 	MeshGeometry::indices = indices;
-	this->textures = textures;
+	
+
 
 	// now that we have all the required data, set the vertex buffers and its attribute pointers.
 	UploadToGPU();

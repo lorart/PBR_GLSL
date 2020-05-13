@@ -92,7 +92,7 @@ namespace NCL {
 				// data to fill
 				vector<Vertex> vertices;
 				vector<unsigned int> indices;
-				vector<Texture> textures;
+				
 				for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 				{
 					Vertex vertex;
@@ -152,7 +152,7 @@ namespace NCL {
 				//std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
 				//textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 				OGLMesh* Temp = NULL;
-				Temp=new OGLMesh(vertices, indices, textures);
+				Temp=new OGLMesh(vertices, indices);
 				return Temp;
 			}
 

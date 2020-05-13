@@ -7,6 +7,7 @@
 
 #include "../CSC8503Common/PositionConstraint.h"
 #include "../../Plugins/OpenGLRendering/Model.h"
+#include "../../Common/Assets.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -44,7 +45,9 @@ void TutorialGame::InitialiseAssets() {
 
 	//TODO:DELETE
 	loadFunc("cube.msh"	 , &cubeMesh);
-	testmodel = new Model("../../Assets/Meshes/twoBox.obj",0);
+	string modelname = "twoBox";
+	testmodel = new Model(Assets::TEXTUREDIR +modelname+".obj",0);
+	std::vector<OGLTexture*> modelPbrTex = OGLTexture::PBRTexArryFromModelname(modelname);
 
 
 	basicTex	= (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
@@ -325,7 +328,7 @@ void TutorialGame::AddModelToWorld(Model* model,const Vector3& position, Vector3
 		if (ispbr)
 		{
 			//todo:texture arry
-			modelObject->SetRenderObject(new RenderObject(&modelObject->GetTransform(), model->meshes[i], basicTex, basicShader,true));
+			modelObject->SetRenderObject(new RenderObject(&modelObject->GetTransform(), model->meshes[i], modelPbrTex, basicShader,true));
 		} 
 		else
 		{

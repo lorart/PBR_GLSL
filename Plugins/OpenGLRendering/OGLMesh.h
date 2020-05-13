@@ -15,6 +15,7 @@ https://learnopengl.com/Model-Loading/Mesh
 #include "glad\glad.h"
 
 #include <string>
+#include "OGLTexture.h"
 
 namespace NCL {
 	namespace Rendering {
@@ -31,11 +32,7 @@ namespace NCL {
 			Vector3 Bitangent;
 		};
 
-		struct Texture {
-			unsigned int id;
-			std::string type;
-			std::string path;
-		};
+	
 
 		class OGLMesh : public NCL::MeshGeometry
 		{
@@ -84,9 +81,9 @@ namespace NCL {
 			// mesh Data
 			vector<Vertex>       vertices;
 			vector<unsigned int> indices;
-			vector<Texture>      textures;
+			
 			//todo: unsigned int VAO;
-			OGLMesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures);
+			OGLMesh(vector<Vertex> vertices, vector<unsigned int> indices);
 			bool getIsAsimmp() {
 				return this->IsAsimmp;
 			}

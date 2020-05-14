@@ -157,11 +157,11 @@ void GameTechRenderer::RenderCamera() {
 				std::cout << "error: losing Pbr Texture!" << std::endl;
 					}
 				else {
-					BindTextureToShader((OGLTexture*)tempMaterial->pbrTexArry[0], "albedo_map", 0);
-					BindTextureToShader((OGLTexture*)tempMaterial->pbrTexArry[1], "normal_map", 0);
-					BindTextureToShader((OGLTexture*)tempMaterial->pbrTexArry[2], "metallic_map", 0);
-					BindTextureToShader((OGLTexture*)tempMaterial->pbrTexArry[3],"roughness_map", 0);
-					BindTextureToShader((OGLTexture*)tempMaterial->pbrTexArry[4], "ao_map", 0);
+					BindTextureToShader((OGLTexture*)tempMaterial->pbrTexArry[TextureType::ALBEDO_MAP], "albedo_map", 0);
+					BindTextureToShader((OGLTexture*)tempMaterial->pbrTexArry[TextureType::NORMAL_MAP], "normal_map", 0);
+					BindTextureToShader((OGLTexture*)tempMaterial->pbrTexArry[TextureType::METALLIC_MAP], "metallic_map", 0);
+					BindTextureToShader((OGLTexture*)tempMaterial->pbrTexArry[TextureType::ROUGHNESS_MAP],"roughness_map", 0);
+					BindTextureToShader((OGLTexture*)tempMaterial->pbrTexArry[TextureType::AO_MAP], "ao_map", 0);
 				}
 
 				albedoValueLocation = glGetUniformLocation(shader->GetProgramID(),		"albedoValue"	);

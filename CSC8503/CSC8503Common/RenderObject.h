@@ -7,21 +7,17 @@
 #include "..\..\Plugins\OpenGLRendering\OGLMaterial.h"
 
 
+
+
 namespace NCL {
 	using namespace NCL::Rendering;
-	
+
 	//class MeshGeometry;
 	//class OGLMesh;
 	namespace CSC8503 {
 		class Transform;
 		using namespace Maths;
-		enum TextureType {
-			ALBEDO_MAP,
-			NORMAL_MAP,
-			METALLIC_MAP,
-			ROUGHNESS_MAP,
-			AO_MAP
-		};
+	
 
 		class RenderObject
 		{

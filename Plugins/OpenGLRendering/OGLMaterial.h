@@ -9,6 +9,7 @@ namespace NCL {
 		{
 		public:
 			OGLMaterial(std::vector<OGLTexture*> pbrTexArry, Vector3 albedoValue, Vector3 normalValue, int metallicValue, int roughnessValue, int aoValue);
+			OGLMaterial(std::vector<OGLTexture*> pbrTexArry);
 			~OGLMaterial();
 			std::vector<OGLTexture*> pbrTexArry;
 			Vector3 albedoValue = Vector3(0, 0, 0);

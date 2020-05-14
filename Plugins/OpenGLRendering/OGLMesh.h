@@ -32,11 +32,20 @@ namespace NCL {
 			Vector3 Bitangent;
 		};
 
-	
+
+		enum TextureType {
+			ALBEDO_MAP,
+			NORMAL_MAP,
+			METALLIC_MAP,
+			ROUGHNESS_MAP,
+			AO_MAP,
+			Max_Number
+		};
 
 		class OGLMesh : public NCL::MeshGeometry
 		{
 		public:
+
 			enum MeshBuffer {
 				VERTEX_BUFFER,
 				COLOUR_BUFFER,
@@ -61,6 +70,7 @@ namespace NCL {
 			void UploadToGPU() override;
 
 		protected:
+			
 			GLuint	GetVAO()			const { return vao;			}
 			int		GetSubMeshCount()	const { return subCount;	}
 
@@ -84,6 +94,7 @@ namespace NCL {
 			
 			//todo: unsigned int VAO;
 			OGLMesh(vector<Vertex> vertices, vector<unsigned int> indices);
+			OGLMesh(vector<Vertex> vertices, vector<unsigned int> indices, OGLMaterial* material);
 			bool getIsAsimmp() {
 				return this->IsAsimmp;
 			}

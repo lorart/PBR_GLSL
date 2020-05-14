@@ -46,7 +46,7 @@ void TutorialGame::InitialiseAssets() {
 	//TODO:DELETE
 	loadFunc("cube.msh"	 , &cubeMesh);
 	string modelname = "twoBox";
-	testmodel = new Model(Assets::TEXTUREDIR +modelname+".obj",0);
+	testmodel = new Model(Assets::MESHDIR +modelname+".obj",0);
 
 
 

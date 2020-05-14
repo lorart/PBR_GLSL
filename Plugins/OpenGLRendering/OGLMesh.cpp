@@ -55,6 +55,27 @@ OGLMesh::OGLMesh(vector<Vertex> vertices, vector<unsigned int> indices)  {
 	// now that we have all the required data, set the vertex buffers and its attribute pointers.
 	UploadToGPU();
 }
+OGLMesh::OGLMesh(vector<Vertex> vertices, vector<unsigned int> indices, OGLMaterial* material) {
+	vao = 0;
+	subCount = 1;
+	IsAsimmp = true;
+	primType = GeometryPrimitive::Triangles;
+
+	for (int i = 0; i < MAX_BUFFER; ++i) {
+		buffers[i] = 0;
+	}
+
+
+	this->vertices = vertices;
+	this->indices = indices;
+	this->material = material;
+	MeshGeometry::indices = indices;
+
+
+
+	// now that we have all the required data, set the vertex buffers and its attribute pointers.
+	UploadToGPU();
+}
 
 
 OGLMesh::~OGLMesh()	{
@@ -62,6 +83,7 @@ OGLMesh::~OGLMesh()	{
 		glDeleteVertexArrays(1, &vao);			//Delete our VAO
 		glDeleteBuffers(1, &ebo);          //Delete EBO
 		glDeleteBuffers(MAX_BUFFER, buffers);	//Delete our VBOs
+		delete material;
 	}
 	else {
 		glDeleteVertexArrays(1, &vao);			//Delete our VAO

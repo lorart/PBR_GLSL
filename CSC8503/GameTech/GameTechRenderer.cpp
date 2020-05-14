@@ -157,11 +157,18 @@ void GameTechRenderer::RenderCamera() {
 				std::cout << "error: losing Pbr Texture!" << std::endl;
 					}
 				else {
-					BindTextureToShader((OGLTexture*)tempMaterial->pbrTexArry[TextureType::ALBEDO_MAP], "albedo_map", 0);
-					BindTextureToShader((OGLTexture*)tempMaterial->pbrTexArry[TextureType::NORMAL_MAP], "normal_map", 0);
-					BindTextureToShader((OGLTexture*)tempMaterial->pbrTexArry[TextureType::METALLIC_MAP], "metallic_map", 0);
-					BindTextureToShader((OGLTexture*)tempMaterial->pbrTexArry[TextureType::ROUGHNESS_MAP],"roughness_map", 0);
-					BindTextureToShader((OGLTexture*)tempMaterial->pbrTexArry[TextureType::AO_MAP], "ao_map", 0);
+
+					OGLTexture* tempAlbedo = (OGLTexture*)tempMaterial->pbrTexArry[TextureType::ALBEDO_MAP];
+					OGLTexture* tempNormal = (OGLTexture*)tempMaterial->pbrTexArry[TextureType::NORMAL_MAP];
+					OGLTexture* tempMetallic = (OGLTexture*)tempMaterial->pbrTexArry[TextureType::METALLIC_MAP];
+					OGLTexture* tempRoughness = (OGLTexture*)tempMaterial->pbrTexArry[TextureType::ROUGHNESS_MAP];
+					OGLTexture* tempAO = (OGLTexture*)tempMaterial->pbrTexArry[TextureType::AO_MAP];
+
+					BindTextureToShader(tempAlbedo, "albedo_map", tempAlbedo->GetObjectID());
+					BindTextureToShader(tempNormal, "normal_map", tempNormal->GetObjectID());
+					BindTextureToShader(tempMetallic, "metallic_map", tempMetallic->GetObjectID());
+					BindTextureToShader(tempRoughness,"roughness_map", tempRoughness->GetObjectID());
+					BindTextureToShader(tempAO, "ao_map", tempAO->GetObjectID());
 				}
 
 				albedoValueLocation = glGetUniformLocation(shader->GetProgramID(),		"albedoValue"	);

@@ -52,7 +52,7 @@ namespace NCL {
 
 		private:
 			// loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
-			OGLTexture* blackTexture= (OGLTexture*)OGLTexture::RGBATextureFromFilename(Assets::TEXTUREDIR + "blackPicture.jpg");
+			OGLTexture* blackTexture= (OGLTexture*)OGLTexture::RGBATextureFromFilename(Assets::TEXTUREDIR + "blackPicture_LI.jpg");
 			void loadModel(std::string const& path)
 			{
 				// read file via ASSIMP
@@ -203,8 +203,9 @@ namespace NCL {
 			
 					if (mat->GetTextureCount(type)>0) {
 						//todo:check 0
-						mat->GetTexture(type, 0, &str);
-						texture= (OGLTexture*)OGLTexture::RGBATextureFromFilename(directory+'/'+str.C_Str());
+						mat->GetTexture(type, 1, &str);
+						texture= (OGLTexture*)OGLTexture::RGBATextureFromFilename(Assets::MESHDIR+str.C_Str());
+						//OGLTexture* blackTexture= (OGLTexture*)OGLTexture::RGBATextureFromFilename(Assets::TEXTUREDIR + "blackPicture.jpg");
 					}
 					else {
 						texture = blackTexture;

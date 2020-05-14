@@ -58,7 +58,7 @@ void main(void)
 	if(hasTexture) {
 	 albedo *= texture(mainTex, IN.texCoord);
 	}
-		 albedo *= texture(albedo_map, IN.texCoord);
+	albedo *= texture(albedo_map, IN.texCoord);
 	albedo.rgb = pow(albedo.rgb, vec3(2.2));
 	
 	fragColor.rgb = albedo.rgb * 0.05f; //ambient
@@ -71,6 +71,7 @@ void main(void)
 	
 	fragColor.a = albedo.a;
 
+fragColor= texture(mainTex, IN.texCoord);
 //fragColor.rgb = IN.normal;
 
 	//fragColor = IN.colour;

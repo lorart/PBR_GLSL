@@ -39,9 +39,9 @@ namespace NCL {
 			Model(std::string const& path, bool gamma = false) : gammaCorrection(gamma)
 			{
 			
-				blackTexture = (OGLTexture*)TextureLoader::LoadAPITexture("blackPicture_LI.jpg");
+				//blackTexture = (OGLTexture*)TextureLoader::LoadAPITexture("blackPicture_LI.jpg");
 				//blackTexture = (OGLTexture*)TextureLoader::LoadAPITexture("blackPicture.jpg");
-				//blackTexture = (OGLTexture*)TextureLoader::LoadAPITexture("wire_113135006_Base_Color.jpg");
+				blackTexture = (OGLTexture*)TextureLoader::LoadAPITexture("wire_113135006_Base_Color.jpg");
 				loadModel(path);
 			}
 			//TODO:texture

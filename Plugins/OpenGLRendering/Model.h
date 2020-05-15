@@ -10,6 +10,8 @@
 #include "..\..\Common\Assets.h"
 #include "../../CSC8503/CSC8503Common/RenderObject.h"
 
+#include "../../Common/TextureLoader.h"
+
 
 /*
 
@@ -36,6 +38,10 @@ namespace NCL {
 			// constructor, expects a filepath to a 3D model.
 			Model(std::string const& path, bool gamma = false) : gammaCorrection(gamma)
 			{
+			
+				blackTexture = (OGLTexture*)TextureLoader::LoadAPITexture("blackPicture_LI.jpg");
+				//blackTexture = (OGLTexture*)TextureLoader::LoadAPITexture("blackPicture.jpg");
+				//blackTexture = (OGLTexture*)TextureLoader::LoadAPITexture("wire_113135006_Base_Color.jpg");
 				loadModel(path);
 			}
 			//TODO:texture
@@ -52,7 +58,10 @@ namespace NCL {
 
 		private:
 			// loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
-			OGLTexture* blackTexture= (OGLTexture*)OGLTexture::RGBATextureFromFilename(Assets::TEXTUREDIR + "blackPicture_LI.jpg");
+			OGLTexture* blackTexture;
+	
+			// blackTexture = (OGLTexture*)TextureLoader::LoadAPITexture("blackPicture_LI.jpg");
+		
 			void loadModel(std::string const& path)
 			{
 				// read file via ASSIMP
@@ -204,7 +213,7 @@ namespace NCL {
 					if (mat->GetTextureCount(type)>0) {
 						//todo:check 0
 						mat->GetTexture(type, 1, &str);
-						texture= (OGLTexture*)OGLTexture::RGBATextureFromFilename(Assets::MESHDIR+str.C_Str());
+						texture= (OGLTexture*)OGLTexture::RGBATextureFromFilename(Assets::TEXTUREDIR+str.C_Str());
 						//OGLTexture* blackTexture= (OGLTexture*)OGLTexture::RGBATextureFromFilename(Assets::TEXTUREDIR + "blackPicture.jpg");
 					}
 					else {
@@ -213,6 +222,8 @@ namespace NCL {
 					}
 					return texture;
 			}
+
+
 		};
 	}
 };

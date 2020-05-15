@@ -25,6 +25,8 @@ OGLTexture::OGLTexture(GLuint texToOwn) {
 
 OGLTexture::~OGLTexture()
 {
+	//todo:delete
+	std::cout << "~OGLTexture()" << std::endl;
 	glDeleteTextures(1, &texID);
 }
 

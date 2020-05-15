@@ -42,11 +42,15 @@ bool TextureLoader::LoadTexture(const std::string& filename, char*& outData, int
 	//By default, attempt to use stb image to get this texture
 	stbi_uc *texData = stbi_load(realPath.c_str(), &width, &height, &channels, 0);
 
+	//todo: delete
+	std::cout << "texture channels" << channels << std::endl;
+
+
 	if (texData) {
 		outData = (char*)texData;
 		return true;
 	}
-
+	
 	return false;
 }
 

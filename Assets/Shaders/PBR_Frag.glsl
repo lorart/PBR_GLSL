@@ -71,7 +71,8 @@ void main(void)
 	
 	fragColor.a = albedo.a;
 
-fragColor= texture(mainTex, IN.texCoord);
+fragColor.rgb= texture(albedo_map, IN.texCoord).rgb;
+//fragColor.rgb= vec3(0,1,1);
 //fragColor.rgb = IN.normal;
 
 	//fragColor = IN.colour;

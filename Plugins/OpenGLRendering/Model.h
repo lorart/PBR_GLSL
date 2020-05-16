@@ -40,8 +40,8 @@ namespace NCL {
 			{
 			
 				//blackTexture = (OGLTexture*)TextureLoader::LoadAPITexture("blackPicture_LI.jpg");
-				//blackTexture = (OGLTexture*)TextureLoader::LoadAPITexture("blackPicture.jpg");
-				blackTexture = (OGLTexture*)TextureLoader::LoadAPITexture("wire_113135006_Base_Color.jpg");
+				blackTexture = (OGLTexture*)TextureLoader::LoadAPITexture("blackPicture.jpg");
+				//blackTexture = (OGLTexture*)TextureLoader::LoadAPITexture("wire_113135006_Base_Color.jpg");
 				loadModel(path);
 			}
 			//TODO:texture
@@ -165,23 +165,15 @@ namespace NCL {
 					for (unsigned int j = 0; j < face.mNumIndices; j++)
 						indices.push_back(face.mIndices[j]);
 				}
-				//TODO:texture
-				/*
-				ALBEDO_MAP,
-			NORMAL_MAP,
-			METALLIC_MAP,
-			ROUGHNESS_MAP,
-			AO_MAP,
-			Max_Number
-				*/
+		
 				mat = scene->mMaterials[mesh->mMaterialIndex];
+
 				OGLTexture* diffuseMap = loadMaterialTextures(mat, aiTextureType_DIFFUSE);
 				pbrTexArry[TextureType::ALBEDO_MAP] = diffuseMap;
 
 				OGLTexture* normalMap = loadMaterialTextures(mat, aiTextureType_NORMALS);
 				pbrTexArry[TextureType::NORMAL_MAP] = normalMap;
 
-				//todo:?
 				OGLTexture* metallicMap = loadMaterialTextures(mat, aiTextureType_UNKNOWN);
 				pbrTexArry[TextureType::NORMAL_MAP] = metallicMap;
 
@@ -207,13 +199,17 @@ namespace NCL {
 			// the required info is returned as a Texture struct.
 			OGLTexture* loadMaterialTextures(aiMaterial* mat, aiTextureType type) {
 			
-				OGLTexture* texture;
+				OGLTexture* texture=nullptr;
 				aiString str;
-			
+
 					if (mat->GetTextureCount(type)>0) {
-						//todo:check 0
-						mat->GetTexture(type, 1, &str);
-						texture= (OGLTexture*)OGLTexture::RGBATextureFromFilename(Assets::TEXTUREDIR+str.C_Str());
+						mat->GetTexture(type, 0, &str);
+						
+						//todo:delete str.C_Str()  is null
+						std::cout << "path" << Assets::TEXTUREDIR  << str.C_Str() << std::endl;
+				
+						texture = (OGLTexture*)TextureLoader::LoadAPITexture(Assets::TEXTUREDIR + str.C_Str());
+						//texture= (OGLTexture*)OGLTexture::RGBATextureFromFilename(Assets::TEXTUREDIR+str.C_Str());
 						//OGLTexture* blackTexture= (OGLTexture*)OGLTexture::RGBATextureFromFilename(Assets::TEXTUREDIR + "blackPicture.jpg");
 					}
 					else {

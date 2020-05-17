@@ -208,7 +208,7 @@ namespace NCL {
 						//todo:delete str.C_Str()  is null
 						std::cout << "path" << Assets::TEXTUREDIR  << str.C_Str() << std::endl;
 				
-						texture = (OGLTexture*)TextureLoader::LoadAPITexture(Assets::TEXTUREDIR + str.C_Str());
+						texture = (OGLTexture*)TextureLoader::LoadAPITexture(str.C_Str());
 						//texture= (OGLTexture*)OGLTexture::RGBATextureFromFilename(Assets::TEXTUREDIR+str.C_Str());
 						//OGLTexture* blackTexture= (OGLTexture*)OGLTexture::RGBATextureFromFilename(Assets::TEXTUREDIR + "blackPicture.jpg");
 					}

@@ -16,7 +16,7 @@ uniform vec3 albedoValue;
 uniform vec3 metallicValue;
 uniform float roughnessValue;
 uniform float aoValue;
-uniform float normalValue;
+uniform float normalValue;//todo
 
 uniform sampler2D albedo_map;
 uniform sampler2D metallic_map;
@@ -38,40 +38,10 @@ out vec4 fragColor;
 
 void main(void)
 {
-	float shadow = 1.0; // New !
 	
-	if( IN . shadowProj . w > 0.0) { // New !
-		shadow = textureProj ( shadowTex , IN . shadowProj ) * 0.5f;
-	}
-
-	vec3  incident = normalize ( lightPos - IN.worldPos );
-	float lambert  = max (0.0 , dot ( incident , IN.normal )) * 0.9; 
-	
-	vec3 viewDir = normalize ( cameraPos - IN . worldPos );
-	vec3 halfDir = normalize ( incident + viewDir );
-
-	float rFactor = max (0.0 , dot ( halfDir , IN.normal ));
-	float sFactor = pow ( rFactor , 80.0 );
-	
-	vec4 albedo = vec4(1,1,1,1);
-	
-	if(hasTexture) {
-	 albedo *= texture(mainTex, IN.texCoord);
-	}
-	albedo *= texture(albedo_map, IN.texCoord);
-	albedo.rgb = pow(albedo.rgb, vec3(2.2));
-	
-	fragColor.rgb = albedo.rgb * 0.05f; //ambient
-	
-	fragColor.rgb += albedo.rgb * lightColour.rgb * lambert * shadow; //diffuse light
-	
-	fragColor.rgb += lightColour.rgb * sFactor * shadow; //specular light
-	
-	fragColor.rgb = pow(fragColor.rgb, vec3(1.0 / 2.2f));
-	
-	fragColor.a = albedo.a;
-
-fragColor.rgb= texture(albedo_map, IN.texCoord).rgb;
+vec3 normal=texture(normal_map, IN.texCoord).rgb;
+vec3 colour=texture(albedo_map, IN.texCoord).rgb;
+fragColor.rgb=  normal;
 //fragColor.rgb= vec3(0,1,1);
 //fragColor.rgb = IN.normal;
 

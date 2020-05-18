@@ -45,7 +45,7 @@ void TutorialGame::InitialiseAssets() {
 
 	//TODO:DELETE
 	//loadFunc("cube.msh"	 , &cubeMesh);
-	string modelname = "apple";
+	string modelname = "backpack";
 	testmodel = new Model(Assets::MESHDIR +modelname+".obj",0);
 
 

@@ -30,7 +30,7 @@ namespace NCL {
 		{
 
 		public:
-			
+			vector<OGLTexture*>loadedTexture;
 			vector<OGLMesh*>   meshes;
 			std::string directory;
 			bool gammaCorrection;
@@ -38,10 +38,7 @@ namespace NCL {
 			// constructor, expects a filepath to a 3D model.
 			Model(std::string const& path, bool gamma = false) : gammaCorrection(gamma)
 			{
-			
-				//blackTexture = (OGLTexture*)TextureLoader::LoadAPITexture("blackPicture_LI.jpg");
 				blackTexture = (OGLTexture*)TextureLoader::LoadAPITexture("blackPicture.jpg");
-				//blackTexture = (OGLTexture*)TextureLoader::LoadAPITexture("wire_113135006_Base_Color.jpg");
 				loadModel(path);
 			}
 			//TODO:texture
@@ -171,17 +168,17 @@ namespace NCL {
 				OGLTexture* diffuseMap = loadMaterialTextures(mat, aiTextureType_DIFFUSE);
 				pbrTexArry[TextureType::ALBEDO_MAP] = diffuseMap;
 
-				OGLTexture* normalMap = loadMaterialTextures(mat, aiTextureType_NORMALS);
+				OGLTexture* normalMap = loadMaterialTextures(mat, aiTextureType_HEIGHT);
 				pbrTexArry[TextureType::NORMAL_MAP] = normalMap;
 
 				OGLTexture* metallicMap = loadMaterialTextures(mat, aiTextureType_UNKNOWN);
-				pbrTexArry[TextureType::NORMAL_MAP] = metallicMap;
+				pbrTexArry[TextureType::METALLIC_MAP] = metallicMap;
 
 				OGLTexture* roughnesslMap = loadMaterialTextures(mat, aiTextureType_UNKNOWN);
-				pbrTexArry[TextureType::NORMAL_MAP] = roughnesslMap;
+				pbrTexArry[TextureType::ROUGHNESS_MAP] = roughnesslMap;
 
 				OGLTexture* aolMap = loadMaterialTextures(mat, aiTextureType_UNKNOWN);
-				pbrTexArry[TextureType::NORMAL_MAP] = aolMap;
+				pbrTexArry[TextureType::AO_MAP] = aolMap;
 
 			
 
@@ -207,13 +204,32 @@ namespace NCL {
 						
 						//todo:delete str.C_Str()  is null
 						std::cout << "path" << Assets::TEXTUREDIR  << str.C_Str() << std::endl;
-				
+
+						for (int j = 0; j< loadedTexture.size(); j++)
+						{	
+							if (str.C_Str() == loadedTexture[j]->texPath) {
+								texture = loadedTexture[j];
+								//todo:delete str.C_Str()  is null
+								std::cout << "already input" << std::endl;
+								return texture;
+							}
+						}
+
+						if (texture == nullptr)
+						{
+							texture = (OGLTexture*)TextureLoader::LoadAPITexture(str.C_Str());
+							texture->texPath = str.C_Str();
+							loadedTexture.push_back(texture);
+
+						}
+
 						texture = (OGLTexture*)TextureLoader::LoadAPITexture(str.C_Str());
-						//texture= (OGLTexture*)OGLTexture::RGBATextureFromFilename(Assets::TEXTUREDIR+str.C_Str());
-						//OGLTexture* blackTexture= (OGLTexture*)OGLTexture::RGBATextureFromFilename(Assets::TEXTUREDIR + "blackPicture.jpg");
+						return texture;
+						
 					}
 					else {
 						texture = blackTexture;
+						return texture;
 
 					}
 					return texture;

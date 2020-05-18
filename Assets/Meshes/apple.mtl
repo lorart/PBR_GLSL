@@ -11,7 +11,7 @@ Ns 128
 illum 2
 map_Ka wire_086086086_Base_Color.png 
 map_Kd wire_086086086_Base_Color.png 
-map_bump lwire_086086086_Normal_OpenGL.png 
+map_Bump wire_086086086_Normal_OpenGL.png 
 
 
 newmtl wire_113135006
@@ -24,4 +24,4 @@ Ns 128
 illum 2
 map_Ka wire_113135006_Base_Color.jpg
 map_Kd wire_113135006_Base_Color.jpg
-map_bump wire_113135006_Normal_OpenGL.png 
+map_Bump  wire_113135006_Normal_OpenGL.png 

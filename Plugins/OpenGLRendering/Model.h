@@ -34,17 +34,16 @@ namespace NCL {
 			vector<OGLMesh*>   meshes;
 			std::string directory;
 			bool gammaCorrection;
+		
 
 			// constructor, expects a filepath to a 3D model.
 			Model(std::string const& path, bool gamma = false) : gammaCorrection(gamma)
 			{
-				blackTexture = (OGLTexture*)TextureLoader::LoadAPITexture("blackPicture.jpg");
+				//blackTexture = (OGLTexture*)TextureLoader::LoadAPITexture("blackPicture.jpg");
 				loadModel(path);
 			}
-			//TODO:texture
-			
-			
-
+		
+	
 			~Model() {
 				for (int i = 0; i < meshes.size(); i++)
 				{
@@ -55,9 +54,10 @@ namespace NCL {
 
 		private:
 			// loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
-			OGLTexture* blackTexture;
+			OGLTexture* blackTexture = (OGLTexture*)TextureLoader::LoadAPITexture("blackPicture.jpg");
+		
 	
-			// blackTexture = (OGLTexture*)TextureLoader::LoadAPITexture("blackPicture_LI.jpg");
+
 		
 			void loadModel(std::string const& path)
 			{

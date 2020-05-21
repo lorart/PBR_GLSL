@@ -45,7 +45,7 @@ void TutorialGame::InitialiseAssets() {
 
 	//TODO:DELETE
 	//loadFunc("cube.msh"	 , &cubeMesh);
-	string modelname = "backpack";
+	string modelname = "apple";
 	testmodel = new Model(Assets::MESHDIR +modelname+".obj",0);
 
 
@@ -328,7 +328,9 @@ void TutorialGame::AddModelToWorld(Model* model,const Vector3& position, Vector3
 		if (ispbr)
 		{
 			
-			modelObject->SetRenderObject(new RenderObject(&modelObject->GetTransform(), model->meshes[i], model->meshes[i]->material, basicShader,true));
+		//	modelObject->SetRenderObject(new RenderObject(&modelObject->GetTransform(), model->meshes[i], model->meshes[i]->material, basicShader,true));
+			modelObject->SetRenderObject(new RenderObject(&modelObject->GetTransform(), model->meshes[i], model->meshes[i]->material, 
+				model->meshes[i]->material->matShader, true));
 		} 
 		else
 		{

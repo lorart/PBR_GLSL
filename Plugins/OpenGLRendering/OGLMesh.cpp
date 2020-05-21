@@ -69,6 +69,7 @@ OGLMesh::OGLMesh(vector<Vertex> vertices, vector<unsigned int> indices, OGLMater
 	this->vertices = vertices;
 	this->indices = indices;
 	this->material = material;
+	
 	MeshGeometry::indices = indices;
 
 

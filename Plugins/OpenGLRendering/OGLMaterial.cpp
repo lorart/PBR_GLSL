@@ -1,8 +1,7 @@
 #include "OGLMaterial.h"
 
-NCL::Rendering::OGLMaterial::OGLMaterial(std::vector<OGLTexture*> pbrTexArry,
-	Vector3 albedoValue, Vector3 normalValue, int metallicValue,
-	int roughnessValue, int aoValue)
+NCL::Rendering::OGLMaterial::OGLMaterial(std::vector<OGLTexture*> pbrTexArry, Vector3 albedoValue, 
+	Vector3 normalValue, int metallicValue, int roughnessValue)
 {
 	this->pbrTexArry = pbrTexArry;
 	this->albedoValue = albedoValue;
@@ -10,9 +9,11 @@ NCL::Rendering::OGLMaterial::OGLMaterial(std::vector<OGLTexture*> pbrTexArry,
 	this->metallicValue = metallicValue;
 	this->roughnessValue = roughnessValue;
 	this->aoValue = aoValue;
+	this->matShader = new OGLShader("PBR_Vert.glsl", "PBR_Frag.glsl");
 
 }
 NCL::Rendering::OGLMaterial::OGLMaterial(std::vector<OGLTexture*> pbrTexArry
+
 	)
 {
 	this->pbrTexArry = pbrTexArry;
@@ -21,10 +22,12 @@ NCL::Rendering::OGLMaterial::OGLMaterial(std::vector<OGLTexture*> pbrTexArry
 	this->metallicValue = 0;
 	this->roughnessValue = 0;
 	this->aoValue = 0;
+	this->matShader = new OGLShader("PBR_Vert.glsl", "PBR_Frag.glsl");
 
 }
 
 NCL::Rendering::OGLMaterial::~OGLMaterial()
 {
+	delete matShader;
 
 }

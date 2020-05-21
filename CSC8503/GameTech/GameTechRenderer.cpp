@@ -153,7 +153,7 @@ void GameTechRenderer::RenderCamera() {
 		OGLShader* shader = (OGLShader*)(*i).GetShader();
 		BindShader(shader);
 		//todo:why
-		//if (activeShader != shader) {
+		if (activeShader != shader) {
 			if ((*i).GetIsPBR()) {
 				//TODO: 
 
@@ -225,10 +225,9 @@ void GameTechRenderer::RenderCamera() {
 			int shadowTexLocation = glGetUniformLocation(shader->GetProgramID(), "shadowTex");
 			glUniform1i(shadowTexLocation, 1);
 			activeShader = shader;
-		//}
+		}
 
-		//textureRelate
-		//?
+		
 		Matrix4 modelMatrix = (*i).GetTransform()->GetWorldMatrix();
 		glUniformMatrix4fv(modelLocation, 1, false, (float*)&modelMatrix);
 
@@ -252,7 +251,7 @@ void GameTechRenderer::RenderCamera() {
 		//todo::check
 		glActiveTexture(GL_TEXTURE0);
 	}
-	//}
+	
 }
 	
 

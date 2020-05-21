@@ -2,13 +2,14 @@
 #include <vector>
 #include "../../Common/MeshGeometry.h"
 #include "..\..\Plugins\OpenGLRendering\OGLTexture.h"
+#include "..\..\Plugins\OpenGLRendering\OGLShader.h"
 
 namespace NCL {
 	namespace Rendering {
 		class OGLMaterial
 		{
 		public:
-			OGLMaterial(std::vector<OGLTexture*> pbrTexArry, Vector3 albedoValue, Vector3 normalValue, int metallicValue, int roughnessValue, int aoValue);
+			OGLMaterial(std::vector<OGLTexture*> pbrTexArry, Vector3 albedoValue, Vector3 normalValue, int metallicValue, int roughnessValue);
 			OGLMaterial(std::vector<OGLTexture*> pbrTexArry);
 			~OGLMaterial();
 			std::vector<OGLTexture*> pbrTexArry;
@@ -17,6 +18,7 @@ namespace NCL {
 			int metallicValue = 0;
 			int roughnessValue = 0;
 			int aoValue = 0;
+			OGLShader* matShader;
 		};
 	}
 }

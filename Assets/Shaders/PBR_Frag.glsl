@@ -41,7 +41,8 @@ void main(void)
 	
 vec3 normal=texture(normal_map, IN.texCoord).rgb;
 vec3 colour=texture(albedo_map, IN.texCoord).rgb;
-fragColor.rgb=  normal;
+
+fragColor.rgb= lightColour.rgb;
 //fragColor.rgb= vec3(0,1,1);
 //fragColor.rgb = IN.normal;
 

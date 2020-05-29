@@ -27,7 +27,7 @@ NCL::Rendering::OGLMaterial::OGLMaterial(std::vector<OGLTexture*> pbrTexArry
 }
 
 NCL::Rendering::OGLMaterial::~OGLMaterial()
-{
+{ 
 	delete matShader;
 
 }

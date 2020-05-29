@@ -4,6 +4,7 @@
 #include "../../Plugins/OpenGLRendering/Model.h"
 
 
+
 namespace NCL {
 	namespace CSC8503 {
 		class TutorialGame		{
@@ -37,7 +38,7 @@ namespace NCL {
 			void LockedObjectMovement();
 			void LockedCameraMovement();
 
-			
+			OGLLight* AddLightToWorld(Vector4 lightColour, float lightRadius, Vector3 lightPosition);
 			void AddModelToWorld(Model* model, const Vector3& position, Vector3 dimensions, bool ispbr);
 
 			//TODO:DELETE

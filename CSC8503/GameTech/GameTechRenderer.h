@@ -4,6 +4,7 @@
 #include "../../Plugins/OpenGLRendering/OGLTexture.h"
 #include "../../Plugins/OpenGLRendering/OGLMesh.h"
 #include "../CSC8503Common/GameWorld.h"
+#include "../../Plugins/OpenGLRendering/OGLLight.h"
 
 namespace NCL {
 	class Maths::Vector3;
@@ -15,6 +16,8 @@ namespace NCL {
 		public:
 			GameTechRenderer(GameWorld& world);
 			~GameTechRenderer();
+			vector<OGLLight*> lightArry;
+
 
 		protected:
 			void RenderFrame()	override;
@@ -38,10 +41,7 @@ namespace NCL {
 			GLuint		shadowFBO;
 			Matrix4     shadowMatrix;
 
-			Vector4		lightColour;
-			float		lightRadius;
-			Vector3		lightPosition;
-
+			
 
 
 

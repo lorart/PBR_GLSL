@@ -53,6 +53,8 @@ void TutorialGame::InitialiseAssets() {
 	basicTex	= (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
 	basicShader = new OGLShader("PBR_Vert.glsl", "PBR_Frag.glsl");
 
+	AddLightToWorld(Vector4(1, 1, 0, 1), 1000, Vector3(100, 100, 100));
+
 	InitCamera();
 	InitWorld();
 }
@@ -64,6 +66,7 @@ TutorialGame::~TutorialGame()	{
 
 	delete basicTex;
 	delete basicShader;
+	
 #pragma region
 	//delete physics;
 #pragma endregion physic
@@ -328,7 +331,7 @@ void TutorialGame::AddModelToWorld(Model* model,const Vector3& position, Vector3
 		if (ispbr)
 		{
 			
-		//	modelObject->SetRenderObject(new RenderObject(&modelObject->GetTransform(), model->meshes[i], model->meshes[i]->material, basicShader,true));
+		
 			modelObject->SetRenderObject(new RenderObject(&modelObject->GetTransform(), model->meshes[i], model->meshes[i]->material, 
 				model->meshes[i]->material->matShader, true));
 		} 
@@ -369,4 +372,10 @@ GameObject* TutorialGame::AddCubeToWorld(const Vector3& position, Vector3 dimens
 	return cube;
 }
 
+OGLLight* NCL::CSC8503::TutorialGame::AddLightToWorld(Vector4 lightColour, float lightRadius, Vector3 lightPosition)
+{
+	OGLLight* light = new OGLLight(lightColour, lightRadius, lightPosition);
+	renderer->lightArry.push_back(light);
+	return light;
+}
 

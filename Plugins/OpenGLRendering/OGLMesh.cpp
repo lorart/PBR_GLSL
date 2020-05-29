@@ -50,6 +50,8 @@ OGLMesh::OGLMesh(vector<Vertex> vertices, vector<unsigned int> indices)  {
 	this->indices = indices;
 	MeshGeometry::indices = indices;
 	
+	
+	
 
 
 	// now that we have all the required data, set the vertex buffers and its attribute pointers.
@@ -132,50 +134,56 @@ void OGLMesh::UploadToGPU() {
 		// vertex texture coords
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
-		//// vertex tangent
-		//glEnableVertexAttribArray(3);
-		//glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
-		//// vertex bitangent
-		//glEnableVertexAttribArray(4);
-		//glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
+		//todo:test
+		// vertex tangent
+		glEnableVertexAttribArray(4);
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
+		// vertex bitangent
+		glEnableVertexAttribArray(5);
+		glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
 	}
 	else{
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
+		glGenVertexArrays(1, &vao);
+		glBindVertexArray(vao);
 
-	int numVertices = GetVertexCount();
-	int numIndices	= GetIndexCount();
+		int numVertices = GetVertexCount();
+		int numIndices	= GetIndexCount();
 
-	//Buffer vertex data
-	if (!GetPositionData().empty()) {
-		CreateVertexBuffer(buffers[VERTEX_BUFFER], numVertices * sizeof(Vector3), (char*)GetPositionData().data());
-		BindVertexAttribute(VERTEX_BUFFER, buffers[VERTEX_BUFFER], VERTEX_BUFFER, 3, sizeof(Vector3), 0);
-	}
+		//Buffer vertex data
+		if (!GetPositionData().empty()) {
+			CreateVertexBuffer(buffers[VERTEX_BUFFER], numVertices * sizeof(Vector3), (char*)GetPositionData().data());
+			BindVertexAttribute(VERTEX_BUFFER, buffers[VERTEX_BUFFER], VERTEX_BUFFER, 3, sizeof(Vector3), 0);
+		}
 
-	//if (!GetColourData().empty()) {	//buffer colour data
-	//	CreateVertexBuffer(buffers[COLOUR_BUFFER], numVertices * sizeof(Vector4), (char*)GetColourData().data());
-	//	BindVertexAttribute(COLOUR_BUFFER, buffers[COLOUR_BUFFER], COLOUR_BUFFER, 4, sizeof(Vector4), 0);
-	//}
-	if (!GetTextureCoordData().empty()) {	//Buffer texture data
-		CreateVertexBuffer(buffers[TEXTURE_BUFFER], numVertices * sizeof(Vector2), (char*)GetTextureCoordData().data());
-		BindVertexAttribute(TEXTURE_BUFFER, buffers[TEXTURE_BUFFER], TEXTURE_BUFFER, 2, sizeof(Vector2), 0);
-	}
+		//if (!GetColourData().empty()) {	//buffer colour data
+		//	CreateVertexBuffer(buffers[COLOUR_BUFFER], numVertices * sizeof(Vector4), (char*)GetColourData().data());
+		//	BindVertexAttribute(COLOUR_BUFFER, buffers[COLOUR_BUFFER], COLOUR_BUFFER, 4, sizeof(Vector4), 0);
+		//}
+		if (!GetTextureCoordData().empty()) {	//Buffer texture data
+			CreateVertexBuffer(buffers[TEXTURE_BUFFER], numVertices * sizeof(Vector2), (char*)GetTextureCoordData().data());
+			BindVertexAttribute(TEXTURE_BUFFER, buffers[TEXTURE_BUFFER], TEXTURE_BUFFER, 2, sizeof(Vector2), 0);
+		}
 
-	if (!GetNormalData().empty()) {	//Buffer normal data
-		CreateVertexBuffer(buffers[NORMAL_BUFFER], numVertices * sizeof(Vector3), (char*)GetNormalData().data());
-		BindVertexAttribute(NORMAL_BUFFER, buffers[NORMAL_BUFFER], NORMAL_BUFFER, 3, sizeof(Vector3), 0);
-	}
+		if (!GetNormalData().empty()) {	//Buffer normal data
+			CreateVertexBuffer(buffers[NORMAL_BUFFER], numVertices * sizeof(Vector3), (char*)GetNormalData().data());
+			BindVertexAttribute(NORMAL_BUFFER, buffers[NORMAL_BUFFER], NORMAL_BUFFER, 3, sizeof(Vector3), 0);
+		}
 
-	if (!GetTangentData().empty()) {	//Buffer tangent data
-		CreateVertexBuffer(buffers[TANGENT_BUFFER], numVertices * sizeof(Vector3), (char*)GetTangentData().data());
-		BindVertexAttribute(TANGENT_BUFFER, buffers[TANGENT_BUFFER], TANGENT_BUFFER, 3, sizeof(Vector3), 0);
-	}
+		if (!GetTangentData().empty()) {	//Buffer tangent data
+			CreateVertexBuffer(buffers[TANGENT_BUFFER], numVertices * sizeof(Vector3), (char*)GetTangentData().data());
+			BindVertexAttribute(TANGENT_BUFFER, buffers[TANGENT_BUFFER], TANGENT_BUFFER, 3, sizeof(Vector3), 0);
+		}
+		if (!GetBitangentData().empty()) {	//Buffer tangent data
+			CreateVertexBuffer(buffers[BITANGENT_BUFFER], numVertices * sizeof(Vector3), (char*)GetBitangentData().data());
+			BindVertexAttribute(BITANGENT_BUFFER, buffers[BITANGENT_BUFFER], BITANGENT_BUFFER, 3, sizeof(Vector3), 0);
+		}
 
-	if (!GetIndexData().empty()) {		//buffer index data
-		glGenBuffers(1, &buffers[INDEX_BUFFER]);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[INDEX_BUFFER]);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(GLuint), (int*)GetIndexData().data(), GL_STATIC_DRAW);
-	}
+
+		if (!GetIndexData().empty()) {		//buffer index data
+			glGenBuffers(1, &buffers[INDEX_BUFFER]);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[INDEX_BUFFER]);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(GLuint), (int*)GetIndexData().data(), GL_STATIC_DRAW);
+		}
 	}
 	glBindBuffer(GL_ARRAY_BUFFER, 0);//new
 

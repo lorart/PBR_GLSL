@@ -49,6 +49,7 @@ namespace NCL {
 		const vector<Vector4>&		GetColourData()			const { return colours;		}
 		const vector<Vector3>&		GetNormalData()			const { return normals;		}
 		const vector<Vector3>&		GetTangentData()		const { return tangents;	}
+		const vector<Vector3>&		GetBitangentData()		const { return bitangents; }
 		const vector<unsigned int>& GetIndexData()			const { return indices;		}
 
 		void SetVertexPositions(const vector<Vector3>& newVerts);
@@ -57,6 +58,7 @@ namespace NCL {
 		void SetVertexColours(const vector<Vector4>& newColours);
 		void SetVertexNormals(const vector<Vector3>& newNorms);
 		void SetVertexTangents(const vector<Vector3>& newTans);
+		void SetVertexBitangents(const vector<Vector3>& newBitans);
 		void SetVertexIndices(const vector<unsigned int>& newIndices);
 
 
@@ -78,6 +80,7 @@ namespace NCL {
 		vector<Vector4>		colours;
 		vector<Vector3>		normals;
 		vector<Vector3>		tangents;
+		vector<Vector3>		bitangents;
 		vector<unsigned int>	indices;
 	};
 }

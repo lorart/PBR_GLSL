@@ -187,3 +187,8 @@ void MeshGeometry::SetVertexTangents(const vector<Vector3>& newTans) {
 void MeshGeometry::SetVertexIndices(const vector<unsigned int>& newIndices) {
 	indices = newIndices;
 }
+
+void NCL::MeshGeometry::SetVertexBitangents(const vector<Vector3>& newBitans)
+{
+	bitangents = newBitans;
+}

@@ -34,9 +34,10 @@ namespace NCL {
 
 			bool SelectObject();
 			void MoveSelectedObject();
-			void DebugObjectMovement();
+			//void DebugObjectMovement();
 			void LockedObjectMovement();
 			void LockedCameraMovement();
+			void LightMovement();
 
 			OGLLight* AddLightToWorld(Vector4 lightColour, float lightRadius, Vector3 lightPosition);
 			void AddModelToWorld(Model* model, const Vector3& position, Vector3 dimensions, bool ispbr);
@@ -70,6 +71,10 @@ namespace NCL {
 			void LockCameraToObject(GameObject* o) {
 				lockedObject = o;
 			}
+
+			string basicFragName;
+			string basicVertName;
+
 		};
 	}
 }

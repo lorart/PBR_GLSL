@@ -51,9 +51,12 @@ void TutorialGame::InitialiseAssets() {
 
 
 	basicTex	= (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
-	basicShader = new OGLShader("PBR_Vert.glsl", "PBR_Frag.glsl");
+	//basicShader = new OGLShader("PBR_Vert.glsl", "PBR_Frag.glsl");
+	basicVertName = "Feng_Vert.glsl";
+	basicFragName = "Feng_Frag.glsl";
+	basicShader = new OGLShader(basicVertName, basicFragName);
 
-	AddLightToWorld(Vector4(1, 1, 0, 1), 1000, Vector3(100, 100, 100));
+	
 
 	InitCamera();
 	InitWorld();
@@ -104,43 +107,45 @@ void TutorialGame::UpdateGame(float dt) {
 }
 
 void TutorialGame::UpdateKeys() {
-	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F1)) {
-		InitWorld(); //We can reset the simulation at any time with F1
-		selectionObject = nullptr;
-	}
+	//if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F1)) {
+	//	InitWorld(); //We can reset the simulation at any time with F1
+	//	selectionObject = nullptr;
+	//}
 
-	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F2)) {
-		InitCamera(); //F2 will reset the camera to a specific default place
-	}
+	//if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F2)) {
+	//	InitCamera(); //F2 will reset the camera to a specific default place
+	//}
 
-	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::G)) {
-		useGravity = !useGravity; //Toggle gravity!
-		physics->UseGravity(useGravity);
-	}
-	//Running certain physics updates in a consistent order might cause some
-	//bias in the calculations - the same objects might keep 'winning' the constraint
-	//allowing the other one to stretch too much etc. Shuffling the order so that it
-	//is random every frame can help reduce such bias.
-	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F9)) {
-		world->ShuffleConstraints(true);
-	}
-	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F10)) {
-		world->ShuffleConstraints(false);
-	}
+	//if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::G)) {
+	//	useGravity = !useGravity; //Toggle gravity!
+	//	physics->UseGravity(useGravity);
+	//}
+	////Running certain physics updates in a consistent order might cause some
+	////bias in the calculations - the same objects might keep 'winning' the constraint
+	////allowing the other one to stretch too much etc. Shuffling the order so that it
+	////is random every frame can help reduce such bias.
+	//if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F9)) {
+	//	world->ShuffleConstraints(true);
+	//}
+	//if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F10)) {
+	//	world->ShuffleConstraints(false);
+	//}
 
-	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F7)) {
-		world->ShuffleObjects(true);
-	}
-	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F8)) {
-		world->ShuffleObjects(false);
-	}
+	//if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F7)) {
+	//	world->ShuffleObjects(true);
+	//}
+	//if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F8)) {
+	//	world->ShuffleObjects(false);
+	//}
 
 	if (lockedObject) {
 		LockedObjectMovement();
 	}
 	else {
-		DebugObjectMovement();
+		//DebugObjectMovement();
 	}
+	LightMovement();
+	
 }
 
 void TutorialGame::LockedObjectMovement() {
@@ -189,45 +194,65 @@ void  TutorialGame::LockedCameraMovement() {
 		world->GetMainCamera()->SetYaw(angles.y);
 	}
 }
-
-
-void TutorialGame::DebugObjectMovement() {
-//If we've selected an object, we can manipulate it with some key presses
-	if (inSelectionMode && selectionObject) {
-		//Twist the selected object!
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::LEFT)) {
-			selectionObject->GetPhysicsObject()->AddTorque(Vector3(-10, 0, 0));
+void NCL::CSC8503::TutorialGame::LightMovement()
+{//todo:only move one light
+	if (renderer->lightArry.size() > 0) {
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::J)) {
+			renderer->lightArry[0]->lightPosition = renderer->lightArry[0]->lightPosition+Vector3(0,0,-10);
 		}
 
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
-			selectionObject->GetPhysicsObject()->AddTorque(Vector3(10, 0, 0));
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::K)) {
+			renderer->lightArry[0]->lightPosition = renderer->lightArry[0]->lightPosition + Vector3(10, 0,0);
 		}
 
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM7)) {
-			selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, 10, 0));
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::L)) {
+			renderer->lightArry[0]->lightPosition = renderer->lightArry[0]->lightPosition + Vector3(0, 0, 10);
 		}
 
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM8)) {
-			selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, -10, 0));
-		}
-
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
-			selectionObject->GetPhysicsObject()->AddTorque(Vector3(10, 0, 0));
-		}
-
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::UP)) {
-			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 0, -10));
-		}
-
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::DOWN)) {
-			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 0, 10));
-		}
-
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM5)) {
-			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, -10, 0));
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::I)) {
+			renderer->lightArry[0]->lightPosition = renderer->lightArry[0]->lightPosition + Vector3(-10, 0, 0);
 		}
 	}
 }
+
+
+//void TutorialGame::DebugObjectMovement() {
+////If we've selected an object, we can manipulate it with some key presses
+//	if (inSelectionMode && selectionObject) {
+//		//Twist the selected object!
+//		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::LEFT)) {
+//			selectionObject->GetPhysicsObject()->AddTorque(Vector3(-10, 0, 0));
+//		}
+//
+//		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
+//			selectionObject->GetPhysicsObject()->AddTorque(Vector3(10, 0, 0));
+//		}
+//
+//		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM7)) {
+//			selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, 10, 0));
+//		}
+//
+//		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM8)) {
+//			selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, -10, 0));
+//		}
+//
+//		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
+//			selectionObject->GetPhysicsObject()->AddTorque(Vector3(10, 0, 0));
+//		}
+//
+//		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::UP)) {
+//			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 0, -10));
+//		}
+//
+//		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::DOWN)) {
+//			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 0, 10));
+//		}
+//
+//		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM5)) {
+//			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, -10, 0));
+//		}
+//	}
+//}
 
 /*
 
@@ -312,6 +337,7 @@ void TutorialGame::InitWorld() {
 	//AddCubeToWorld(Vector3(0, 0, 0), Vector3(10, 10, 10), 0);
 	bool isPBR=true;
 	AddModelToWorld(testmodel, Vector3(0, 0, 0), Vector3(10, 10, 10), isPBR);
+	AddLightToWorld(Vector4(1, 1, 0.6, 1), 500, Vector3(150, -150, -150));
 	//physics->Clear();
 
 }
@@ -331,7 +357,7 @@ void TutorialGame::AddModelToWorld(Model* model,const Vector3& position, Vector3
 		if (ispbr)
 		{
 			
-		
+			model->meshes[i]->material->matShader = new OGLShader(basicVertName, basicFragName);
 			modelObject->SetRenderObject(new RenderObject(&modelObject->GetTransform(), model->meshes[i], model->meshes[i]->material, 
 				model->meshes[i]->material->matShader, true));
 		} 
@@ -371,6 +397,8 @@ GameObject* TutorialGame::AddCubeToWorld(const Vector3& position, Vector3 dimens
 
 	return cube;
 }
+
+
 
 OGLLight* NCL::CSC8503::TutorialGame::AddLightToWorld(Vector4 lightColour, float lightRadius, Vector3 lightPosition)
 {

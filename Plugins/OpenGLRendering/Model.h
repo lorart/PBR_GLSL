@@ -102,8 +102,7 @@ namespace NCL {
 
 			OGLMesh* processMesh(aiMesh* mesh, const aiScene* scene)
 			{
-				//TODO:delete
-				std::cout << "Process Mesh!" << std::endl;
+				
 				// data to fill
 				vector<Vertex> vertices;
 				vector<unsigned int> indices;

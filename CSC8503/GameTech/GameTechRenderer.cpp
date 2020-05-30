@@ -268,7 +268,7 @@ void GameTechRenderer::RenderCamera() {
 		BindMesh((*i).GetMesh());
 		DrawBoundMesh();
 		//todo::check
-		glActiveTexture(GL_TEXTURE0);
+	//	glActiveTexture(GL_TEXTURE0);
 	}
 	
 }

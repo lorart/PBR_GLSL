@@ -68,7 +68,7 @@ vec3 colour = (diffuse.rgb * lightColour.rgb);
 	fragColor = vec4(colour * atten * lambert, 1);
 	fragColor.rgb += (diffuse.rgb * lightColour.rgb) * 0.1;
 	fragColor*=1.1;
-	//fragColor.rgb=N ;
+	fragColor.rgb=IN . normal;
 
 
 }

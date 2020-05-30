@@ -164,19 +164,19 @@ void OGLMesh::UploadToGPU() {
 			BindVertexAttribute(TEXTURE_BUFFER, buffers[TEXTURE_BUFFER], TEXTURE_BUFFER, 2, sizeof(Vector2), 0);
 		}
 
-		if (!GetNormalData().empty()) {	//Buffer normal data
-			CreateVertexBuffer(buffers[NORMAL_BUFFER], numVertices * sizeof(Vector3), (char*)GetNormalData().data());
-			BindVertexAttribute(NORMAL_BUFFER, buffers[NORMAL_BUFFER], NORMAL_BUFFER, 3, sizeof(Vector3), 0);
-		}
+		//if (!GetNormalData().empty()) {	//Buffer normal data
+		//	CreateVertexBuffer(buffers[NORMAL_BUFFER], numVertices * sizeof(Vector3), (char*)GetNormalData().data());
+		//	BindVertexAttribute(NORMAL_BUFFER, buffers[NORMAL_BUFFER], NORMAL_BUFFER, 3, sizeof(Vector3), 0);
+		//}
 
-		if (!GetTangentData().empty()) {	//Buffer tangent data
-			CreateVertexBuffer(buffers[TANGENT_BUFFER], numVertices * sizeof(Vector3), (char*)GetTangentData().data());
-			BindVertexAttribute(TANGENT_BUFFER, buffers[TANGENT_BUFFER], TANGENT_BUFFER, 3, sizeof(Vector3), 0);
-		}
-		if (!GetBitangentData().empty()) {	//Buffer tangent data
-			CreateVertexBuffer(buffers[BITANGENT_BUFFER], numVertices * sizeof(Vector3), (char*)GetBitangentData().data());
-			BindVertexAttribute(BITANGENT_BUFFER, buffers[BITANGENT_BUFFER], BITANGENT_BUFFER, 3, sizeof(Vector3), 0);
-		}
+		//if (!GetTangentData().empty()) {	//Buffer tangent data
+		//	CreateVertexBuffer(buffers[TANGENT_BUFFER], numVertices * sizeof(Vector3), (char*)GetTangentData().data());
+		//	BindVertexAttribute(TANGENT_BUFFER, buffers[TANGENT_BUFFER], TANGENT_BUFFER, 3, sizeof(Vector3), 0);
+		//}
+		//if (!GetBitangentData().empty()) {	//Buffer tangent data
+		//	CreateVertexBuffer(buffers[BITANGENT_BUFFER], numVertices * sizeof(Vector3), (char*)GetBitangentData().data());
+		//	BindVertexAttribute(BITANGENT_BUFFER, buffers[BITANGENT_BUFFER], BITANGENT_BUFFER, 3, sizeof(Vector3), 0);
+		//}
 
 
 		if (!GetIndexData().empty()) {		//buffer index data

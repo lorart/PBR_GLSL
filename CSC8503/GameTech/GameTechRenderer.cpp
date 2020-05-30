@@ -225,19 +225,11 @@ void GameTechRenderer::RenderCamera() {
 			glUniformMatrix4fv(viewLocation, 1, false, (float*)&viewMatrix);
 
 
-
 			lightPosLocation = glGetUniformLocation(shader->GetProgramID(), "lightPos");
 			lightColourLocation = glGetUniformLocation(shader->GetProgramID(), "lightColour");
 			lightRadiusLocation = glGetUniformLocation(shader->GetProgramID(), "lightRadius");
 
-			//todo:check
-			if (lightArry.size()>0)
-			{
-				//todo:single light->more light
-				glUniform3fv(lightPosLocation, 1, (float*)&(lightArry[0]->lightPosition));
-				glUniform4fv(lightColourLocation, 1, (float*)&(lightArry[0]->lightColour));
-				glUniform1f(lightRadiusLocation, lightArry[0]->lightRadius);
-			}
+		
 			
 
 			int shadowTexLocation = glGetUniformLocation(shader->GetProgramID(), "shadowTex");
@@ -245,7 +237,16 @@ void GameTechRenderer::RenderCamera() {
 			activeShader = shader;
 		}
 
-		
+		//todo:check
+		if (lightArry.size() > 0)
+		{
+			//todo:single light->more light
+
+			glUniform3fv(lightPosLocation, 1, (float*)&(lightArry[0]->lightPosition));
+			glUniform4fv(lightColourLocation, 1, (float*)&(lightArry[0]->lightColour));
+			glUniform1f(lightRadiusLocation, lightArry[0]->lightRadius);
+		}
+
 		Matrix4 modelMatrix = (*i).GetTransform()->GetWorldMatrix();
 		glUniformMatrix4fv(modelLocation, 1, false, (float*)&modelMatrix);
 

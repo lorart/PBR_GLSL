@@ -35,8 +35,12 @@ void main(void)
 	OUT.shadowProj 	=  shadowMatrix * vec4 ( position,1);
 	OUT.worldPos 	= ( modelMatrix * vec4 ( position ,1)). xyz ;
 	OUT.normal 		= normalize ( normalMatrix * normalize ( normal ));
+
+
+	
 	OUT.texCoord	= texCoord;
 	OUT.tangent	=tangent;
 	OUT.binormal =binormal;
+	
 	gl_Position		= mvp * vec4(position, 1.0);
 }

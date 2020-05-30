@@ -47,14 +47,13 @@ out vec4 fragColor;
 void main(void)
 {
  mat3 TBN = mat3 ( IN . tangent , IN . binormal , IN . normal );
- vec3 N = normalize ( TBN * ( texture ( normal_map ,
- IN . texCoord ). rgb * 2.0 - 1.0));
+ vec3 N = normalize ( TBN * ( texture ( normal_map ,IN . texCoord ). rgb * 2.0 - 1.0));
 
 
 vec3 colour=texture(albedo_map, IN.texCoord).rgb;
 
-fragColor.rgb= N ;
-fragColor.rgb= vec3(0,1,1);
+fragColor.rgb= N;
+//fragColor.rgb= vec3(0,1,1);
 //fragColor.rgb = IN.normal;
 
 	//fragColor = IN.colour;

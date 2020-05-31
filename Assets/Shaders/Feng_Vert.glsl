@@ -43,8 +43,9 @@ void main(void)
 	 OUT.normal = normalize(normalMatrix * normalize(normal));
 
 	 OUT.tangent = normalize(normalMatrix * normalize(tangent));
-	OUT.binormal = normalize(normalMatrix *normalize(cross(normal, tangent)));
-	// OUT.binormal = normalize(normalMatrix *normalize(cross(vec3(0,0,1), tangent)));
+	 OUT.binormal = normalize(normalMatrix * normalize(binormal));
+	//OUT.binormal = normalize(normalMatrix *normalize(cross(normal, tangent)));
+	
 	
 	gl_Position		= mvp * vec4(position, 1.0);
 }

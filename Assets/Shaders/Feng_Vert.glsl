@@ -29,6 +29,7 @@ out Vertex
 
 void main(void)
 {
+	
 	mat4 mvp 		  = (projMatrix * viewMatrix * modelMatrix);
 	mat3 normalMatrix = transpose ( inverse ( mat3 ( modelMatrix )));
 
@@ -39,7 +40,9 @@ void main(void)
 	OUT.texCoord	= texCoord;
 	
 	
-	 OUT.normal = normalize(normalMatrix * normalize(normal));
+	 //OUT.normal = normalize(normalMatrix * normalize(normal));
+	OUT.normal=normal;
+
 	 //OUT.normal = normalize(normalMatrix * normalize(vec3(0,0,1)));
 	 OUT.tangent = normalize(normalMatrix * normalize(tangent));
 	OUT.binormal = normalize(normalMatrix *normalize(cross(normal, tangent)));

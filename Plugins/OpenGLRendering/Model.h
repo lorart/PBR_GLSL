@@ -64,6 +64,7 @@ namespace NCL {
 				// read file via ASSIMP
 				Assimp::Importer importer;
 				const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
+			//	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate  | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
 				// check for errors
 				if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
 				{
@@ -129,6 +130,8 @@ namespace NCL {
 					vector.y = mesh->mNormals[i].y;
 					vector.z = mesh->mNormals[i].z;
 					vertex.Normal = vector;
+					//todo:delete
+					std::cout << vertex.Normal << std::endl;
 					// texture coordinates
 					if (mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
 					{
@@ -140,7 +143,9 @@ namespace NCL {
 						vertex.TexCoords = vec;
 					}
 					else
+					{
 						vertex.TexCoords = Vector2(0.0f, 0.0f);
+					}
 					// tangent
 					vector.x = mesh->mTangents[i].x;
 					vector.y = mesh->mTangents[i].y;

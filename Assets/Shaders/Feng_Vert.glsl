@@ -40,10 +40,8 @@ void main(void)
 	OUT.texCoord	= texCoord;
 	
 	
-	 //OUT.normal = normalize(normalMatrix * normalize(normal));
-	OUT.normal=normal;
+	 OUT.normal = normalize(normalMatrix * normalize(normal));
 
-	 //OUT.normal = normalize(normalMatrix * normalize(vec3(0,0,1)));
 	 OUT.tangent = normalize(normalMatrix * normalize(tangent));
 	OUT.binormal = normalize(normalMatrix *normalize(cross(normal, tangent)));
 	// OUT.binormal = normalize(normalMatrix *normalize(cross(vec3(0,0,1), tangent)));

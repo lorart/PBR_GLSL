@@ -130,6 +130,7 @@ namespace NCL {
 					vector.y = mesh->mNormals[i].y;
 					vector.z = mesh->mNormals[i].z;
 					vertex.Normal = vector;
+				
 					
 					// texture coordinates
 					if (mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
@@ -150,12 +151,16 @@ namespace NCL {
 					vector.y = mesh->mTangents[i].y;
 					vector.z = mesh->mTangents[i].z;
 					vertex.Tangent = vector;
+					//todo:delete
+					std::cout << "vertex.Tangent =" << vertex.Tangent << std::endl;
 					
 					// bitangent
 					vector.x = mesh->mBitangents[i].x;
 					vector.y = mesh->mBitangents[i].y;
 					vector.z = mesh->mBitangents[i].z;
 					vertex.Bitangent = vector;
+					//todo:delete
+					//std::cout << "vertex.Bitangent =" << vertex.Bitangent << std::endl;
 
 
 					vertices.push_back(vertex);

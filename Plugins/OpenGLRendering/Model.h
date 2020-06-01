@@ -55,6 +55,7 @@ namespace NCL {
 		private:
 			// loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
 			OGLTexture* blackTexture = (OGLTexture*)TextureLoader::LoadAPITexture("blackPicture.jpg");
+			OGLTexture* normalTexture = (OGLTexture*)TextureLoader::LoadAPITexture("normalPicture.png");
 		
 	
 
@@ -151,16 +152,14 @@ namespace NCL {
 					vector.y = mesh->mTangents[i].y;
 					vector.z = mesh->mTangents[i].z;
 					vertex.Tangent = vector;
-					//todo:delete
-					std::cout << "vertex.Tangent =" << vertex.Tangent << std::endl;
+			
 					
 					// bitangent
 					vector.x = mesh->mBitangents[i].x;
 					vector.y = mesh->mBitangents[i].y;
 					vector.z = mesh->mBitangents[i].z;
 					vertex.Bitangent = vector;
-					//todo:delete
-					//std::cout << "vertex.Bitangent =" << vertex.Bitangent << std::endl;
+			
 
 
 					vertices.push_back(vertex);
@@ -179,7 +178,8 @@ namespace NCL {
 				OGLTexture* diffuseMap = loadMaterialTextures(mat, aiTextureType_DIFFUSE);
 				pbrTexArry[TextureType::ALBEDO_MAP] = diffuseMap;
 
-				OGLTexture* normalMap = loadMaterialTextures(mat, aiTextureType_HEIGHT);
+				//OGLTexture* normalMap = loadMaterialTextures(mat, aiTextureType_HEIGHT);
+				OGLTexture* normalMap = loadMaterialTextures(mat, aiTextureType_NORMALS);
 				pbrTexArry[TextureType::NORMAL_MAP] = normalMap;
 
 				OGLTexture* metallicMap = loadMaterialTextures(mat, aiTextureType_UNKNOWN);
@@ -213,14 +213,14 @@ namespace NCL {
 					if (mat->GetTextureCount(type)>0) {
 						mat->GetTexture(type, 0, &str);
 						
-						//todo:delete str.C_Str()  is null
+						//todo:delete 
 						std::cout << "path" << Assets::TEXTUREDIR  << str.C_Str() << std::endl;
 
 						for (int j = 0; j< loadedTexture.size(); j++)
 						{	
 							if (str.C_Str() == loadedTexture[j]->texPath) {
 								texture = loadedTexture[j];
-								//todo:delete str.C_Str()  is null
+								//todo:delete 
 								std::cout << "already input" << std::endl;
 								return texture;
 							}
@@ -239,7 +239,12 @@ namespace NCL {
 						
 					}
 					else {
-						texture = blackTexture;
+						if (type= aiTextureType_NORMALS) {
+							texture = normalTexture;
+						}
+						else {
+							texture = blackTexture;
+						}
 						return texture;
 
 					}

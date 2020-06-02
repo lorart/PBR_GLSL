@@ -239,7 +239,8 @@ namespace NCL {
 						
 					}
 					else {
-						if (type= aiTextureType_NORMALS) {
+						
+						if (type== aiTextureType_NORMALS) {
 							texture = normalTexture;
 						}
 						else {

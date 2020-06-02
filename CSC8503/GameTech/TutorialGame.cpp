@@ -52,8 +52,8 @@ void TutorialGame::InitialiseAssets() {
 
 	basicTex	= (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
 	//basicShader = new OGLShader("PBR_Vert.glsl", "PBR_Frag.glsl");
-	basicVertName = "Feng_Vert.glsl";
-	basicFragName = "Feng_Frag.glsl";
+	basicVertName = "PBR_Vert.glsl";
+	basicFragName = "PBR_Frag.glsl";
 	basicShader = new OGLShader(basicVertName, basicFragName);
 
 	
@@ -66,7 +66,11 @@ TutorialGame::~TutorialGame()	{
 	delete cubeMesh;
 	
 	delete testmodel;
-
+	for (auto& i:testShaderModelVector)
+	{
+		delete i;
+	}
+	delete sphere;
 	delete basicTex;
 	delete basicShader;
 	
@@ -336,8 +340,10 @@ void TutorialGame::InitWorld() {
 	world->ClearAndErase();
 	//AddCubeToWorld(Vector3(0, 0, 0), Vector3(10, 10, 10), 0);
 	bool isPBR=true;
-	AddModelToWorld(testmodel, Vector3(0, 0, 0), Vector3(10, 10, 10), isPBR);
-	AddLightToWorld(Vector4(1, 1, 0.6, 1), 500, Vector3(150, -150, -150));
+	//todo:delete
+	//AddModelToWorld(testmodel, Vector3(0, 0, 0), Vector3(10, 10, 10), isPBR);
+	testShaderBySpheres();
+	AddLightToWorld(Vector4(1, 1, 0.6, 1), 500, Vector3(0, 0, 0));
 	//physics->Clear();
 
 }
@@ -405,5 +411,43 @@ OGLLight* NCL::CSC8503::TutorialGame::AddLightToWorld(Vector4 lightColour, float
 	OGLLight* light = new OGLLight(lightColour, lightRadius, lightPosition);
 	renderer->lightArry.push_back(light);
 	return light;
+}
+
+void NCL::CSC8503::TutorialGame::testShaderBySpheres()
+{
+	float tempValue = 0;
+	int length=15;
+	
+	for (int hight = 0; hight < 4; hight++)
+	{
+		 tempValue = 0;
+		for (int wide = 0; wide <= 5; wide++)
+		{
+			sphere = new Model(Assets::MESHDIR + "sphere" + ".obj", 0);
+			testShaderModelVector.push_back(sphere);
+			tempValue =wide*(1.0 /5.0);
+			AddModelToWorld(sphere, Vector3(-hight * length, wide * length, 0), Vector3(5, 5, 5), 1);
+			if (hight == 0) {
+				sphere->meshes[0]->material->metallicValue = tempValue;
+				//todo:delete
+			//	std::cout <<"  hight="<< hight <<"  wide="<< wide <<"  tempValue=" << tempValue <<"  wide* 1 /5="<< wide * 1 / 5 <<std::endl;
+			
+			}
+			else if (hight == 1) {
+				sphere->meshes[0]->material->roughnessValue= tempValue;
+				//std::cout << "  hight=" << hight << "  wide=" << wide << "  tempValue=" << tempValue << "  wide* 1 /5=" << wide * 1 / 5 << std::endl;
+			
+			}
+			else if (hight == 2) {
+				sphere->meshes[0]->material->aoValue = tempValue;
+			}
+			else if (hight == 3) {
+				sphere->meshes[0]->material->albedoValue =Vector3(tempValue, tempValue, tempValue);
+
+			}
+		}
+	}
+	
+
 }
 

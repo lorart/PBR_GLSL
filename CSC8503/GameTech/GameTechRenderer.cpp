@@ -188,17 +188,13 @@ void GameTechRenderer::RenderCamera() {
 					BindTextureToShader(tempAO, "ao_map", 4);
 				}
 
-				albedoValueLocation = glGetUniformLocation(shader->GetProgramID(), "albedoValue");
-				normalValueLocation = glGetUniformLocation(shader->GetProgramID(), "normalValue");
-				metallicValueLocation = glGetUniformLocation(shader->GetProgramID(), "metallicValue");
-				roughnessValueLocation = glGetUniformLocation(shader->GetProgramID(), "roughnessValue");
-				aoValueLocation = glGetUniformLocation(shader->GetProgramID(), "aoValue");
+		
 
-				glUniform3fv(albedoValueLocation, 1, (float*)&(tempMaterial->albedoValue));
-				glUniform3fv(normalValueLocation, 1, (float*)&(tempMaterial->normalValue));
-				glUniform1f(metallicValueLocation, tempMaterial->metallicValue);
-				glUniform1f(roughnessValueLocation, tempMaterial->roughnessValue);
-				glUniform1f(aoValueLocation, tempMaterial->aoValue);
+				/*	glUniform3fv(albedoValueLocation, 1, (float*)&(tempMaterial->albedoValue));
+					glUniform3fv(normalValueLocation, 1, (float*)&(tempMaterial->normalValue));
+					glUniform1f(metallicValueLocation, tempMaterial->metallicValue);
+					glUniform1f(roughnessValueLocation, tempMaterial->roughnessValue);
+					glUniform1f(aoValueLocation, tempMaterial->aoValue);*/
 
 
 			}
@@ -208,7 +204,18 @@ void GameTechRenderer::RenderCamera() {
 				hasTexLocation = glGetUniformLocation(shader->GetProgramID(), "hasTexture");
 
 			}
-
+			//todo: make it better
+			if ((*i).GetIsPBR()) {
+				albedoValueLocation = glGetUniformLocation(shader->GetProgramID(), "albedoValue");
+				metallicValueLocation = glGetUniformLocation(shader->GetProgramID(), "metallicValue");
+				roughnessValueLocation = glGetUniformLocation(shader->GetProgramID(), "roughnessValue");
+				aoValueLocation = glGetUniformLocation(shader->GetProgramID(), "aoValue");
+				auto tempMaterial = (*i).GetOGLMaterial();
+				glUniform3fv(albedoValueLocation, 1, (float*)&(tempMaterial->albedoValue));
+				glUniform1f(metallicValueLocation, tempMaterial->metallicValue);
+				glUniform1f(roughnessValueLocation, tempMaterial->roughnessValue);
+				glUniform1f(aoValueLocation, tempMaterial->aoValue);
+			}
 
 
 			projLocation = glGetUniformLocation(shader->GetProgramID(), "projMatrix");

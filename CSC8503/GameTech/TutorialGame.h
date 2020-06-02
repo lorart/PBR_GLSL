@@ -41,6 +41,7 @@ namespace NCL {
 
 			OGLLight* AddLightToWorld(Vector4 lightColour, float lightRadius, Vector3 lightPosition);
 			void AddModelToWorld(Model* model, const Vector3& position, Vector3 dimensions, bool ispbr);
+			void testShaderBySpheres();
 
 			//TODO:DELETE
 			GameObject* AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f);
@@ -62,6 +63,8 @@ namespace NCL {
 			//TODO:DELETE
     		OGLMesh*	cubeMesh	= nullptr;
 			Model* testmodel = nullptr;
+			Model* sphere = nullptr;
+			vector<Model*> testShaderModelVector;
 
 			std::vector<OGLTexture*> modelPbrTex;
 

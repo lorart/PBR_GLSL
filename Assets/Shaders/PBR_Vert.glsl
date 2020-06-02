@@ -29,18 +29,23 @@ out Vertex
 
 void main(void)
 {
+	
 	mat4 mvp 		  = (projMatrix * viewMatrix * modelMatrix);
 	mat3 normalMatrix = transpose ( inverse ( mat3 ( modelMatrix )));
 
 	OUT.shadowProj 	=  shadowMatrix * vec4 ( position,1);
 	OUT.worldPos 	= ( modelMatrix * vec4 ( position ,1)). xyz ;
-	OUT.normal 		= normalize ( normalMatrix * normalize ( normal ));
-
 
 	
 	OUT.texCoord	= texCoord;
-	OUT.tangent	=tangent;
-	OUT.binormal =binormal;
+	
+	
+	 OUT.normal = normalize(normalMatrix * normalize(normal));
+
+	 OUT.tangent = normalize(normalMatrix * normalize(tangent));
+	 OUT.binormal = normalize(normalMatrix * normalize(binormal));
+	//OUT.binormal = normalize(normalMatrix *normalize(cross(normal, tangent)));
+	
 	
 	gl_Position		= mvp * vec4(position, 1.0);
 }

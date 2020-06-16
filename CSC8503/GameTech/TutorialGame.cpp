@@ -45,7 +45,7 @@ void TutorialGame::InitialiseAssets() {
 
 	//TODO:DELETE
 	//loadFunc("cube.msh"	 , &cubeMesh);
-	string modelname = "apple";
+	string modelname = "bunny";
 	testmodel = new Model(Assets::MESHDIR +modelname+".obj",0);
 
 
@@ -202,19 +202,19 @@ void NCL::CSC8503::TutorialGame::LightMovement()
 {//todo:only move one light
 	if (renderer->lightArry.size() > 0) {
 		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::J)) {
-			renderer->lightArry[0]->lightPosition = renderer->lightArry[0]->lightPosition+Vector3(0,0,-10);
+			renderer->lightArry[0]->lightPosition = renderer->lightArry[0]->lightPosition+Vector3(0,0,-1);
 		}
 
 		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::K)) {
-			renderer->lightArry[0]->lightPosition = renderer->lightArry[0]->lightPosition + Vector3(10, 0,0);
+			renderer->lightArry[0]->lightPosition = renderer->lightArry[0]->lightPosition + Vector3(1, 0,0);
 		}
 
 		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::L)) {
-			renderer->lightArry[0]->lightPosition = renderer->lightArry[0]->lightPosition + Vector3(0, 0, 10);
+			renderer->lightArry[0]->lightPosition = renderer->lightArry[0]->lightPosition + Vector3(0, 0, 1);
 		}
 
 		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::I)) {
-			renderer->lightArry[0]->lightPosition = renderer->lightArry[0]->lightPosition + Vector3(-10, 0, 0);
+			renderer->lightArry[0]->lightPosition = renderer->lightArry[0]->lightPosition + Vector3(-1, 0, 0);
 		}
 	}
 }
@@ -338,12 +338,11 @@ void TutorialGame::InitCamera() {
 
 void TutorialGame::InitWorld() {
 	world->ClearAndErase();
-	//AddCubeToWorld(Vector3(0, 0, 0), Vector3(10, 10, 10), 0);
 	bool isPBR=true;
-	//todo:delete
-	//AddModelToWorld(testmodel, Vector3(0, 0, 0), Vector3(10, 10, 10), isPBR);
-	testShaderBySpheres();
-	AddLightToWorld(Vector4(1, 1, 0.6, 1), 500, Vector3(0, 0, 0));
+	//todo:mark
+	AddModelToWorld(testmodel, Vector3(0, 0, 0), Vector3(5, 5, 5), isPBR);
+	//testShaderBySpheres();
+	AddLightToWorld(Vector4(1, 1, 1, 1), 100, Vector3(0, 10, 0));
 	//physics->Clear();
 
 }
@@ -417,10 +416,12 @@ void NCL::CSC8503::TutorialGame::testShaderBySpheres()
 {
 	float tempValue = 0;
 	int length=15;
-	
+	Vector3 clolor = Vector3(0, 0, 1);
 	for (int hight = 0; hight < 4; hight++)
 	{
 		 tempValue = 0;
+
+
 		for (int wide = 0; wide <= 5; wide++)
 		{
 			sphere = new Model(Assets::MESHDIR + "sphere" + ".obj", 0);
@@ -441,10 +442,10 @@ void NCL::CSC8503::TutorialGame::testShaderBySpheres()
 			else if (hight == 2) {
 				sphere->meshes[0]->material->aoValue = tempValue;
 			}
-			else if (hight == 3) {
-				sphere->meshes[0]->material->albedoValue =Vector3(tempValue, tempValue, tempValue);
+			
+				sphere->meshes[0]->material->albedoValue = clolor;
 
-			}
+			
 		}
 	}
 	

@@ -9,15 +9,15 @@ namespace NCL {
 		class OGLMaterial
 		{
 		public:
-			OGLMaterial(std::vector<OGLTexture*> pbrTexArry, Vector3 albedoValue, Vector3 normalValue, int metallicValue, int roughnessValue);
+			OGLMaterial(std::vector<OGLTexture*> pbrTexArry, Vector3 albedoValue, Vector3 normalValue, float metallicValue, float roughnessValue);
 			OGLMaterial(std::vector<OGLTexture*> pbrTexArry);
 			~OGLMaterial();
 			std::vector<OGLTexture*> pbrTexArry;
 			Vector3 albedoValue = Vector3(0, 0, 0);
 			Vector3 normalValue = Vector3(0, 0, 0);
-			int metallicValue = 0;
-			int roughnessValue = 0;
-			int aoValue = 0;
+			float metallicValue = 0;
+			float roughnessValue = 0;
+			float aoValue = 0;
 			OGLShader* matShader;
 		};
 	}

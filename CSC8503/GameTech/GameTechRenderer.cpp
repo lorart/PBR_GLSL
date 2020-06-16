@@ -214,6 +214,8 @@ void GameTechRenderer::RenderCamera() {
 				glUniform3fv(albedoValueLocation, 1, (float*)&(tempMaterial->albedoValue));
 				glUniform1f(metallicValueLocation, tempMaterial->metallicValue);
 				glUniform1f(roughnessValueLocation, tempMaterial->roughnessValue);
+				//todo:delete
+				//std::cout << "tempMaterial->roughnessValue=" << tempMaterial->roughnessValue << std::endl;
 				glUniform1f(aoValueLocation, tempMaterial->aoValue);
 			}
 

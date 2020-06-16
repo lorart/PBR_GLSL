@@ -1,7 +1,7 @@
 #include "OGLMaterial.h"
 
 NCL::Rendering::OGLMaterial::OGLMaterial(std::vector<OGLTexture*> pbrTexArry, Vector3 albedoValue, 
-	Vector3 normalValue, int metallicValue, int roughnessValue)
+	Vector3 normalValue, float metallicValue, float roughnessValue)
 {
 	this->pbrTexArry = pbrTexArry;
 	this->albedoValue = albedoValue;

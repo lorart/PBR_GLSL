@@ -178,8 +178,8 @@ namespace NCL {
 				OGLTexture* diffuseMap = loadMaterialTextures(mat, aiTextureType_DIFFUSE);
 				pbrTexArry[TextureType::ALBEDO_MAP] = diffuseMap;
 
-				//OGLTexture* normalMap = loadMaterialTextures(mat, aiTextureType_HEIGHT);
-				OGLTexture* normalMap = loadMaterialTextures(mat, aiTextureType_NORMALS);
+				OGLTexture* normalMap = loadMaterialTextures(mat, aiTextureType_HEIGHT);
+				//OGLTexture* normalMap = loadMaterialTextures(mat, aiTextureType_NORMALS);
 				pbrTexArry[TextureType::NORMAL_MAP] = normalMap;
 
 				OGLTexture* metallicMap = loadMaterialTextures(mat, aiTextureType_UNKNOWN);
@@ -240,7 +240,7 @@ namespace NCL {
 					}
 					else {
 						
-						if (type== aiTextureType_NORMALS) {
+						if (type== aiTextureType_NORMALS|| type == aiTextureType_HEIGHT) {
 							texture = normalTexture;
 						}
 						else {

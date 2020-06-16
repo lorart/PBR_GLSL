@@ -59,10 +59,6 @@ float NoramlDistirbution_GGX(float roughnessValue,float NdotH){
 	return nom/denom;
 }
 
-float Geometry_lmplicit(float NdotL,float NdotV){
-	return NdotL*NdotV;
-}
-/*
 float Geometry_SchlickGGX(float roughnessValue,float NdotV)
 {
 	float k=(roughnessValue+1)*(roughnessValue+1)/8.0;
@@ -73,15 +69,6 @@ float Geometry_SchlickGGX(float roughnessValue,float NdotV)
 }
 
 
-float Geometry_SchlickGGX_1(float roughnessValue,float NdotV,float NdotL)
-{
-	float k=roughnessValue*roughnessValue*0.5;
-	float V= NdotV*(1-k)+k;
-	float L= NdotL*(1-k)+k;
-	return 0.25/(V*L);
-
-}
-*/
 float chiGGX(float v){
 return v>0?1:0;
 }
@@ -95,7 +82,6 @@ float Geometry_GGX(float roughnessValue,float NdotV,float HdotV)
 }
 
 
-
 vec3 Fresnel_Schlick(float metallicValue ,vec3 diffuseValue,vec3 F0,float HdotV){  //which didn't look right
 	F0=mix(F0,diffuseValue,metallicValue);
 	return F0+(1-F0)*pow((1-HdotV),5.0);    
@@ -103,8 +89,8 @@ vec3 Fresnel_Schlick(float metallicValue ,vec3 diffuseValue,vec3 F0,float HdotV)
 
 
 
-vec3 Cook_Torrance(float NorD,float Geo,vec3 Fre,float NdotV,float NdotL ){
-	vec3 nom=NorD*Geo*Fre;
+vec3 Cook_Torrance(float NorD_ggx,float Geo_ggx,vec3 Fre_SCH,float NdotV,float NdotL ){
+	vec3 nom=NorD_ggx*Geo_ggx*Fre_SCH;
 	float denom=4.0*NdotV*NdotL+0.00001;
 	return nom/denom;
 }
@@ -135,19 +121,17 @@ float NdotV=max(dot(N,viewDir),0.0);
 float HdotV=max(dot(halfDir,viewDir),0.0);
 float NdotL=max(dot(N,incident),0.0);
 
-float NorD=NoramlDistirbution_GGX(roughnessValue, NdotH);
+float NorD_ggx=NoramlDistirbution_GGX(roughnessValue, NdotH);
 
 //float Geo_ggx=Geometry_SchlickGGX( roughnessValue, NdotV);
-//float Geo_ggx= Geometry_GGX( roughnessValue, NdotV, HdotV);
-//float Geo_ggx=Geometry_SchlickGGX_1(roughnessValue,NdotV,NdotL);
-float Geo=Geometry_lmplicit(NdotL, NdotV);
+float Geo_ggx= Geometry_GGX( roughnessValue, NdotV, HdotV);
 
 //todo: get F0
 vec3 F0=vec3(0.0941, 0.0941, 0.0941);
-vec3 Fre=Fresnel_Schlick( metallicValue ,albedoValue,F0, HdotV);//?
+vec3 Fre_SCH=Fresnel_Schlick( metallicValue ,albedoValue,F0, HdotV);//?
 
-vec3 specular=Cook_Torrance( NorD,Geo, Fre, NdotV, NdotL );//strange
-
+vec3 specular=Cook_Torrance( NorD_ggx,Geo_ggx, Fre_SCH, NdotV, NdotL );//strange
+//vec3 specular=Cook_Torrance( NorD_ggx,Geo_ggx, Fre_SCH, NdotV,NdotH );
 
 float distance=length(lightPos-IN.worldPos);
 float attenuation=1.0-clamp(distance/lightRadius,0.0,1.0);
@@ -158,12 +142,10 @@ vec3 radiance=lightColour.rgb*attenuation;//ok
 //radiance=lightColour.rgb*attenuation*specular;
 
 
-vec3 ks=Fre;
+vec3 ks=Fre_SCH;
 vec3 kd=vec3(1.0)-ks;
-//ec3 kd=(vec3(1.0)-ks)*(1-metallicValue);
-//vec3 kd=(vec3(1.0)-ks)*(1-metallic);
+vec3 Lo=(kd*albedoValue/PI+specular)*radiance*NdotL;
 //vec3 Lo=(kd*albedoValue/PI+ ks*specular)*radiance*NdotL;
-vec3 colour=(kd*albedoValue+ ks*specular)*radiance;
 
 
 
@@ -171,7 +153,7 @@ vec3 colour=(kd*albedoValue+ ks*specular)*radiance;
 
 
 
-fragColor.rgb=IN . normal;
+fragColor.rgb=specular;
 
 
 }

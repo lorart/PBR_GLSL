@@ -20,6 +20,8 @@ _-_-_-_-_-_-_-""  ""
 
 #include <string>
 
+
+
 namespace NCL {
 	namespace Rendering {
 		class RendererBase;

@@ -160,6 +160,8 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\..\packages\Assimp.redist.3.0.0\build\native\Assimp.redist.targets" Condition="Exists('..\..\packages\Assimp.redist.3.0.0\build\native\Assimp.redist.targets')" />
     <Import Project="..\..\packages\Assimp.3.0.0\build\native\Assimp.targets" Condition="Exists('..\..\packages\Assimp.3.0.0\build\native\Assimp.targets')" />
+    <Import Project="..\..\packages\freeglut.redist.2.8.1.15\build\native\freeglut.redist.targets" Condition="Exists('..\..\packages\freeglut.redist.2.8.1.15\build\native\freeglut.redist.targets')" />
+    <Import Project="..\..\packages\freeglut.2.8.1.15\build\native\freeglut.targets" Condition="Exists('..\..\packages\freeglut.2.8.1.15\build\native\freeglut.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -167,5 +169,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\Assimp.redist.3.0.0\build\native\Assimp.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Assimp.redist.3.0.0\build\native\Assimp.redist.targets'))" />
     <Error Condition="!Exists('..\..\packages\Assimp.3.0.0\build\native\Assimp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Assimp.3.0.0\build\native\Assimp.targets'))" />
+    <Error Condition="!Exists('..\..\packages\freeglut.redist.2.8.1.15\build\native\freeglut.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\freeglut.redist.2.8.1.15\build\native\freeglut.redist.targets'))" />
+    <Error Condition="!Exists('..\..\packages\freeglut.2.8.1.15\build\native\freeglut.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\freeglut.2.8.1.15\build\native\freeglut.targets'))" />
   </Target>
 </Project>

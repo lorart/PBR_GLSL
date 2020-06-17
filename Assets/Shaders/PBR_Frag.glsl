@@ -62,7 +62,7 @@ float NoramlDistirbution_GGX(float roughnessValue,float NdotH){
 float Geometry_lmplicit(float NdotL,float NdotV){
 	return NdotL*NdotV;
 }
-/*
+
 float Geometry_SchlickGGX(float roughnessValue,float NdotV)
 {
 	float k=(roughnessValue+1)*(roughnessValue+1)/8.0;
@@ -71,7 +71,25 @@ float Geometry_SchlickGGX(float roughnessValue,float NdotV)
 	return nom/denom;
 
 }
+float Geometry_Smith_UE4(float roughnessValue,float NdotV)
+{
+	float a=(roughnessValue+1)/2;
+	a=a*a;
+	float k=a/2;
+	float nom= NdotV;
+	float denom= NdotV*(1-k)+k;
+	return nom/denom;
+}
+float Geometry_Smith_Disney(float roughnessValue,float NdotV)
+{
+	float a=roughnessValue/2+0.5;
+	a=a*a;
+	float nom= NdotV*2;
+	float  temp=a*a+(1-a*a)* NdotV* NdotV;
+	float denom= NdotV+sqrt(temp);
+	return nom/denom;
 
+}
 
 float Geometry_SchlickGGX_1(float roughnessValue,float NdotV,float NdotL)
 {
@@ -81,7 +99,7 @@ float Geometry_SchlickGGX_1(float roughnessValue,float NdotV,float NdotL)
 	return 0.25/(V*L);
 
 }
-*/
+
 float chiGGX(float v){
 return v>0?1:0;
 }
@@ -137,10 +155,13 @@ float NdotL=max(dot(N,incident),0.0);
 
 float NorD=NoramlDistirbution_GGX(roughnessValue, NdotH);
 
-//float Geo_ggx=Geometry_SchlickGGX( roughnessValue, NdotV);
-//float Geo_ggx= Geometry_GGX( roughnessValue, NdotV, HdotV);
-//float Geo_ggx=Geometry_SchlickGGX_1(roughnessValue,NdotV,NdotL);
-float Geo=Geometry_lmplicit(NdotL, NdotV);
+//float Geo=Geometry_SchlickGGX( roughnessValue, NdotV);
+//float Geo= Geometry_GGX( roughnessValue, NdotV, HdotV);
+//float Geo=Geometry_SchlickGGX_1(roughnessValue,NdotV,NdotL);
+//float Geo=Geometry_lmplicit(NdotL, NdotV);
+//float Geo= Geometry_Smith_UE4( roughnessValue, NdotV);
+float Geo=Geometry_Smith_Disney( roughnessValue,NdotV);
+
 
 //todo: get F0
 vec3 F0=vec3(0.0941, 0.0941, 0.0941);
@@ -171,7 +192,7 @@ vec3 colour=(kd*albedoValue+ ks*specular)*radiance;
 
 
 
-fragColor.rgb=IN . normal;
+fragColor.rgb=vec3(Geo);
 
 
 }

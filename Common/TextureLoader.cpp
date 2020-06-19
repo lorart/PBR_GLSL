@@ -42,8 +42,7 @@ bool TextureLoader::LoadTexture(const std::string& filename, char*& outData, int
 	//By default, attempt to use stb image to get this texture
 	stbi_uc *texData = stbi_load(realPath.c_str(), &width, &height, &channels, 0);
 
-	//todo: delete
-	std::cout << "texture channels" << channels << std::endl;
+	
 
 
 	if (texData) {
@@ -53,6 +52,7 @@ bool TextureLoader::LoadTexture(const std::string& filename, char*& outData, int
 	
 	return false;
 }
+
 
 void TextureLoader::RegisterTextureLoadFunction(TextureLoadFunction f, const std::string&fileExtension) {
 	fileHandlers.insert(std::make_pair(fileExtension, f));
@@ -83,4 +83,38 @@ TextureBase* TextureLoader::LoadAPITexture(const std::string&filename) {
 		return nullptr;
 	}
 	return apiFunction(filename);
+}
+
+bool NCL::TextureLoader::LoadLinearTexture(const std::string& filename, char*& outData, int& width, int& height, int& channels, int& flags)
+{
+	if (filename.empty()) {
+		return false;
+	}
+	std::string extension = GetFileExtension(filename);
+
+	auto it = fileHandlers.find(extension);
+
+	std::string realPath = Assets::TEXTUREDIR + filename;
+
+	//todo: check WHY
+	stbi_set_flip_vertically_on_load(true);
+
+	if (it != fileHandlers.end()) {
+		//There's a custom handler function for this, just use that
+		return it->second(realPath, outData, width, height, channels, flags);   //todo:check
+	}
+//stbi_loadf("newport_loft.hdr", &width, &height, &nrComponents, 0);
+	float* texData = stbi_loadf(realPath.c_str(), &width, &height, &channels, 0);
+
+	//todo: delete
+	std::cout << "linear texture channels" << channels << std::endl;
+
+
+	if (texData) {
+		outData = (char*)texData;
+		return true;
+	}
+
+	return false;
+
 }

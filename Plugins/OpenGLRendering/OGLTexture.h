@@ -27,6 +27,11 @@ namespace NCL {
 
 			static TextureBase* RGBATextureFromFilename(const std::string&name);
 
+			static TextureBase* LinerRGBATextureFromData(char* data, int width, int height, int channels);
+
+			static  TextureBase* LinerRGBATextureFromFilename(const std::string& name);
+
+
 		
 			std::string texPath;
 			GLuint GetObjectID() const	{

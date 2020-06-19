@@ -48,8 +48,8 @@ mat3 TBN = mat3 ( IN . tangent , IN . binormal , IN . normal );
 
 
 
-
-float NoramlDistirbution_GGX(float roughnessValue,float NdotH){
+/*********************************************/
+float NoramlDistirbution_GGX(float roughnessValue,float NdotH){ //trowbridge-Reitz
 
 	float roughnessValue2=roughnessValue*roughnessValue;
 	float roughnessValue4=roughnessValue2*roughnessValue2;
@@ -59,6 +59,11 @@ float NoramlDistirbution_GGX(float roughnessValue,float NdotH){
 	return nom/denom;
 }
 
+
+
+
+
+/*********************************************/
 float Geometry_lmplicit(float NdotL,float NdotV){
 	return NdotL*NdotV;
 }
@@ -113,6 +118,7 @@ float Geometry_GGX(float roughnessValue,float NdotV,float HdotV)
 }
 
 
+/*********************************************/
 
 vec3 Fresnel_Schlick(float metallicValue ,vec3 diffuseValue,vec3 F0,float HdotV){  //which didn't look right
 	F0=mix(F0,diffuseValue,metallicValue);
@@ -159,8 +165,8 @@ float NorD=NoramlDistirbution_GGX(roughnessValue, NdotH);
 //float Geo= Geometry_GGX( roughnessValue, NdotV, HdotV);
 //float Geo=Geometry_SchlickGGX_1(roughnessValue,NdotV,NdotL);
 //float Geo=Geometry_lmplicit(NdotL, NdotV);
-//float Geo= Geometry_Smith_UE4( roughnessValue, NdotV);
-float Geo=Geometry_Smith_Disney( roughnessValue,NdotV);
+float Geo= Geometry_Smith_UE4( roughnessValue, NdotV);
+//float Geo=Geometry_Smith_Disney( roughnessValue,NdotV);
 
 
 //todo: get F0
@@ -192,7 +198,8 @@ vec3 colour=(kd*albedoValue+ ks*specular)*radiance;
 
 
 
-fragColor.rgb=vec3(Geo);
+//fragColor.rgb=vec3(Geo);
+fragColor.rgb=NorD*Geo*Fre;
 
 
 }

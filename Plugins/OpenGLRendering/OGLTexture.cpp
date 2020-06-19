@@ -74,5 +74,55 @@ TextureBase* OGLTexture::RGBATextureFromFilename(const std::string&name) {
 	return glTex;
 }
 
+TextureBase* OGLTexture::LinerRGBATextureFromData(char* data, int width, int height, int channels) {
+	OGLTexture* tex = new OGLTexture();
+
+	int dataSize = width * height * channels; //This always assumes data is 1 byte per channel
+	/*
+	int sourceType = GL_RGB;
+
+	switch (channels) {
+	case 1: sourceType = GL_RED; break;
+
+	case 2: sourceType = GL_RG; break;
+	case 3: sourceType = GL_RGB; break;
+	case 4: sourceType = GL_RGBA; break;
+		//default:
+	}
+	*/
+
+	glBindTexture(GL_TEXTURE_2D, tex->texID);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGB, GL_FLOAT, data);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	return tex;
+}
+//todo::
+NCL::Rendering::TextureBase* NCL::Rendering::OGLTexture::LinerRGBATextureFromFilename(const std::string& name)
+{
+	char* texData = nullptr;
+	int width = 0;
+	int height = 0;
+	int channels = 0;
+	int flags = 0;
+	TextureLoader::LoadLinearTexture(name, texData, width, height, channels, flags);//todo:check
+
+	//todo::delete
+	std::cout << " name" << name<< " texData" <<texData<< " width" << width<< " height" << height<< "  channels" << channels<< "  flags" << flags<<std::endl;
+
+	TextureBase* glTex = LinerRGBATextureFromData(texData, width, height, channels);
+
+	free(texData);
+
+	return glTex;
+
+}
 
 

@@ -146,6 +146,8 @@
   <ItemGroup>
     <ClInclude Include="Model.h" />
     <ClInclude Include="OGLComputeShader.h" />
+    <ClInclude Include="OGLFbo.h" />
+    <ClInclude Include="OGLHdr.h" />
     <ClInclude Include="OGLLight.h" />
     <ClInclude Include="OGLMaterial.h" />
     <ClInclude Include="OGLMesh.h" />
@@ -157,6 +159,7 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="OGLComputeShader.cpp" />
+    <ClCompile Include="OGLHdr.cpp" />
     <ClCompile Include="OGLLight.cpp" />
     <ClCompile Include="OGLMaterial.cpp" />
     <ClCompile Include="OGLMesh.cpp" />

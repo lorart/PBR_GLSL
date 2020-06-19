@@ -17,7 +17,7 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	glEnable(GL_DEPTH_TEST);
 	//todo
 
-
+	//todo:check
 	shadowShader = new OGLShader("GameTechShadowVert.glsl", "GameTechShadowFrag.glsl");
 
 	glGenTextures(1, &shadowTex);

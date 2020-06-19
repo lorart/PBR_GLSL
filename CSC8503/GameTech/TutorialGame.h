@@ -2,6 +2,7 @@
 #include "GameTechRenderer.h"
 #include "../CSC8503Common/PhysicsSystem.h"
 #include "../../Plugins/OpenGLRendering/Model.h"
+#include "../../Plugins/OpenGLRendering/OGLHdr.h"
 
 
 
@@ -37,15 +38,16 @@ namespace NCL {
 			//void DebugObjectMovement();
 			void LockedObjectMovement();
 			void LockedCameraMovement();
+
 			void LightMovement();
 
 			OGLLight* AddLightToWorld(Vector4 lightColour, float lightRadius, Vector3 lightPosition);
 			void AddModelToWorld(Model* model, const Vector3& position, Vector3 dimensions, bool ispbr);
 			void testShaderBySpheres();
+			void AddHdrToWorld(OGLHdr* hdrEnvmap);
 
-			//TODO:DELETE
-			GameObject* AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f);
-		
+
+			
 
 
 			GameTechRenderer*	renderer;
@@ -60,8 +62,10 @@ namespace NCL {
 			GameObject* selectionObject = nullptr;
 			OGLTexture* basicTex = nullptr;
 			OGLShader* basicShader = nullptr;
-			//TODO:DELETE
-    		OGLMesh*	cubeMesh	= nullptr;
+			OGLHdr* hdrEnvmap= nullptr;
+			
+
+			
 			Model* testmodel = nullptr;
 			Model* sphere = nullptr;
 			vector<Model*> testShaderModelVector;

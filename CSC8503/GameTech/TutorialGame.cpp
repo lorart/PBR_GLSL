@@ -9,6 +9,8 @@
 #include "../../Plugins/OpenGLRendering/Model.h"
 #include "../../Common/Assets.h"
 
+#include "../../Plugins/OpenGLRendering/OGLHdr.h"
+
 using namespace NCL;
 using namespace CSC8503;
 
@@ -48,7 +50,7 @@ void TutorialGame::InitialiseAssets() {
 	string modelname = "bunny";
 	testmodel = new Model(Assets::MESHDIR +modelname+".obj",0);
 
-
+	
 
 	basicTex	= (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
 	//basicShader = new OGLShader("PBR_Vert.glsl", "PBR_Frag.glsl");
@@ -56,14 +58,15 @@ void TutorialGame::InitialiseAssets() {
 	basicFragName = "PBR_Frag.glsl";
 	basicShader = new OGLShader(basicVertName, basicFragName);
 
-	
+	string hdrFilename = "fireplace_1k.hdr";
+	hdrEnvmap = new OGLHdr(hdrFilename);
 
 	InitCamera();
 	InitWorld();
 }
 
 TutorialGame::~TutorialGame()	{
-	delete cubeMesh;
+
 	
 	delete testmodel;
 	for (auto& i:testShaderModelVector)
@@ -73,6 +76,7 @@ TutorialGame::~TutorialGame()	{
 	delete sphere;
 	delete basicTex;
 	delete basicShader;
+	delete hdrEnvmap;
 	
 #pragma region
 	//delete physics;
@@ -343,6 +347,7 @@ void TutorialGame::InitWorld() {
 	//AddModelToWorld(testmodel, Vector3(0, 0, 0), Vector3(5, 5, 5), isPBR);
 	testShaderBySpheres();
 	AddLightToWorld(Vector4(1, 1, 1, 1), 100, Vector3(0, 10, 0));
+	AddHdrToWorld(hdrEnvmap);
 	//physics->Clear();
 
 }
@@ -366,8 +371,7 @@ void TutorialGame::AddModelToWorld(Model* model,const Vector3& position, Vector3
 			modelObject->SetRenderObject(new RenderObject(&modelObject->GetTransform(), model->meshes[i], model->meshes[i]->material, 
 				model->meshes[i]->material->matShader, true));
 		} 
-		else
-		{
+		else {
 			modelObject->SetRenderObject(new RenderObject(&modelObject->GetTransform(), model->meshes[i], basicTex, basicShader));
 		}
 	
@@ -379,28 +383,6 @@ void TutorialGame::AddModelToWorld(Model* model,const Vector3& position, Vector3
 		world->AddGameObject(modelObject);
 	}
 
-}
-
-GameObject* TutorialGame::AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass) {
-	GameObject* cube = new GameObject();
-
-	AABBVolume* volume = new AABBVolume(dimensions);
-
-	cube->SetBoundingVolume((CollisionVolume*)volume);
-
-
-	cube->GetTransform().SetWorldPosition(position);
-	cube->GetTransform().SetWorldScale(dimensions);
-
-	cube->SetRenderObject(new RenderObject(&cube->GetTransform(), cubeMesh, basicTex, basicShader));
-	cube->SetPhysicsObject(new PhysicsObject(&cube->GetTransform(), cube->GetBoundingVolume()));
-
-	cube->GetPhysicsObject()->SetInverseMass(inverseMass);
-	cube->GetPhysicsObject()->InitCubeInertia();
-
-	world->AddGameObject(cube);
-
-	return cube;
 }
 
 
@@ -428,20 +410,11 @@ void NCL::CSC8503::TutorialGame::testShaderBySpheres()
 			testShaderModelVector.push_back(sphere);
 			tempValue =wide*(1.0 /5.0);
 			AddModelToWorld(sphere, Vector3(-hight * length, wide * length, 0), Vector3(5, 5, 5), 1);
-			if (hight == 0) {
-				sphere->meshes[0]->material->metallicValue = tempValue;
-				//todo:delete
-			//	std::cout <<"  hight="<< hight <<"  wide="<< wide <<"  tempValue=" << tempValue <<"  wide* 1 /5="<< wide * 1 / 5 <<std::endl;
 			
-			}
-			else if (hight == 1) {
+				sphere->meshes[0]->material->metallicValue = hight * (1.0 / 5.0);
+				
 				sphere->meshes[0]->material->roughnessValue= tempValue;
 				//std::cout << "  hight=" << hight << "  wide=" << wide << "  tempValue=" << tempValue << "  wide* 1 /5=" << wide * 1 / 5 << std::endl;
-			
-			}
-			else if (hight == 2) {
-				sphere->meshes[0]->material->aoValue = tempValue;
-			}
 			
 				sphere->meshes[0]->material->albedoValue = clolor;
 
@@ -449,6 +422,29 @@ void NCL::CSC8503::TutorialGame::testShaderBySpheres()
 		}
 	}
 	
+
+}
+
+void NCL::CSC8503::TutorialGame::AddHdrToWorld(OGLHdr* hdrEnvmap)
+{
+	Vector3 position=Vector3(0,0,0);
+	Vector3 dimensions= Vector3(5, 5, 5);
+	Model* model=hdrEnvmap->cubeModel;
+		GameObject* modelObject = new GameObject();
+		AABBVolume* volume = new AABBVolume(dimensions);
+		modelObject->SetBoundingVolume((CollisionVolume*)volume);
+
+		modelObject->GetTransform().SetWorldPosition(position);
+		modelObject->GetTransform().SetWorldScale(dimensions);
+	
+		modelObject->SetRenderObject(new RenderObject(&modelObject->GetTransform(), model->meshes[0], hdrEnvmap->HdrTexture, hdrEnvmap->HdrShader));
+
+		modelObject->SetPhysicsObject(new PhysicsObject(&modelObject->GetTransform(), modelObject->GetBoundingVolume()));
+
+		modelObject->GetPhysicsObject()->SetInverseMass(0);
+		modelObject->GetPhysicsObject()->InitCubeInertia();
+
+		world->AddGameObject(modelObject);
 
 }
 

@@ -45,6 +45,12 @@
     <ClInclude Include="OGLLight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="OGLHdr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLFbo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OGLRenderer.cpp">
@@ -72,6 +78,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OGLLight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLHdr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -25,9 +25,12 @@ namespace NCL {
 
 			static TextureBase* RGBATextureFromData(char* data, int width, int height, int channels);
 
+
 			static TextureBase* RGBATextureFromFilename(const std::string&name);
 
 			static TextureBase* LinerRGBATextureFromData(char* data, int width, int height, int channels);
+
+			static TextureBase* AllocateCubeTexture();
 
 			static  TextureBase* LinerRGBATextureFromFilename(const std::string& name);
 

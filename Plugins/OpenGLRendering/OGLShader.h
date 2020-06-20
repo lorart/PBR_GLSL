@@ -9,6 +9,7 @@ https://research.ncl.ac.uk/game/
 #pragma once
 #include "../../Common/ShaderBase.h"
 #include "glad\glad.h"
+#include <glm/glm.hpp>
 #include "../../Common/MeshGeometry.h"
 
 namespace NCL {

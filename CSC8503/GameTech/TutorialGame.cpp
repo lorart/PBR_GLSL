@@ -347,7 +347,7 @@ void TutorialGame::InitWorld() {
 	//AddModelToWorld(testmodel, Vector3(0, 0, 0), Vector3(5, 5, 5), isPBR);
 	testShaderBySpheres();
 	AddLightToWorld(Vector4(1, 1, 1, 1), 100, Vector3(0, 10, 0));
-	AddHdrToWorld(hdrEnvmap);
+	//AddHdrToWorld(hdrEnvmap);
 	//physics->Clear();
 
 }
@@ -427,7 +427,7 @@ void NCL::CSC8503::TutorialGame::testShaderBySpheres()
 
 void NCL::CSC8503::TutorialGame::AddHdrToWorld(OGLHdr* hdrEnvmap)
 {
-	Vector3 position=Vector3(0,0,0);
+	/*Vector3 position=Vector3(0,0,0);
 	Vector3 dimensions= Vector3(5, 5, 5);
 	Model* model=hdrEnvmap->cubeModel;
 		GameObject* modelObject = new GameObject();
@@ -436,7 +436,7 @@ void NCL::CSC8503::TutorialGame::AddHdrToWorld(OGLHdr* hdrEnvmap)
 
 		modelObject->GetTransform().SetWorldPosition(position);
 		modelObject->GetTransform().SetWorldScale(dimensions);
-	
+
 		modelObject->SetRenderObject(new RenderObject(&modelObject->GetTransform(), model->meshes[0], hdrEnvmap->HdrTexture, hdrEnvmap->HdrShader));
 
 		modelObject->SetPhysicsObject(new PhysicsObject(&modelObject->GetTransform(), modelObject->GetBoundingVolume()));
@@ -444,7 +444,7 @@ void NCL::CSC8503::TutorialGame::AddHdrToWorld(OGLHdr* hdrEnvmap)
 		modelObject->GetPhysicsObject()->SetInverseMass(0);
 		modelObject->GetPhysicsObject()->InitCubeInertia();
 
-		world->AddGameObject(modelObject);
+		world->AddGameObject(modelObject);*/
 
 }
 

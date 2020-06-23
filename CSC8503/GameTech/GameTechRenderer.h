@@ -5,6 +5,7 @@
 #include "../../Plugins/OpenGLRendering/OGLMesh.h"
 #include "../CSC8503Common/GameWorld.h"
 #include "../../Plugins/OpenGLRendering/OGLLight.h"
+#include "../../Plugins/OpenGLRendering/OGLHdr.h"
 
 namespace NCL {
 	class Maths::Vector3;
@@ -31,6 +32,8 @@ namespace NCL {
 			void RenderShadowMap();
 			void RenderCamera(); 
 
+			
+
 			void SetupDebugMatrix(OGLShader*s) override;
 
 			vector<const RenderObject*> activeObjects;
@@ -42,6 +45,9 @@ namespace NCL {
 			Matrix4     shadowMatrix;
 
 			
+			void RenderHDRenvironment();
+			void RenderHDRtoCubemap();
+			OGLHdr* HdrEnv;
 
 
 

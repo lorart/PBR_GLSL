@@ -43,7 +43,9 @@ void GameWorld::RemoveGameObject(GameObject* o) {
 	std::remove(gameObjects.begin(), gameObjects.end(), o);
 }
 
-void GameWorld::GetObjectIterators(
+void GameWorld::GetObjectIterators
+
+(
 	GameObjectIterator& first,
 	GameObjectIterator& last) const {
 

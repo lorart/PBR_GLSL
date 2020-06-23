@@ -47,10 +47,8 @@ namespace NCL {
 			glGenRenderbuffers(1, &rboId);
 			glBindRenderbuffer(GL_RENDERBUFFER, rboId);
 		}
-		void bindFboRbo_depth(GLuint fboId, GLuint rboId, int texSize) {
+		void bindRbotoFbo_depth(GLuint rboId, int texSize) {
 		
-
-			
 			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
 			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboId);
 		}

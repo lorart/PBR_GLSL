@@ -6,6 +6,12 @@
 #include <string>
 #include <vector>
 #include "Model.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include "OGLFbo.h"
+#include "OGLRenderer.h"
+
 namespace NCL {
 	namespace Rendering {
 		class OGLHdr 
@@ -14,9 +20,21 @@ namespace NCL {
 			OGLHdr(std::string& HdrFilename);
 			~OGLHdr();
 
+			//void generateHdrCubeMaps();
+			void renderCube();
+
 			OGLTexture* HdrTexture;
-			Model* cubeModel=nullptr;
+			OGLTexture* cubeTex;
+
+			Model* cubeModel = nullptr;
+
 			OGLShader* HdrShader = nullptr;
+			OGLShader* HdrToCubemapShader = nullptr;
+
+
+			unsigned int captureFBO;
+			unsigned int captureRBO;
+
 			
 			
 

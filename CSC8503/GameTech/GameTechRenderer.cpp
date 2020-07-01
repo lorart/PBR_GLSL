@@ -42,7 +42,7 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 
 	glClearColor(1, 1, 1, 1);
 #pragma endregion
-//todo:check
+
 	HdrEnv = nullptr;
 
 
@@ -296,6 +296,12 @@ void GameTechRenderer::SetupDebugMatrix(OGLShader*s) {
 	glUniformMatrix4fv(matLocation, 1, false, (float*)&vp);
 }
 
+void NCL::CSC8503::GameTechRenderer::setupHDR(OGLHdr* hdrEnv)
+{
+	this->HdrEnv = hdrEnv;
+	RenderHDRtoCubemap();
+}
+
 void NCL::CSC8503::GameTechRenderer::RenderHDRenvironment()
 {
 
@@ -350,4 +356,5 @@ void NCL::CSC8503::GameTechRenderer::DrawHDRCube()
 		RenderObject* i= new RenderObject(cubetransform,  HdrEnv->cubeModel->meshes[0], HdrEnv->cubeTex, HdrEnv->HdrToCubemapShader);
 		BindMesh((*i).GetMesh());
 		DrawBoundMesh();
+	
 }

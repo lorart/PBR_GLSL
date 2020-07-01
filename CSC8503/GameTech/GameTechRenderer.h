@@ -19,7 +19,8 @@ namespace NCL {
 			GameTechRenderer(GameWorld& world);
 			~GameTechRenderer();
 			vector<OGLLight*> lightArry;
-			OGLHdr* HdrEnv;
+		
+			void setupHDR(OGLHdr* HdrEnv);
 
 
 		protected:
@@ -50,6 +51,7 @@ namespace NCL {
 			void RenderHDRenvironment();
 			void RenderHDRtoCubemap();
 			void DrawHDRCube();
+			OGLHdr* HdrEnv;
 	
 
 

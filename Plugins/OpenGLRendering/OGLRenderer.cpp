@@ -254,6 +254,7 @@ void OGLRenderer::DrawDebugStrings() {
 	BindMesh(&textMesh);
 	BindTextureToShader(font->GetTexture(), "mainTex", 0);
 	DrawBoundMesh();
+	
 
 	debugStrings.clear();
 }

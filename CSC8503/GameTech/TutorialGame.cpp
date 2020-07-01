@@ -48,11 +48,11 @@ void TutorialGame::InitialiseAssets() {
 	//TODO:DELETE
 	//loadFunc("cube.msh"	 , &cubeMesh);
 	string modelname = "bunny";
-	testmodel = new Model(Assets::MESHDIR +modelname+".obj",0);
+	testmodel = new Model(Assets::MESHDIR + modelname + ".obj", 0);
 
-	
 
-	basicTex	= (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
+
+	basicTex = (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
 	//basicShader = new OGLShader("PBR_Vert.glsl", "PBR_Frag.glsl");
 	basicVertName = "PBR_Vert.glsl";
 	basicFragName = "PBR_Frag.glsl";
@@ -60,7 +60,7 @@ void TutorialGame::InitialiseAssets() {
 
 	string hdrFilename = "fireplace_1k.hdr";
 	hdrEnvmap = new OGLHdr(hdrFilename);
-	renderer->HdrEnv = hdrEnvmap;
+	renderer->setupHDR(hdrEnvmap);
 
 	InitCamera();
 	InitWorld();
@@ -343,6 +343,7 @@ void TutorialGame::InitCamera() {
 
 void TutorialGame::InitWorld() {
 	world->ClearAndErase();
+	
 	bool isPBR=true;
 	//todo:mark
 	//AddModelToWorld(testmodel, Vector3(0, 0, 0), Vector3(5, 5, 5), isPBR);

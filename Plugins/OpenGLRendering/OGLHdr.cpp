@@ -11,7 +11,11 @@ NCL::Rendering::OGLHdr::OGLHdr(std::string& HdrFilename)
 	//todo:check
 	HdrToCubemapShader = new OGLShader("HDR_toCubeMap_Vert.glsl", "HDR_toCubeMap_Frag.glsl");
 	HdrShader = new OGLShader("HDR_Vert.glsl", "HDR_Frag.glsl");
-
+	generate_bind_Fbo(captureFBO);
+	generate_bind_Rbo(captureRBO);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO);
+	//clear_Fbo();
 	//cubeModel->meshes[0]->material->matShader= HdrShader;
 	
 	

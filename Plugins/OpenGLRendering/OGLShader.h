@@ -1,5 +1,5 @@
 /*
-Part of Newcastle University's Game Engineering source code.
+Part of,,,
 
 Use as you see fit!
 

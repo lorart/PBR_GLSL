@@ -21,7 +21,7 @@ namespace NCL {
 			~OGLHdr();
 
 			//void generateHdrCubeMaps();
-			void renderCube();
+			//void renderCube();
 
 			OGLTexture* HdrTexture;
 			OGLTexture* cubeTex;

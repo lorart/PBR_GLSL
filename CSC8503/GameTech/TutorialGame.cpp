@@ -60,6 +60,7 @@ void TutorialGame::InitialiseAssets() {
 
 	string hdrFilename = "fireplace_1k.hdr";
 	hdrEnvmap = new OGLHdr(hdrFilename);
+	renderer->HdrEnv = hdrEnvmap;
 
 	InitCamera();
 	InitWorld();

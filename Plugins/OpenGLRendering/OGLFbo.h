@@ -8,7 +8,7 @@ using namespace NCL::Rendering;
 
 namespace NCL {
 	namespace Rendering {
-		void generateFboAndTex_bind_depth(GLuint texId, GLuint fboId,int texSize) {
+		static void generateFboAndTex_bind_depth(GLuint texId, GLuint fboId,int texSize) {
 			glGenTextures(1, &texId);
 			glBindTexture(GL_TEXTURE_2D, texId);
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -31,23 +31,23 @@ namespace NCL {
 		}
 	
 	
-		void genBinTex_CubeMap(GLuint cubemapId) {
+		static void genBinTex_CubeMap(GLuint cubemapId) {
 			glGenTextures(1, &cubemapId);
 			glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapId);
 		}
 	
-		void generate_bind_Fbo(GLuint fboId) {
+		static  void generate_bind_Fbo(GLuint fboId) {
 			glGenFramebuffers(1, &fboId);
 			glBindFramebuffer(GL_FRAMEBUFFER, fboId);
 		}
-		void clear_Fbo() {
+		static void clear_Fbo() {
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
-		void generate_bind_Rbo(GLuint rboId) {
+		static void generate_bind_Rbo(GLuint rboId) {
 			glGenRenderbuffers(1, &rboId);
 			glBindRenderbuffer(GL_RENDERBUFFER, rboId);
 		}
-		void bindRbotoFbo_depth(GLuint rboId, int texSize) {
+		static void bindRbotoFbo_depth(GLuint rboId, int texSize) {
 		
 			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
 			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboId);

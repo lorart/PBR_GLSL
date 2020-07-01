@@ -42,8 +42,8 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 
 	glClearColor(1, 1, 1, 1);
 #pragma endregion
-
-	HdrEnv = new OGLHdr();
+//todo:check
+	HdrEnv = nullptr;
 
 
 }
@@ -303,5 +303,51 @@ void NCL::CSC8503::GameTechRenderer::RenderHDRenvironment()
 
 void NCL::CSC8503::GameTechRenderer::RenderHDRtoCubemap()
 {
+	glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
+	glm::mat4 captureViews[] =
+	{
+		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  1.0f,  0.0f), glm::vec3(0.0f,  0.0f,  1.0f)),
+		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f,  0.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
+		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
+	};
 
+	//todo::check
+	HdrEnv->HdrToCubemapShader->use();
+	HdrEnv->HdrToCubemapShader->setInt("mainTex", 0);
+	HdrEnv->HdrToCubemapShader->setMat4("projMatrix", captureProjection);
+
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, HdrEnv->HdrTexture->GetObjectID());
+
+	//todo::check
+	glViewport(0, 0, 512, 512); // don't forget to configure the viewport to the capture dimensions. 
+
+	generate_bind_Fbo(HdrEnv->captureFBO);//todo::check
+	for (unsigned int i = 0; i < 6; ++i)
+	{
+		HdrEnv->HdrToCubemapShader->setMat4("viewMatrix", captureViews[i]);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, HdrEnv->cubeTex->GetObjectID(), 0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		DrawHDRCube();
+	}
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+}
+
+void NCL::CSC8503::GameTechRenderer::DrawHDRCube()
+{
+
+	//TODO:CHECK
+	Transform* cubetransform = new Transform();
+	     
+		OGLShader* shader = HdrEnv->HdrToCubemapShader;
+		BindShader(shader);
+		//Transform* parentTransform, OGLMesh* mesh, TextureBase* colourtex, ShaderBase* shader
+		RenderObject* i= new RenderObject(cubetransform,  HdrEnv->cubeModel->meshes[0], HdrEnv->cubeTex, HdrEnv->HdrToCubemapShader);
+		BindMesh((*i).GetMesh());
+		DrawBoundMesh();
 }

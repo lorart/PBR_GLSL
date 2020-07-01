@@ -11,6 +11,11 @@ https://research.ncl.ac.uk/game/
 #include "glad\glad.h"
 #include "../../Common/MeshGeometry.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+
 namespace NCL {
 	namespace Rendering {
 		class OGLShader : public ShaderBase

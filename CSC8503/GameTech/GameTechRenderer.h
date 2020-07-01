@@ -7,6 +7,7 @@
 #include "../../Plugins/OpenGLRendering/OGLLight.h"
 #include "../../Plugins/OpenGLRendering/OGLHdr.h"
 
+
 namespace NCL {
 	class Maths::Vector3;
 	class Maths::Vector4;
@@ -18,6 +19,7 @@ namespace NCL {
 			GameTechRenderer(GameWorld& world);
 			~GameTechRenderer();
 			vector<OGLLight*> lightArry;
+			OGLHdr* HdrEnv;
 
 
 		protected:
@@ -47,7 +49,8 @@ namespace NCL {
 			
 			void RenderHDRenvironment();
 			void RenderHDRtoCubemap();
-			OGLHdr* HdrEnv;
+			void DrawHDRCube();
+	
 
 
 

@@ -28,8 +28,10 @@ namespace NCL {
 
 			Model* cubeModel = nullptr;
 
-			OGLShader* HdrShader = nullptr;
+			//OGLShader* HdrShader = nullptr;
 			OGLShader* HdrToCubemapShader = nullptr;
+			OGLShader* irradianceShader = nullptr;
+			OGLShader* SkyboxShader = nullptr;
 
 
 			unsigned int captureFBO;

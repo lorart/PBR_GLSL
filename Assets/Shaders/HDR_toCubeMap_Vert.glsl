@@ -1,32 +1,17 @@
-#version 400 core
+#version 330 core
+layout (location = 0) in vec3 aPos;
 
-uniform mat4 modelMatrix 	= mat4(1.0f);
-uniform mat4 viewMatrix 	= mat4(1.0f);
-uniform mat4 projMatrix 	= mat4(1.0f);
-uniform mat4 shadowMatrix 	= mat4(1.0f);
+uniform mat4 projection;
+uniform mat4 view;
 
-layout(location = 0) in vec3 position;
-//layout(location = 1) in vec4 colour;
-layout(location = 2) in vec2 texCoord;
-layout(location = 3) in vec3 normal;
+out vec3 localPos;
 
-uniform vec4 		objectColour = vec4(1,1,1,1);
-
-uniform bool hasVertexColours = false;
-
-out Vertex
+void main()
 {
-	vec3 localPos;
-	//vec4 colour;
+    localPos = aPos;
 
-} OUT;
+    mat4 rotView = mat4(mat3(view)); // remove translation from the view matrix
+    vec4 clipPos = projection * rotView * vec4(localPos, 1.0);
 
-void main(void)
-{
-	mat4 mvp 		  = (projMatrix * viewMatrix * modelMatrix);
-	mat3 normalMatrix = transpose ( inverse ( mat3 ( modelMatrix )));
-
-	OUT.localPos 	=  position;
-
-	gl_Position		= mvp * vec4(position, 1.0);
+    gl_Position = clipPos.xyww;
 }

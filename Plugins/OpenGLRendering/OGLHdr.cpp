@@ -8,9 +8,11 @@ NCL::Rendering::OGLHdr::OGLHdr(std::string& HdrFilename)
 	cubeModel= new Model(Assets::MESHDIR + "CUBE" + ".obj", 0);
 
 	
-	//todo:check
+
 	HdrToCubemapShader = new OGLShader("HDR_toCubeMap_Vert.glsl", "HDR_toCubeMap_Frag.glsl");
-	HdrShader = new OGLShader("HDR_Vert.glsl", "HDR_Frag.glsl");
+	SkyboxShader = new OGLShader("Skybox_Vert.glsl","Skybox_Frag.glsl");
+	//todo:
+	//irradianceShader = new  OGLShader("HDR_irradiance_Vert.glsl","HDR_irradiance_Vert.glsl");
 	generate_bind_Fbo(captureFBO);
 	generate_bind_Rbo(captureRBO);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
@@ -25,8 +27,10 @@ NCL::Rendering::OGLHdr::~OGLHdr()
 {
 	delete cubeModel;
 	delete HdrTexture;
-	delete HdrShader;
+	//delete HdrShader;
 	delete HdrToCubemapShader;
+	delete SkyboxShader;
+	delete irradianceShader;
 }
 
 //todo:delete

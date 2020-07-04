@@ -34,7 +34,7 @@ namespace NCL {
 			void SortObjectList();
 			void RenderShadowMap();
 			void RenderCamera(); 
-
+			void CaculateViewPorjMat();
 			
 
 			void SetupDebugMatrix(OGLShader*s) override;
@@ -47,10 +47,15 @@ namespace NCL {
 			GLuint		shadowFBO;
 			Matrix4     shadowMatrix;
 
+
+			float screenAspect ;
+			Matrix4 viewMatrix ;
+			Matrix4 projMatrix;
+
 			
 			void RenderHDRenvironment();
 			void RenderHDRtoCubemap();
-			void DrawHDRCube();
+			void DrawHDRCube(OGLShader* shader, OGLTexture* tex);
 			OGLHdr* HdrEnv;
 	
 

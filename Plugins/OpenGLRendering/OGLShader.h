@@ -15,6 +15,8 @@ https://research.ncl.ac.uk/game/
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "..\..\Common\Matrix4.h"
+
 
 namespace NCL {
 	namespace Rendering {
@@ -104,6 +106,10 @@ namespace NCL {
 			void setMat4(const std::string& name, const glm::mat4& mat) const
 			{
 				glUniformMatrix4fv(glGetUniformLocation(programID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+			}
+			void setMat4(const std::string& name, const Matrix4 modelMatrix) const
+			{
+				glUniformMatrix4fv(glGetUniformLocation(programID, name.c_str()), 1, GL_FALSE, (float*)&modelMatrix);
 			}
 
 

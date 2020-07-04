@@ -44,6 +44,9 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 #pragma endregion
 
 	HdrEnv = nullptr;
+	float screenAspect=0;
+	Matrix4 viewMatrix;
+	Matrix4 projMatrix;
 
 
 }
@@ -60,12 +63,15 @@ GameTechRenderer::~GameTechRenderer()	{
 }
 
 void GameTechRenderer::RenderFrame() {
+	CaculateViewPorjMat();
 	glEnable(GL_CULL_FACE);
 	glClearColor(1, 1, 1, 1);
+	//RenderHDRenvironment();
 	BuildObjectList();
 	SortObjectList();
 	RenderShadowMap();
 	RenderCamera();
+	RenderHDRenvironment();
 	glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
 	//TODO: 
 }
@@ -124,9 +130,9 @@ void GameTechRenderer::RenderShadowMap() {
 }
 
 void GameTechRenderer::RenderCamera() {
-	float screenAspect = (float)currentWidth / (float)currentHeight;
-	Matrix4 viewMatrix = gameWorld.GetMainCamera()->BuildViewMatrix();
-	Matrix4 projMatrix = gameWorld.GetMainCamera()->BuildProjectionMatrix(screenAspect);
+	//float screenAspect = (float)currentWidth / (float)currentHeight;
+	//Matrix4 viewMatrix = gameWorld.GetMainCamera()->BuildViewMatrix();
+	//Matrix4 projMatrix = gameWorld.GetMainCamera()->BuildProjectionMatrix(screenAspect);
 
 	OGLShader* activeShader = nullptr;
 	int projLocation	= 0;
@@ -302,8 +308,22 @@ void NCL::CSC8503::GameTechRenderer::setupHDR(OGLHdr* hdrEnv)
 	RenderHDRtoCubemap();
 }
 
-void NCL::CSC8503::GameTechRenderer::RenderHDRenvironment()
+void NCL::CSC8503::GameTechRenderer::CaculateViewPorjMat()
 {
+	this->screenAspect = (float)currentWidth / (float)currentHeight;
+	this->viewMatrix = gameWorld.GetMainCamera()->BuildViewMatrix();
+	this->projMatrix = gameWorld.GetMainCamera()->BuildProjectionMatrix(screenAspect);
+
+}
+
+void NCL::CSC8503::GameTechRenderer::RenderHDRenvironment()
+{ 
+	glDepthFunc(GL_LEQUAL);
+	HdrEnv->SkyboxShader->use();
+	HdrEnv->SkyboxShader->setMat4("projection", this->projMatrix);
+	HdrEnv->SkyboxShader->setMat4("view", this->viewMatrix);
+	DrawHDRCube(HdrEnv->SkyboxShader,HdrEnv->cubeTex);
+	glDepthFunc(GL_LESS); // set depth function back to default
 
 }
 
@@ -336,47 +356,46 @@ void NCL::CSC8503::GameTechRenderer::RenderHDRtoCubemap()
 	for (unsigned int i = 0; i < 6; ++i)
 	{
 		HdrEnv->HdrToCubemapShader->setMat4("viewMatrix", captureViews[i]);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, HdrEnv->HdrTexture->GetObjectID(), 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, HdrEnv->cubeTex->GetObjectID(), 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		DrawHDRCube();
+		DrawHDRCube(HdrEnv->HdrToCubemapShader,HdrEnv->HdrTexture);
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, HdrEnv->captureFBO);
-	glBindRenderbuffer(GL_RENDERBUFFER, HdrEnv->captureRBO);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 32, 32); //the size of texture
+	//glBindFramebuffer(GL_FRAMEBUFFER, HdrEnv->captureFBO);
+	//glBindRenderbuffer(GL_RENDERBUFFER, HdrEnv->captureRBO);
+	//glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 32, 32); //the size of texture
 
-	irradianceShader.use();
-	irradianceShader.setInt("environmentMap", 0);
-	irradianceShader.setMat4("projection", captureProjection);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, HdrEnv->cubeTex->GetObjectID());
+	//irradianceShader.use();
+	//irradianceShader.setInt("environmentMap", 0);,,
+	//irradianceShader.setMat4("projection", captureProjection);
+	//glActiveTexture(GL_TEXTURE0);
+	//glBindTexture(GL_TEXTURE_CUBE_MAP, HdrEnv->cubeTex->GetObjectID());
 
-	glViewport(0, 0, 32, 32); // don't forget to configure the viewport to the capture dimensions.
-	glBindFramebuffer(GL_FRAMEBUFFER, HdrEnv->captureFBO);
-	for (unsigned int i = 0; i < 6; ++i)
-	{
-		irradianceShader.setMat4("view", captureViews[i]);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, irradianceMap, 0);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glViewport(0, 0, 32, 32); // don't forget to configure the viewport to the capture dimensions.
+	//glBindFramebuffer(GL_FRAMEBUFFER, HdrEnv->captureFBO);
+	//for (unsigned int i = 0; i < 6; ++i)
+	//{
+	//	irradianceShader.setMat4("view", captureViews[i]);
+	//	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, irradianceMap, 0);
+	//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		DrawHDRCube();
-	}
+	//	DrawHDRCube();
+	//}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 
 }
 
-void NCL::CSC8503::GameTechRenderer::DrawHDRCube()
+void NCL::CSC8503::GameTechRenderer::DrawHDRCube(OGLShader* shader, OGLTexture* tex)
 {
 
 	//TODO:CHECK
 	Transform* cubetransform = new Transform();
 	     
-		OGLShader* shader = HdrEnv->HdrToCubemapShader;
 		BindShader(shader);
 		//Transform* parentTransform, OGLMesh* mesh, TextureBase* colourtex, ShaderBase* shader
-		RenderObject* i= new RenderObject(cubetransform,  HdrEnv->cubeModel->meshes[0], HdrEnv->cubeTex, HdrEnv->HdrToCubemapShader);
+		RenderObject* i= new RenderObject(cubetransform,  HdrEnv->cubeModel->meshes[0], tex,  shader);
 		BindMesh((*i).GetMesh());
 		DrawBoundMesh();
 	

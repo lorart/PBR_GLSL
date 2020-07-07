@@ -319,9 +319,14 @@ void NCL::CSC8503::GameTechRenderer::CaculateViewPorjMat()
 void NCL::CSC8503::GameTechRenderer::RenderHDRenvironment()
 { 
 	glDepthFunc(GL_LEQUAL);
+	////todo:test
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, HdrEnv->cubeTex->GetObjectID());
+
 	HdrEnv->SkyboxShader->use();
 	HdrEnv->SkyboxShader->setMat4("projection", this->projMatrix);
 	HdrEnv->SkyboxShader->setMat4("view", this->viewMatrix);
+	HdrEnv->SkyboxShader->setInt("equirectangularMap", HdrEnv->cubeTex->GetObjectID());
 	DrawHDRCube(HdrEnv->SkyboxShader,HdrEnv->cubeTex);
 	glDepthFunc(GL_LESS); // set depth function back to default
 
@@ -329,6 +334,7 @@ void NCL::CSC8503::GameTechRenderer::RenderHDRenvironment()
 
 void NCL::CSC8503::GameTechRenderer::RenderHDRtoCubemap()
 {
+	
 	glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
 	glm::mat4 captureViews[] =
 	{
@@ -342,12 +348,14 @@ void NCL::CSC8503::GameTechRenderer::RenderHDRtoCubemap()
 
 	//todo::check
 	HdrEnv->HdrToCubemapShader->use();
-	HdrEnv->HdrToCubemapShader->setInt("mainTex", 0);
-	HdrEnv->HdrToCubemapShader->setMat4("projMatrix", captureProjection);
+	//HdrEnv->HdrToCubemapShader->setInt("mainTex", 0);
+	HdrEnv->HdrToCubemapShader->setMat4("projection", captureProjection);
+	HdrEnv->HdrToCubemapShader->setInt("hdrMap", HdrEnv->HdrTexture->GetObjectID());
 
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, HdrEnv->HdrTexture->GetObjectID());
+
 
 	//todo::check
 	glViewport(0, 0, 512, 512); // don't forget to configure the viewport to the capture dimensions. 
@@ -355,35 +363,15 @@ void NCL::CSC8503::GameTechRenderer::RenderHDRtoCubemap()
 	generate_bind_Fbo(HdrEnv->captureFBO);//todo::check
 	for (unsigned int i = 0; i < 6; ++i)
 	{
-		HdrEnv->HdrToCubemapShader->setMat4("viewMatrix", captureViews[i]);
+		HdrEnv->HdrToCubemapShader->setMat4("view", captureViews[i]);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, HdrEnv->cubeTex->GetObjectID(), 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		DrawHDRCube(HdrEnv->HdrToCubemapShader,HdrEnv->HdrTexture);
+		//renderHDR to  cubemap
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	//glBindFramebuffer(GL_FRAMEBUFFER, HdrEnv->captureFBO);
-	//glBindRenderbuffer(GL_RENDERBUFFER, HdrEnv->captureRBO);
-	//glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 32, 32); //the size of texture
-
-	//irradianceShader.use();
-	//irradianceShader.setInt("environmentMap", 0);,,
-	//irradianceShader.setMat4("projection", captureProjection);
-	//glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_CUBE_MAP, HdrEnv->cubeTex->GetObjectID());
-
-	//glViewport(0, 0, 32, 32); // don't forget to configure the viewport to the capture dimensions.
-	//glBindFramebuffer(GL_FRAMEBUFFER, HdrEnv->captureFBO);
-	//for (unsigned int i = 0; i < 6; ++i)
-	//{
-	//	irradianceShader.setMat4("view", captureViews[i]);
-	//	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, irradianceMap, 0);
-	//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	//	DrawHDRCube();
-	//}
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
+	
 
 }
 

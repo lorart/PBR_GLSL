@@ -113,7 +113,7 @@ void TutorialGame::UpdateGame(float dt) {
 #pragma endregion physic
 	Debug::FlushRenderables();
 	//todo:delete
-	//renderer->setupHDR(hdrEnvmap);
+	renderer->setupHDR(hdrEnvmap);
 	renderer->Render();
 }
 

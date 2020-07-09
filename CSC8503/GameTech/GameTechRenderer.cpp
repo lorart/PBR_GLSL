@@ -370,15 +370,11 @@ void NCL::CSC8503::GameTechRenderer::RenderHDRtoCubemap()
 
 	glViewport(0, 0, 512, 512); // don't forget to configure the viewport to the capture dimensions. 
 
-	glBindFramebuffer(GL_FRAMEBUFFER, HdrEnv->captureFBO);
-
-
-	HdrEnv->HdrToCubemapShader->setMat4("view", captureViews[0]);
-
+	//glBindFramebuffer(GL_FRAMEBUFFER, HdrEnv->captureFBO);
+	generate_bind_Fbo(HdrEnv->captureFBO);
 	for ( int i = 0; i < 6; i++)
 	{
-		HdrEnv->HdrToCubemapShader->setMat4("view", captureViews[0]);
-		//HdrEnv->HdrToCubemapShader->setMat4("view", captureViews[i]);
+		HdrEnv->HdrToCubemapShader->setMat4("view", captureViews[i]);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, HdrEnv->cubeTex->GetObjectID(), 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		DrawHDRCube(HdrEnv->HdrToCubemapShader,HdrEnv->HdrTexture);

@@ -18,6 +18,7 @@ NCL::Rendering::OGLHdr::OGLHdr(std::string& HdrFilename)
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO);
 	//clear_Fbo();
+
 	//cubeModel->meshes[0]->material->matShader= HdrShader;
 	
 	

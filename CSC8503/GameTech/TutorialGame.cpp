@@ -47,7 +47,7 @@ void TutorialGame::InitialiseAssets() {
 
 	//TODO:DELETE
 	//loadFunc("cube.msh"	 , &cubeMesh);
-	string modelname = "bunny";
+	string modelname = "apple";
 	testmodel = new Model(Assets::MESHDIR + modelname + ".obj", 0);
 
 
@@ -113,7 +113,7 @@ void TutorialGame::UpdateGame(float dt) {
 #pragma endregion physic
 	Debug::FlushRenderables();
 	//todo:delete
-	renderer->setupHDR(hdrEnvmap);
+//	renderer->setupHDR(hdrEnvmap);
 	renderer->Render();
 }
 
@@ -348,8 +348,8 @@ void TutorialGame::InitWorld() {
 	
 	bool isPBR=true;
 
-	//AddModelToWorld(testmodel, Vector3(0, 0, 0), Vector3(5, 5, 5), isPBR);
-	testShaderBySpheres();
+	AddModelToWorld(testmodel, Vector3(0, 0, 0), Vector3(5, 5, 5), isPBR);
+	//testShaderBySpheres();
 	AddLightToWorld(Vector4(1, 1, 1, 1), 100, Vector3(0, 10, 0));
 
 	//AddHdrToWorld(hdrEnvmap);

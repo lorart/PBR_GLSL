@@ -182,20 +182,33 @@ namespace NCL {
 				//OGLTexture* normalMap = loadMaterialTextures(mat, aiTextureType_NORMALS);
 				pbrTexArry[TextureType::NORMAL_MAP] = normalMap;
 
+				OGLTexture* temp = loadMaterialTextures(mat, aiTextureType_UNKNOWN);
+				auto a=mat->GetTextureCount(aiTextureType_UNKNOWN);
+				std::cout << "****************aiTextureType_UNKNOWN" << a << std::endl;
+			
 				OGLTexture* metallicMap = loadMaterialTextures(mat, aiTextureType_UNKNOWN);
 				pbrTexArry[TextureType::METALLIC_MAP] = metallicMap;
 
-				OGLTexture* roughnesslMap = loadMaterialTextures(mat, aiTextureType_UNKNOWN);
+				string roughnesslMapName=((*mat->mProperties)->mKey).C_Str();
+				//todo:delete
+				std::cout << "****************roughnesslMapName" << roughnesslMapName << std::endl;
+				OGLTexture* roughnesslMap = loadMaterialTextures(mat, roughnesslMapName);
 				pbrTexArry[TextureType::ROUGHNESS_MAP] = roughnesslMap;
 
-				OGLTexture* aolMap = loadMaterialTextures(mat, aiTextureType_UNKNOWN);
+				string aolMapName;
+				OGLTexture* aolMap = loadMaterialTextures(mat, aolMapName);
 				pbrTexArry[TextureType::AO_MAP] = aolMap;
+
 
 			
 
 				//todo:material float
 				//todo: 
 				oglMaterial = new OGLMaterial(pbrTexArry);
+				
+				//todo:more
+				//oglMaterial->metallicValue = mat->Get(, aiPTI_Float,)
+
 				OGLMesh* Temp = NULL;
 				Temp = new OGLMesh(vertices, indices, oglMaterial);
 				
@@ -209,7 +222,7 @@ namespace NCL {
 			
 				OGLTexture* texture=nullptr;
 				aiString str;
-
+				
 					if (mat->GetTextureCount(type)>0) {
 						mat->GetTexture(type, 0, &str);
 						
@@ -220,8 +233,7 @@ namespace NCL {
 						{	
 							if (str.C_Str() == loadedTexture[j]->texPath) {
 								texture = loadedTexture[j];
-								//todo:delete 
-								std::cout << "already input" << std::endl;
+								
 								return texture;
 							}
 						}
@@ -252,6 +264,41 @@ namespace NCL {
 					return texture;
 			}
 
+			OGLTexture* loadMaterialTextures(aiMaterial* mat,string name) {
+
+				OGLTexture* texture = nullptr;
+				
+					//todo:delete 
+					std::cout << "path" << Assets::TEXTUREDIR << name << std::endl;
+				
+					for (int j = 0; j < loadedTexture.size(); j++)
+					{
+						//todo:check
+						if (name == loadedTexture[j]->texPath) {
+							texture = loadedTexture[j];
+							//todo:delete 
+							std::cout << "already input" << std::endl;
+							return texture;
+						}
+					}
+
+					if ((texture == nullptr)&& ((OGLTexture*)TextureLoader::LoadAPITexture(name) != nullptr))
+					{
+						texture = (OGLTexture*)TextureLoader::LoadAPITexture(name);
+						texture->texPath = name;
+						loadedTexture.push_back(texture);
+						texture = (OGLTexture*)TextureLoader::LoadAPITexture(name);
+						return texture;
+
+					}else
+					{
+						texture = blackTexture;;
+						return texture;
+					}
+
+					
+
+			}
 
 		};
 	}

@@ -141,6 +141,15 @@ vec3 Cook_Torrance(float NorD_ggx,float Geo_ggx,vec3 Fre_SCH,float NdotV ,float 
 	return nom/denom;
 }
 */
+
+float CaculateShadow(){
+		float shadow = 1.0; // New !
+	
+	if( IN . shadowProj . w > 0.0) { // New !
+		shadow = textureProj ( shadowTex , IN . shadowProj ) * 0.5f;
+	}
+	return shadow;
+}
 void main(void)
 {
 
@@ -190,8 +199,9 @@ vec3 kd=vec3(1.0)-ks;
 //ec3 kd=(vec3(1.0)-ks)*(1-metallicValue);
 //vec3 kd=(vec3(1.0)-ks)*(1-metallic);
 //vec3 Lo=(kd*albedoValue/PI+ ks*specular)*radiance*NdotL;
-vec3 colour=(kd*albedoValue+ ks*specular)*radiance;
 
+float shadow =CaculateShadow();
+vec3 colour=(kd*albedoValue+ ks*specular*shadow)*radiance;
 
 
 
@@ -199,6 +209,7 @@ vec3 colour=(kd*albedoValue+ ks*specular)*radiance;
 
 
 //fragColor.rgb=vec3(Geo);
+fragColor.rgb=NorD*Geo*Fre;
 fragColor.rgb=NorD*Geo*Fre;
 
 

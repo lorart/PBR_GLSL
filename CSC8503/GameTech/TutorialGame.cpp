@@ -112,8 +112,9 @@ void TutorialGame::UpdateGame(float dt) {
 	//physics->Update(dt);
 #pragma endregion physic
 	Debug::FlushRenderables();
+
 	//todo:delete
-//	renderer->setupHDR(hdrEnvmap);
+	renderer->setupHDR(hdrEnvmap);
 	renderer->Render();
 }
 
@@ -348,11 +349,11 @@ void TutorialGame::InitWorld() {
 	
 	bool isPBR=true;
 
-	AddModelToWorld(testmodel, Vector3(0, 0, 0), Vector3(5, 5, 5), isPBR);
-	//testShaderBySpheres();
-	AddLightToWorld(Vector4(1, 1, 1, 1), 100, Vector3(0, 10, 0));
+	//AddModelToWorld(testmodel, Vector3(0, 0, 0), Vector3(5, 5, 5), isPBR);
+	testShaderBySpheres();
+	AddLightToWorld(Vector4(1, 1, 1, 1), 100, Vector3(0, 80, 0));
 
-	//AddHdrToWorld(hdrEnvmap);
+
 	//physics->Clear();
 
 }

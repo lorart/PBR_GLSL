@@ -21,8 +21,8 @@ NCL::Rendering::OGLMaterial::OGLMaterial(std::vector<OGLTexture*> pbrTexArry
 	this->pbrTexArry = pbrTexArry;
 	this->albedoValue = Vector3(0, 0, 0);
 	this->normalValue = Vector3(0, 0, 0);
-	this->metallicValue = 0;
-	this->roughnessValue = 0;
+	this->metallicValue = 0.01;
+	this->roughnessValue = 0.01;
 	this->aoValue = 0;
 	this->matShader = nullptr;
 

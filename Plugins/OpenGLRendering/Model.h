@@ -182,29 +182,43 @@ namespace NCL {
 				//OGLTexture* normalMap = loadMaterialTextures(mat, aiTextureType_NORMALS);
 				pbrTexArry[TextureType::NORMAL_MAP] = normalMap;
 
-				OGLTexture* temp = loadMaterialTextures(mat, aiTextureType_UNKNOWN);
-				auto a=mat->GetTextureCount(aiTextureType_UNKNOWN);
-				std::cout << "****************aiTextureType_UNKNOWN" << a << std::endl;
+				//OGLTexture* temp = loadMaterialTextures(mat, aiTextureType_UNKNOWN);
+				//auto a=mat->GetTextureCount(aiTextureType_UNKNOWN);
+				//std::cout << "****************aiTextureType_UNKNOWN" << a << std::endl;
 			
+				//OGLTexture* metallicMap = loadMaterialTextures(mat, aiTextureType_UNKNOWN);
+				//pbrTexArry[TextureType::METALLIC_MAP] = metallicMap;
+
+				//string roughnesslMapName=((*mat->mProperties)->mKey).C_Str();
+				////todo:delete
+				//std::cout << "****************roughnesslMapName" << roughnesslMapName << std::endl;
+				//OGLTexture* roughnesslMap = loadMaterialTextures(mat, roughnesslMapName);
+				//pbrTexArry[TextureType::ROUGHNESS_MAP] = roughnesslMap;
+
+				//string aolMapName;
+				//OGLTexture* aolMap = loadMaterialTextures(mat, aolMapName);
+				//pbrTexArry[TextureType::AO_MAP] = aolMap;
+
+
+
 				OGLTexture* metallicMap = loadMaterialTextures(mat, aiTextureType_UNKNOWN);
 				pbrTexArry[TextureType::METALLIC_MAP] = metallicMap;
 
-				string roughnesslMapName=((*mat->mProperties)->mKey).C_Str();
-				//todo:delete
-				std::cout << "****************roughnesslMapName" << roughnesslMapName << std::endl;
-				OGLTexture* roughnesslMap = loadMaterialTextures(mat, roughnesslMapName);
+				OGLTexture* roughnesslMap = loadMaterialTextures(mat, aiTextureType_UNKNOWN);
 				pbrTexArry[TextureType::ROUGHNESS_MAP] = roughnesslMap;
 
-				string aolMapName;
-				OGLTexture* aolMap = loadMaterialTextures(mat, aolMapName);
+				OGLTexture* aolMap = loadMaterialTextures(mat, aiTextureType_UNKNOWN);
 				pbrTexArry[TextureType::AO_MAP] = aolMap;
 
-
-			
 
 				//todo:material float
 				//todo: 
 				oglMaterial = new OGLMaterial(pbrTexArry);
+				//todo:check
+				if (1) {
+					oglMaterial->roughnessValue = 0.8;
+					oglMaterial->metallicValue = 0.1;
+				}
 				
 				//todo:more
 				//oglMaterial->metallicValue = mat->Get(, aiPTI_Float,)

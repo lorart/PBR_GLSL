@@ -210,7 +210,7 @@ vec3 colour=(kd*albedoValue+ ks*specular*shadow)*radiance;
 
 //fragColor.rgb=vec3(Geo);
 fragColor.rgb=NorD*Geo*Fre;
-fragColor.rgb=NorD*Geo*Fre;
+//fragColor.rgb=vec3(shadow);
 
 
 }

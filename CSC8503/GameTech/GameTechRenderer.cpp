@@ -99,6 +99,7 @@ void GameTechRenderer::SortObjectList() {
 }
 //todo:shadowMap
 void GameTechRenderer::RenderShadowMap() {
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
 	glClear(GL_DEPTH_BUFFER_BIT);	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);	glViewport(0, 0, SHADOWSIZE, SHADOWSIZE);
 
@@ -332,6 +333,7 @@ void NCL::CSC8503::GameTechRenderer::RenderHDRenvironment()
 	HdrEnv->SkyboxShader->setMat4("view", this->viewMatrix);
 
 	HdrEnv->SkyboxShader->setInt("environmentMap", HdrEnv->cubeTex->GetObjectID());
+
 
 
 

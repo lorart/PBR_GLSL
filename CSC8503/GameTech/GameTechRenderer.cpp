@@ -105,10 +105,15 @@ void GameTechRenderer::RenderShadowMap() {
 
 	glCullFace(GL_FRONT);
 
+	//todo:test glDepthFunc(GL_LESS); 
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+
 	BindShader(shadowShader);
 	int mvpLocation = glGetUniformLocation(shadowShader->GetProgramID(), "mvpMatrix");
 
 	Matrix4 shadowViewMatrix = Matrix4::BuildViewMatrix(lightArry[0]->lightPosition, Vector3(0, 0, 0), Vector3(0,1,0));
+
 	Matrix4 shadowProjMatrix = Matrix4::Perspective(100.0f, 500.0f, 1, 45.0f);
 
 	Matrix4 mvMatrix = shadowProjMatrix * shadowViewMatrix;
@@ -319,27 +324,23 @@ void NCL::CSC8503::GameTechRenderer::CaculateViewPorjMat()
 
 void NCL::CSC8503::GameTechRenderer::RenderHDRenvironment()
 { 
-	//todo:check
+	
 	glDepthFunc(GL_LEQUAL);
 	
-	////todo:test
+	
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_FRONT);
-	glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE10);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, HdrEnv->cubeTex->GetObjectID());
 
 	HdrEnv->SkyboxShader->use();
 	HdrEnv->SkyboxShader->setMat4("projection", this->projMatrix);
 	HdrEnv->SkyboxShader->setMat4("view", this->viewMatrix);
 
-	HdrEnv->SkyboxShader->setInt("environmentMap", HdrEnv->cubeTex->GetObjectID());
-
-
-
+	HdrEnv->SkyboxShader->setInt("environmentMap",10);
 
 	DrawHDRCube(HdrEnv->SkyboxShader,HdrEnv->cubeTex);
 
-	glDepthFunc(GL_LESS); // set depth function back to default
 
 	
 	glCullFace(GL_BACK);
@@ -392,7 +393,7 @@ void NCL::CSC8503::GameTechRenderer::RenderHDRtoCubemap()
 void NCL::CSC8503::GameTechRenderer::DrawHDRCube(OGLShader* shader, OGLTexture* tex)
 {
 
-	//TODO:CHECK
+	
 	Transform* cubetransform = new Transform();
 	     
 		BindShader(shader);

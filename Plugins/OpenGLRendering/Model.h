@@ -215,7 +215,7 @@ namespace NCL {
 				//todo: 
 				oglMaterial = new OGLMaterial(pbrTexArry);
 				//todo:check
-				if (1) {
+				if (pbrTexArry[TextureType::METALLIC_MAP]->GetObjectID()== blackTexture->GetObjectID()) {
 					oglMaterial->roughnessValue = 0.8;
 					oglMaterial->metallicValue = 0.1;
 				}

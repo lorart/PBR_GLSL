@@ -21,6 +21,8 @@ namespace NCL {
 			vector<OGLLight*> lightArry;
 		
 			void setupHDR(OGLHdr* HdrEnv);
+			bool isUsedPBR;
+			OGLShader* CompareShader;
 
 
 		protected:
@@ -39,7 +41,7 @@ namespace NCL {
 
 			void SetupDebugMatrix(OGLShader*s) override;
 
-			vector<const RenderObject*> activeObjects;
+			vector< RenderObject*> activeObjects;
 
 			//shadow mapping things
 			OGLShader*	shadowShader;
@@ -57,6 +59,7 @@ namespace NCL {
 			void RenderHDRtoCubemap();
 			void DrawHDRCube(OGLShader* shader, OGLTexture* tex);
 			OGLHdr* HdrEnv;
+			
 	
 
 

@@ -58,7 +58,7 @@ void TutorialGame::InitialiseAssets() {
 	basicFragName = "PBR_Frag.glsl";
 	basicShader = new OGLShader(basicVertName, basicFragName);
 	FongShader = new OGLShader("Feng_Vert.glsl", "Feng_Frag.glsl");
-	IsUsePBRshader = true;
+	renderer->CompareShader = FongShader;
 
 	string hdrFilename = "fireplace_1k.hdr";
 	hdrEnvmap = new OGLHdr(hdrFilename);
@@ -79,6 +79,7 @@ TutorialGame::~TutorialGame()	{
 	delete sphere;
 	delete basicTex;
 	delete basicShader;
+	delete FongShader;
 	delete hdrEnvmap;
 	
 #pragma region
@@ -211,15 +212,8 @@ void  TutorialGame::LockedCameraMovement() {
 void TutorialGame::ChangeShader()
 {
 	
-	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::C)) {
-		std::cout << "change shader" << std::endl;
-		//IsUsePBRshader = !IsUsePBRshader;
-		/*if (IsUsePBRshader == false) {
-
-		}
-		else {
-
-		}*/
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::G)) {
+		renderer->isUsedPBR = !renderer->isUsedPBR;
 	}
 }
 

@@ -51,6 +51,9 @@ namespace NCL {
 			ShaderBase*		GetShader() const {
 				return shader;
 			}
+			void SetShader(ShaderBase* shadernew) {
+				shader=shadernew;
+			}
 
 			void SetColour(const Vector4& c) {
 				colour = c;

@@ -42,11 +42,12 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 
 	glClearColor(1, 1, 1, 1);
 #pragma endregion
-
+	isUsedPBR = true;
 	HdrEnv = nullptr;
 	float screenAspect = 0;
 	Matrix4 viewMatrix;
 	Matrix4 projMatrix;
+	CompareShader = nullptr;
 
 
 }
@@ -55,6 +56,8 @@ GameTechRenderer::~GameTechRenderer() {
 	glDeleteTextures(1, &shadowTex);
 	glDeleteFramebuffers(1, &shadowFBO);
 	//todo:check
+	delete HdrEnv;
+	delete CompareShader;
 
 	for (auto& i : lightArry) {
 		delete i;
@@ -207,11 +210,18 @@ void GameTechRenderer::RenderCamera() {
 	//for (const auto& i : activeObjects) {
 	for (size_t l = 0; l < activeObjects.size(); l++)
 	{
-		const auto i = activeObjects[l];
+		 auto i = activeObjects[l];
+		 if (isUsedPBR) {
+			 OGLShader* shader = (OGLShader*)(*i).GetShader();
+		 }
+		 else {
+			 OGLShader* shader=CompareShader;
+		 }
+	
+	
 
+		//OGLShader* shader = (OGLShader*)(*i).GetShader();
 
-
-		OGLShader* shader = (OGLShader*)(*i).GetShader();
 		BindShader(shader);
 		//todo:why
 		if (activeShader != shader) {

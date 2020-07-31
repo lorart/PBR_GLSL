@@ -57,6 +57,8 @@ void TutorialGame::InitialiseAssets() {
 	basicVertName = "PBR_Vert.glsl";
 	basicFragName = "PBR_Frag.glsl";
 	basicShader = new OGLShader(basicVertName, basicFragName);
+	FongShader = new OGLShader("Feng_Vert.glsl", "Feng_Frag.glsl");
+	IsUsePBRshader = true;
 
 	string hdrFilename = "fireplace_1k.hdr";
 	hdrEnvmap = new OGLHdr(hdrFilename);
@@ -155,6 +157,7 @@ void TutorialGame::UpdateKeys() {
 		//DebugObjectMovement();
 	}
 	LightMovement();
+	ChangeShader();
 	
 }
 
@@ -204,6 +207,22 @@ void  TutorialGame::LockedCameraMovement() {
 		world->GetMainCamera()->SetYaw(angles.y);
 	}
 }
+
+void TutorialGame::ChangeShader()
+{
+	
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::C)) {
+		std::cout << "change shader" << std::endl;
+		//IsUsePBRshader = !IsUsePBRshader;
+		/*if (IsUsePBRshader == false) {
+
+		}
+		else {
+
+		}*/
+	}
+}
+
 void NCL::CSC8503::TutorialGame::LightMovement()
 {//todo:only move one light
 	if (renderer->lightArry.size() > 0) {
@@ -413,7 +432,7 @@ void NCL::CSC8503::TutorialGame::testShaderBySpheres()
 			sphere = new Model(Assets::MESHDIR + "sphere" + ".obj", 0);
 			testShaderModelVector.push_back(sphere);
 			tempValue =wide*(1.0 /5.0);
-			AddModelToWorld(sphere, Vector3(-hight * length, wide * length, 0), Vector3(5, 5, 5), 1);
+			AddModelToWorld(sphere, Vector3(-hight * length, wide * length, 0), Vector3(5, 5, 5), IsUsePBRshader);
 			
 				sphere->meshes[0]->material->metallicValue = hight * (1.0 / 5.0);
 				
@@ -429,26 +448,5 @@ void NCL::CSC8503::TutorialGame::testShaderBySpheres()
 
 }
 
-void NCL::CSC8503::TutorialGame::AddHdrToWorld(OGLHdr* hdrEnvmap)
-{
-	/*Vector3 position=Vector3(0,0,0);
-	Vector3 dimensions= Vector3(5, 5, 5);
-	Model* model=hdrEnvmap->cubeModel;
-		GameObject* modelObject = new GameObject();
-		AABBVolume* volume = new AABBVolume(dimensions);
-		modelObject->SetBoundingVolume((CollisionVolume*)volume);
 
-		modelObject->GetTransform().SetWorldPosition(position);
-		modelObject->GetTransform().SetWorldScale(dimensions);
-
-		modelObject->SetRenderObject(new RenderObject(&modelObject->GetTransform(), model->meshes[0], hdrEnvmap->HdrTexture, hdrEnvmap->HdrShader));
-
-		modelObject->SetPhysicsObject(new PhysicsObject(&modelObject->GetTransform(), modelObject->GetBoundingVolume()));
-
-		modelObject->GetPhysicsObject()->SetInverseMass(0);
-		modelObject->GetPhysicsObject()->InitCubeInertia();
-
-		world->AddGameObject(modelObject);*/
-
-}
 

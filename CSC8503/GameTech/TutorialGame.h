@@ -38,13 +38,14 @@ namespace NCL {
 			//void DebugObjectMovement();
 			void LockedObjectMovement();
 			void LockedCameraMovement();
+			void ChangeShader();
 
 			void LightMovement();
 
 			OGLLight* AddLightToWorld(Vector4 lightColour, float lightRadius, Vector3 lightPosition);
 			void AddModelToWorld(Model* model, const Vector3& position, Vector3 dimensions, bool ispbr);
 			void testShaderBySpheres();
-			void AddHdrToWorld(OGLHdr* hdrEnvmap);
+			
 
 
 			
@@ -56,12 +57,14 @@ namespace NCL {
 
 			bool useGravity;
 			bool inSelectionMode;
+			bool IsUsePBRshader;
 
 			float		forceMagnitude;
 
 			GameObject* selectionObject = nullptr;
 			OGLTexture* basicTex = nullptr;
 			OGLShader* basicShader = nullptr;
+			OGLShader* FongShader = nullptr;
 			OGLHdr* hdrEnvmap= nullptr;
 			
 

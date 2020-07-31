@@ -41,7 +41,7 @@ namespace NCL {
 
 			void SetupDebugMatrix(OGLShader*s) override;
 
-			vector< RenderObject*> activeObjects;
+			vector<const RenderObject*> activeObjects;
 
 			//shadow mapping things
 			OGLShader*	shadowShader;

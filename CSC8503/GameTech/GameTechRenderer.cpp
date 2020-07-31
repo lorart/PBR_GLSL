@@ -210,12 +210,15 @@ void GameTechRenderer::RenderCamera() {
 	//for (const auto& i : activeObjects) {
 	for (size_t l = 0; l < activeObjects.size(); l++)
 	{
-		 auto i = activeObjects[l];
+		OGLShader* shader;
+		const auto i = activeObjects[l];
+		std::cout <<" isUsedPBR   "<< isUsedPBR <<std::endl;
 		 if (isUsedPBR) {
-			 OGLShader* shader = (OGLShader*)(*i).GetShader();
+			 shader = (OGLShader*)(*i).GetShader();
 		 }
 		 else {
-			 OGLShader* shader=CompareShader;
+			 shader = (OGLShader*)(*i).GetShader();
+			// shader=CompareShader;
 		 }
 	
 	

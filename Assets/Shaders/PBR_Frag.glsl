@@ -201,7 +201,8 @@ vec3 kd=vec3(1.0)-ks;
 //vec3 Lo=(kd*albedoValue/PI+ ks*specular)*radiance*NdotL;
 
 float shadow =CaculateShadow();
-vec3 colour=(kd*albedoValue+ ks*specular*shadow)*radiance;
+//vec3 colour=(kd*albedoValue+ ks*specular*shadow)*radiance;
+vec3 colour=(kd*albedoValue+ specular*shadow)*radiance;
 
 
 
@@ -210,7 +211,8 @@ vec3 colour=(kd*albedoValue+ ks*specular*shadow)*radiance;
 
 //fragColor.rgb=vec3(Geo);
 fragColor.rgb=NorD*Geo*Fre;
-//fragColor.rgb=vec3(shadow);
+fragColor.rgb=specular;
+//fragColor.rgb=colour;
 
 
 }

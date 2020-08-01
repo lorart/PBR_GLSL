@@ -212,13 +212,13 @@ void GameTechRenderer::RenderCamera() {
 	{
 		OGLShader* shader;
 		const auto i = activeObjects[l];
-		std::cout <<" isUsedPBR   "<< isUsedPBR <<std::endl;
+	
 		 if (isUsedPBR) {
-			 shader = (OGLShader*)(*i).GetShader();
+		 shader = (OGLShader*)(*i).GetShader();
+			// shader = CompareShader;
 		 }
 		 else {
-			 shader = (OGLShader*)(*i).GetShader();
-			// shader=CompareShader;
+			 shader=CompareShader;
 		 }
 	
 	
@@ -229,8 +229,7 @@ void GameTechRenderer::RenderCamera() {
 		//todo:why
 		if (activeShader != shader) {
 			if ((*i).GetIsPBR()) {
-				//TODO: 
-
+			
 				//if((*i).GetPbrTexArry().size()!=5){
 				auto tempMaterial = (*i).GetOGLMaterial();
 				if (tempMaterial->pbrTexArry.size() != 5) {
@@ -264,19 +263,21 @@ void GameTechRenderer::RenderCamera() {
 
 			}
 			else {
-				BindTextureToShader((OGLTexture*)(*i).GetDefaultTexture(), "mainTex", 0);
+			
+				BindTextureToShader((OGLTexture*)(*i).GetDefaultTexture(), "mainTex", 6);
 
 				hasTexLocation = glGetUniformLocation(shader->GetProgramID(), "hasTexture");
 
 			}
 			//todo: make it better
+			auto tempMaterial = (*i).GetOGLMaterial();
 			if ((*i).GetIsPBR()) {
-				albedoValueLocation = glGetUniformLocation(shader->GetProgramID(), "albedoValue");
+				//albedoValueLocation = glGetUniformLocation(shader->GetProgramID(), "albedoValue");
 				metallicValueLocation = glGetUniformLocation(shader->GetProgramID(), "metallicValue");
 				roughnessValueLocation = glGetUniformLocation(shader->GetProgramID(), "roughnessValue");
 				aoValueLocation = glGetUniformLocation(shader->GetProgramID(), "aoValue");
-				auto tempMaterial = (*i).GetOGLMaterial();
-				glUniform3fv(albedoValueLocation, 1, (float*)&(tempMaterial->albedoValue));
+				
+				//glUniform3fv(albedoValueLocation, 1, (float*)&(tempMaterial->albedoValue));
 				glUniform1f(metallicValueLocation, tempMaterial->metallicValue);
 				glUniform1f(roughnessValueLocation, tempMaterial->roughnessValue);
 				//todo:delete
@@ -284,7 +285,8 @@ void GameTechRenderer::RenderCamera() {
 				glUniform1f(aoValueLocation, tempMaterial->aoValue);
 			}
 
-
+			albedoValueLocation = glGetUniformLocation(shader->GetProgramID(), "albedoValue");
+			glUniform3fv(albedoValueLocation, 1, (float*)&(tempMaterial->albedoValue));
 			projLocation = glGetUniformLocation(shader->GetProgramID(), "projMatrix");
 			viewLocation = glGetUniformLocation(shader->GetProgramID(), "viewMatrix");
 			modelLocation = glGetUniformLocation(shader->GetProgramID(), "modelMatrix");

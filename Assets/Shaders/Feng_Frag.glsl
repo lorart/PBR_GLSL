@@ -52,7 +52,7 @@ void main(void)
 
 
 //vec3 diffuse=texture(albedo_map, IN.texCoord).rgb+albedoValue;
-vec3 diffuse=texture(albedo_map, IN.texCoord).rgb;
+vec3 diffuse=texture(albedo_map, IN.texCoord).rgb+albedoValue;
 vec3 incident = normalize(lightPos - IN.worldPos);
 float lambert = max(0.0, dot(-incident, N));
 
@@ -70,7 +70,7 @@ vec3 colour = (diffuse.rgb * lightColour.rgb);
 	fragColor = vec4(colour * atten * lambert, 1);
 	fragColor.rgb += (diffuse.rgb * lightColour.rgb) * 0.1;
 	fragColor*=1.1;
-	fragColor.rgb= N;
+	//fragColor.rgb= N;
 
 
 }

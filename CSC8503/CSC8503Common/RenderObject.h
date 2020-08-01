@@ -26,7 +26,7 @@ namespace NCL {
 
 			RenderObject(Transform* parentTransform, OGLMesh* mesh, TextureBase* tex, ShaderBase* shader);
 
-			RenderObject(Transform* parentTransform, OGLMesh* mesh, OGLMaterial* meterial, ShaderBase* pbrShader, bool isPBR);
+			RenderObject(Transform* parentTransform, OGLMesh* mesh, OGLMaterial* meterial, ShaderBase* pbrShader, ShaderBase* FengShader, bool isPBR);
 
 			
 

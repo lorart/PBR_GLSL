@@ -25,7 +25,7 @@ TutorialGame::TutorialGame()	{
 	inSelectionMode = false;*/
 #pragma endregion physic
 
-
+	IsUsePBRshader = true;
 	Debug::SetRenderer(renderer);
 
 	InitialiseAssets();
@@ -39,6 +39,7 @@ for this module, even in the coursework, but you can add it if you like!
 
 */
 void TutorialGame::InitialiseAssets() {
+
 	auto loadFunc = [](const string& name, OGLMesh** into) {
 		*into = new OGLMesh(name);
 		(*into)->SetPrimitiveType(GeometryPrimitive::Triangles);
@@ -57,6 +58,9 @@ void TutorialGame::InitialiseAssets() {
 	basicVertName = "PBR_Vert.glsl";
 	basicFragName = "PBR_Frag.glsl";
 	basicShader = new OGLShader(basicVertName, basicFragName);
+
+	CompareVertName = "Feng_Vert.glsl";
+	CompareFragName = "Feng_Frag.glsl";
 	FongShader = new OGLShader("Feng_Vert.glsl", "Feng_Frag.glsl");
 	renderer->CompareShader = FongShader;
 
@@ -214,6 +218,8 @@ void TutorialGame::ChangeShader()
 	
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::G)) {
 		renderer->isUsedPBR = !renderer->isUsedPBR;
+	
+		//model->meshes[i]->material->pbrTexArry[ALBEDO_MAP],
 	}
 }
 
@@ -381,15 +387,23 @@ void TutorialGame::AddModelToWorld(Model* model,const Vector3& position, Vector3
 
 		modelObject->GetTransform().SetWorldPosition(position);
 		modelObject->GetTransform().SetWorldScale(dimensions);
+
+		model->meshes[i]->material->matShader = new OGLShader(basicVertName, basicFragName);
+		model->meshes[i]->material->FengShader = new OGLShader(CompareVertName,CompareFragName);
+
 		if (ispbr)
 		{
 			
-			model->meshes[i]->material->matShader = new OGLShader(basicVertName, basicFragName);
+		//	model->meshes[i]->material->matShader = new OGLShader(basicVertName, basicFragName);
 			modelObject->SetRenderObject(new RenderObject(&modelObject->GetTransform(), model->meshes[i], model->meshes[i]->material, 
-				model->meshes[i]->material->matShader, true));
+				model->meshes[i]->material->matShader, model->meshes[i]->material->FengShader, true));
 		} 
 		else {
-			modelObject->SetRenderObject(new RenderObject(&modelObject->GetTransform(), model->meshes[i], basicTex, basicShader));
+		/*
+			modelObject->SetRenderObject(new RenderObject(&modelObject->GetTransform(), model->meshes[i], 
+				model->meshes[i]->material->pbrTexArry[ALBEDO_MAP], basicShader));*/
+			modelObject->SetRenderObject(new RenderObject(&modelObject->GetTransform(), model->meshes[i],
+				model->meshes[i]->material->pbrTexArry[ALBEDO_MAP], model->meshes[i]->material->FengShader));
 		}
 	
 		modelObject->SetPhysicsObject(new PhysicsObject(&modelObject->GetTransform(), modelObject->GetBoundingVolume()));

@@ -16,10 +16,10 @@ RenderObject::RenderObject(Transform* parentTransform, OGLMesh* mesh, TextureBas
 
 }
 
-RenderObject::RenderObject(Transform* parentTransform, OGLMesh* mesh, OGLMaterial* meterial, ShaderBase* pbrShader, bool isPBR) {
+RenderObject::RenderObject(Transform* parentTransform, OGLMesh* mesh, OGLMaterial* meterial, ShaderBase* pbrShader, ShaderBase* FengShader, bool isPBR) {
 	this->IsPBR = isPBR;
 	if(isPBR){
-	this->texture =nullptr;
+	this->texture = meterial->pbrTexArry[ALBEDO_MAP];
 	this->transform = parentTransform;
 	this->mesh = mesh;
 	this->material = meterial;
@@ -29,8 +29,8 @@ RenderObject::RenderObject(Transform* parentTransform, OGLMesh* mesh, OGLMateria
 	else {
 		this->transform = parentTransform;
 		this->mesh = mesh;
-		this->texture = meterial->pbrTexArry[0];
-		this->shader = shader;
+		this->texture = meterial->pbrTexArry[ALBEDO_MAP];
+		this->shader = FengShader;
 		this->colour = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	
 	}

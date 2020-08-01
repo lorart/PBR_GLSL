@@ -85,6 +85,9 @@ namespace NCL {
 			string basicFragName;
 			string basicVertName;
 
+			string CompareFragName;
+			string CompareVertName;
+
 		};
 	}
 }

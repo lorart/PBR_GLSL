@@ -19,6 +19,7 @@ namespace NCL {
 			float roughnessValue = 0;
 			float aoValue = 0;
 			OGLShader* matShader;
+			OGLShader* FengShader;
 		};
 	}
 }

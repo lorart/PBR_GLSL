@@ -69,12 +69,15 @@ void GameTechRenderer::RenderFrame() {
 	CaculateViewPorjMat();
 	glEnable(GL_CULL_FACE);
 	glClearColor(1, 1, 1, 1);
-	//RenderHDRenvironment();
+	
+	//todo:delete
+	setupHDR(HdrEnv);
+
 	BuildObjectList();
 	SortObjectList();
 	RenderShadowMap();
 	RenderCamera();
-	RenderHDRenvironment();
+	RenderHDRSkybox();
 	glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
 	//TODO: 
 }
@@ -366,6 +369,7 @@ void NCL::CSC8503::GameTechRenderer::setupHDR(OGLHdr* hdrEnv)
 {
 	this->HdrEnv = hdrEnv;
 	RenderHDRtoCubemap();
+	RenderCubemaptoIrradianceMap();
 }
 
 void NCL::CSC8503::GameTechRenderer::CaculateViewPorjMat()
@@ -376,7 +380,7 @@ void NCL::CSC8503::GameTechRenderer::CaculateViewPorjMat()
 
 }
 
-void NCL::CSC8503::GameTechRenderer::RenderHDRenvironment()
+void NCL::CSC8503::GameTechRenderer::RenderHDRSkybox()
 {
 
 	glDepthFunc(GL_LEQUAL);
@@ -423,12 +427,11 @@ void NCL::CSC8503::GameTechRenderer::RenderHDRtoCubemap()
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, HdrEnv->HdrTexture->GetObjectID());
 
-
-
-	glViewport(0, 0, 512, 512); // don't forget to configure the viewport to the capture dimensions. 
+	glViewport(0, 0, HdrEnv->cubeTexSize, HdrEnv->cubeTexSize); // don't forget to configure the viewport to the capture dimensions. 
 
 	//glBindFramebuffer(GL_FRAMEBUFFER, HdrEnv->captureFBO);
 	generate_bind_Fbo(HdrEnv->captureFBO);
+
 	for (int i = 0; i < 6; i++)
 	{
 		HdrEnv->HdrToCubemapShader->setMat4("view", captureViews[i]);
@@ -442,6 +445,44 @@ void NCL::CSC8503::GameTechRenderer::RenderHDRtoCubemap()
 	glDeleteFramebuffers(1, &HdrEnv->captureFBO);//todo::test
 
 
+
+}
+
+void NCL::CSC8503::GameTechRenderer::RenderCubemaptoIrradianceMap()
+{
+
+	glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
+	glm::mat4 captureViews[] =
+	{
+		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  1.0f,  0.0f), glm::vec3(0.0f,  0.0f,  1.0f)),
+		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f,  0.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
+		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
+	};
+
+	//todo:test
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, HdrEnv->cubeIrradianceTexSize,
+		HdrEnv->cubeIrradianceTexSize);
+	HdrEnv->irradianceShader->use();
+	
+	HdrEnv->irradianceShader->setInt("environmentMap", 0);
+	HdrEnv->irradianceShader->setMat4("projection", captureProjection);
+	glActiveTexture(GL_TEXTURE11);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, HdrEnv->irradianceMap->GetObjectID());
+
+	glViewport(0, 0, 32, 32); // don't forget to configure the viewport to the capture dimensions.
+	glBindFramebuffer(GL_FRAMEBUFFER, HdrEnv->captureFBO);
+	for (unsigned int i = 0; i < 6; ++i)
+	{
+		HdrEnv->irradianceShader->setMat4("view", captureViews[i]);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+			GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, HdrEnv->irradianceMap->GetObjectID(), 0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		DrawHDRCube(HdrEnv->irradianceShader, HdrEnv->HdrTexture);
+	}
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 }
 

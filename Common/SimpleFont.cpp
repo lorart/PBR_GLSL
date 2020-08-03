@@ -73,7 +73,7 @@ int SimpleFont::BuildVerticesForString(std::string &text, Vector2&startPos, Vect
 		}
 		FontChar& charData = allCharData[charIndex - startChar];
 
-		float scale = 0.5f;
+		float scale = 0.35f;
 		//For basic vertex buffers, we're assuming we should add 6 vertices
 
 		float charWidth  = (float)((charData.x1 - charData.x0)/ texWidth) * scale;

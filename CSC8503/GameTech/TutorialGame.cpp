@@ -110,7 +110,7 @@ void TutorialGame::UpdateGame(float dt) {
 	//	Debug::Print("(G)ravity off", Vector2(10, 40));
 	//}
 #pragma endregion physic
-	SelectObject();
+	//SelectObject();
 	MoveSelectedObject();
 
 	world->UpdateWorld(dt);
@@ -119,7 +119,7 @@ void TutorialGame::UpdateGame(float dt) {
 	//physics->Update(dt);
 #pragma endregion physic
 	Debug::FlushRenderables();
-
+	DrawDebugInformation();
 	renderer->Render();
 }
 
@@ -218,9 +218,24 @@ void TutorialGame::ChangeShader()
 	
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::G)) {
 		renderer->isUsedPBR = !renderer->isUsedPBR;
-	
 		//model->meshes[i]->material->pbrTexArry[ALBEDO_MAP],
 	}
+}
+
+void TutorialGame::DrawDebugInformation()
+{
+	renderer->DrawString("Change Shader: G", Vector2(20, 0));
+	renderer->DrawString("MOVE Camera: S D Shift Space ", Vector2(20, 20));
+	renderer->DrawString("MOVE Light: I J K L ", Vector2(20, 40));
+
+	if (renderer->isUsedPBR) {
+		renderer->DrawString("PBR shader", Vector2(20, 620));
+	}
+	else {
+		renderer->DrawString("Bilin-pohng shader", Vector2(20, 600));
+	}
+
+
 }
 
 void NCL::CSC8503::TutorialGame::LightMovement()
@@ -291,55 +306,57 @@ manipulated later. Pressing Q will let you toggle between this behaviour and ins
 letting you move the camera around.
 
 */
-bool TutorialGame::SelectObject() {
-	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::Q)) {
-		inSelectionMode = !inSelectionMode;
-		if (inSelectionMode) {
-			Window::GetWindow()->ShowOSPointer(true);
-			Window::GetWindow()->LockMouseToWindow(false);
-		}
-		else {
-			Window::GetWindow()->ShowOSPointer(false);
-			Window::GetWindow()->LockMouseToWindow(true);
-		}
-	}
-	if (inSelectionMode) {
-		renderer->DrawString("Press Q to change to camera mode!", Vector2(10, 0));
-
-		if (Window::GetMouse()->ButtonDown(NCL::MouseButtons::LEFT)) {
-			if (selectionObject) {	//set colour to deselected;
-				selectionObject->GetRenderObject()->SetColour(Vector4(1, 1, 1, 1));
-				selectionObject = nullptr;
-			}
-
-			Ray ray = CollisionDetection::BuildRayFromMouse(*world->GetMainCamera());
-
-			RayCollision closestCollision;
-			if (world->Raycast(ray, closestCollision, true)) {
-				selectionObject = (GameObject*)closestCollision.node;
-				selectionObject->GetRenderObject()->SetColour(Vector4(0, 1, 0, 1));
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
-		if (Window::GetKeyboard()->KeyPressed(NCL::KeyboardKeys::L)) {
-			if (selectionObject) {
-				if (lockedObject == selectionObject) {
-					lockedObject = nullptr;
-				}
-				else {
-					lockedObject = selectionObject;
-				}
-			}
-		}
-	}
-	else {
-		renderer->DrawString("Press Q to change to select mode!", Vector2(10, 0));
-	}
-	return false;
-}
+//bool TutorialGame::SelectObject() {
+//	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::Q)) {
+//		inSelectionMode = !inSelectionMode;
+//		if (inSelectionMode) {
+//			Window::GetWindow()->ShowOSPointer(true);
+//			Window::GetWindow()->LockMouseToWindow(false);
+//		}
+//		else {
+//			Window::GetWindow()->ShowOSPointer(false);
+//			Window::GetWindow()->LockMouseToWindow(true);
+//		}
+//	}
+//	if (inSelectionMode) {
+//		renderer->DrawString("Press Q to change to camera mode!", Vector2(10, 0));
+//
+//		if (Window::GetMouse()->ButtonDown(NCL::MouseButtons::LEFT)) {
+//			if (selectionObject) {	//set colour to deselected;
+//				selectionObject->GetRenderObject()->SetColour(Vector4(1, 1, 1, 1));
+//				selectionObject = nullptr;
+//			}
+//
+//			Ray ray = CollisionDetection::BuildRayFromMouse(*world->GetMainCamera());
+//
+//			RayCollision closestCollision;
+//			if (world->Raycast(ray, closestCollision, true)) {
+//				selectionObject = (GameObject*)closestCollision.node;
+//				selectionObject->GetRenderObject()->SetColour(Vector4(0, 1, 0, 1));
+//				return true;
+//			}
+//			else {
+//				return false;
+//			}
+//		}
+//		if (Window::GetKeyboard()->KeyPressed(NCL::KeyboardKeys::L)) {
+//			if (selectionObject) {
+//				if (lockedObject == selectionObject) {
+//					lockedObject = nullptr;
+//				}
+//				else {
+//					lockedObject = selectionObject;
+//				}
+//			}
+//		}
+//	}
+//	else {
+//		renderer->DrawString("Change Shader: G", Vector2(20, 0));
+//		renderer->DrawString("MOVE Camera: S D Shift Space ", Vector2(20, 20));
+//		renderer->DrawString("MOVE Light: I J K L ", Vector2(20, 40));
+//	}
+//	return false;
+//}
 
 /*
 If an object has been clicked, it can be pushed with the right mouse button, by an amount

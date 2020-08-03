@@ -194,7 +194,7 @@ void OGLRenderer::DrawString(const std::string& text, const Vector2&pos, const V
 	
 	s.ndcPos.x = (s.ndcPos.x * 2.0f) - 1.0f;
 	s.ndcPos.y = (s.ndcPos.y * 2.0f) - 1.0f;
-	s.size = 1.0f;
+	s.size = 0.3f;
 	s.text = text;
 	debugStrings.emplace_back(s);
 }

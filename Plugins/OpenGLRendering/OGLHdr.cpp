@@ -3,7 +3,10 @@
 NCL::Rendering::OGLHdr::OGLHdr(std::string& HdrFilename)
 {
 	HdrTexture = (OGLTexture*)NCL::Rendering::OGLTexture::LinerRGBATextureFromFilename(HdrFilename);
-	cubeTex = (OGLTexture*)NCL::Rendering::OGLTexture::AllocateCubeTexture();
+	cubeTexSize = 512;
+	cubeIrradianceTexSize = 32;
+	cubeTex = (OGLTexture*)NCL::Rendering::OGLTexture::AllocateCubeTexture(cubeTexSize);
+	irradianceMap= (OGLTexture*)NCL::Rendering::OGLTexture::AllocateCubeTexture(cubeIrradianceTexSize);
 	
 	cubeModel= new Model(Assets::MESHDIR + "CUBE" + ".obj", 0);
 
@@ -11,11 +14,12 @@ NCL::Rendering::OGLHdr::OGLHdr(std::string& HdrFilename)
 
 	HdrToCubemapShader = new OGLShader("HDR_toCubeMap_Vert.glsl", "HDR_toCubeMap_Frag.glsl");
 	SkyboxShader = new OGLShader("Skybox_Vert.glsl","Skybox_Frag.glsl");
+	irradianceShader = new OGLShader("HDR_toCubeMap_Vert.glsl","HDR_irradiance_ Frag.glsl");
 	//todo:
 	//irradianceShader = new  OGLShader("HDR_irradiance_Vert.glsl","HDR_irradiance_Vert.glsl");
 	generate_bind_Fbo(captureFBO);
 	generate_bind_Rbo(captureRBO);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, cubeTexSize, cubeTexSize);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO);
 	//clear_Fbo();
 
@@ -32,6 +36,8 @@ NCL::Rendering::OGLHdr::~OGLHdr()
 	delete HdrToCubemapShader;
 	delete SkyboxShader;
 	delete irradianceShader;
+	delete irradianceMap;
+
 }
 
 //todo:delete

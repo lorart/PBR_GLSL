@@ -25,6 +25,7 @@ namespace NCL {
 
 			OGLTexture* HdrTexture;
 			OGLTexture* cubeTex;
+			OGLTexture* irradianceMap;
 
 			Model* cubeModel = nullptr;
 
@@ -37,7 +38,8 @@ namespace NCL {
 			unsigned int captureFBO;
 			unsigned int captureRBO;
 
-			
+			int cubeTexSize;
+			int cubeIrradianceTexSize;
 			
 
 		};

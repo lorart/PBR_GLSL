@@ -55,8 +55,9 @@ namespace NCL {
 			Matrix4 projMatrix;
 
 			
-			void RenderHDRenvironment();
+			void RenderHDRSkybox();
 			void RenderHDRtoCubemap();
+			void RenderCubemaptoIrradianceMap();
 			void DrawHDRCube(OGLShader* shader, OGLTexture* tex);
 			OGLHdr* HdrEnv;
 			

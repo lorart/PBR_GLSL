@@ -20,7 +20,7 @@ namespace NCL {
 
 			void InitCamera();
 			void UpdateKeys();
-
+			void DrawDebugInformation();
 			void InitWorld();
 
 		
@@ -33,7 +33,7 @@ namespace NCL {
 			*/
 			
 
-			bool SelectObject();
+			//bool SelectObject();
 			void MoveSelectedObject();
 			//void DebugObjectMovement();
 			void LockedObjectMovement();

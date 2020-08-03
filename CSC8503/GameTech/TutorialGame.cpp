@@ -124,36 +124,7 @@ void TutorialGame::UpdateGame(float dt) {
 }
 
 void TutorialGame::UpdateKeys() {
-	//if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F1)) {
-	//	InitWorld(); //We can reset the simulation at any time with F1
-	//	selectionObject = nullptr;
-	//}
-
-	//if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F2)) {
-	//	InitCamera(); //F2 will reset the camera to a specific default place
-	//}
-
-	//if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::G)) {
-	//	useGravity = !useGravity; //Toggle gravity!
-	//	physics->UseGravity(useGravity);
-	//}
-	////Running certain physics updates in a consistent order might cause some
-	////bias in the calculations - the same objects might keep 'winning' the constraint
-	////allowing the other one to stretch too much etc. Shuffling the order so that it
-	////is random every frame can help reduce such bias.
-	//if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F9)) {
-	//	world->ShuffleConstraints(true);
-	//}
-	//if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F10)) {
-	//	world->ShuffleConstraints(false);
-	//}
-
-	//if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F7)) {
-	//	world->ShuffleObjects(true);
-	//}
-	//if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F8)) {
-	//	world->ShuffleObjects(false);
-	//}
+	
 
 	if (lockedObject) {
 		LockedObjectMovement();

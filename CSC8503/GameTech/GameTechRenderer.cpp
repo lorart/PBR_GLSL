@@ -48,6 +48,7 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	Matrix4 viewMatrix;
 	Matrix4 projMatrix;
 	CompareShader = nullptr;
+	cubeTexture = 0;
 
 
 }
@@ -79,10 +80,10 @@ void GameTechRenderer::RenderFrame() {
 	RenderCamera();
 
 
-	//RenderHDRSkybox(HdrEnv->cubeTex->GetObjectID());
+	//RenderHDRSkybox(HdrEnv->cubeTex->GetObjectID(),10);
 	
-	//todo::test
-	RenderHDRSkybox(HdrEnv->irradianceMap->GetObjectID());
+	//todo::error
+	RenderHDRSkybox(HdrEnv->irradianceMap->GetObjectID(),11);
 
 	glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
 	//TODO: 
@@ -386,23 +387,26 @@ void NCL::CSC8503::GameTechRenderer::CaculateViewPorjMat()
 
 }
 
-void NCL::CSC8503::GameTechRenderer::RenderHDRSkybox( int cubeTexture)
+void NCL::CSC8503::GameTechRenderer::RenderHDRSkybox( int cubeTexture,int glActiveTextureNum)
 {
-
+	static int cubeTexNum = 0;
 	glDepthFunc(GL_LEQUAL);
 
 
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_FRONT);
-	glActiveTexture(GL_TEXTURE10);
-	//glBindTexture(GL_TEXTURE_CUBE_MAP, HdrEnv->cubeTex->GetObjectID());
-	glBindTexture(GL_TEXTURE_CUBE_MAP, cubeTexture);
 
-	HdrEnv->SkyboxShader->use();
-	HdrEnv->SkyboxShader->setMat4("projection", this->projMatrix);
-	HdrEnv->SkyboxShader->setMat4("view", this->viewMatrix);
+	//todo::test
+	
+		glActiveTexture(GL_TEXTURE0+ glActiveTextureNum);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubeTexture);
 
-	HdrEnv->SkyboxShader->setInt("environmentMap", 10);
+		HdrEnv->SkyboxShader->use();
+		HdrEnv->SkyboxShader->setMat4("projection", this->projMatrix);
+		HdrEnv->SkyboxShader->setMat4("view", this->viewMatrix);
+
+		HdrEnv->SkyboxShader->setInt("environmentMap", 0+ glActiveTextureNum);
+	
 
 	DrawHDRCube(HdrEnv->SkyboxShader, HdrEnv->cubeTex);
 
@@ -479,12 +483,16 @@ void NCL::CSC8503::GameTechRenderer::RenderCubemaptoIrradianceMap()
 	glBindTexture(GL_TEXTURE_CUBE_MAP, HdrEnv->cubeTex->GetObjectID());
 
 	glViewport(0, 0, 32, 32); // don't forget to configure the viewport to the capture dimensions.
-	glBindFramebuffer(GL_FRAMEBUFFER, HdrEnv->captureFBO);
+
+	//todo::test
+	//glBindFramebuffer(GL_FRAMEBUFFER, HdrEnv->captureFBO);
+	generate_bind_Fbo(HdrEnv->captureFBO);
+
+
 	for (unsigned int i = 0; i < 6; ++i)
 	{
 		HdrEnv->irradianceShader->setMat4("view", captureViews[i]);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-			GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, HdrEnv->irradianceMap->GetObjectID(), 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, HdrEnv->irradianceMap->GetObjectID(), 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		//todo::check
 		DrawHDRCube(HdrEnv->irradianceShader, HdrEnv->HdrTexture);

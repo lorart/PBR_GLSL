@@ -99,3 +99,41 @@ Camera Camera::BuildOrthoCamera(const Vector3& pos, float pitch, float yaw, floa
 
 	return c;
 }
+
+Camera Camera::BuildPinholeCamera(const Vector3& pos, float pitch, float yaw, float fov, float near, float far, int lens)
+{
+	Camera c;
+	c.camType = CameraType::Perspective;
+	c.position = pos;
+	c.pitch = pitch;
+	c.yaw = yaw;
+	c.nearPlane = near;
+	c.farPlane = far;
+
+	c.fov = fov;
+
+	c.lens = lens;
+
+	return c;
+
+	//todo: more
+}
+
+Camera Camera::BuildVOFCamera(const Vector3& pos, float pitch, float yaw, float fov, float near, float far, int nearDistance, int farDistance)
+{
+	Camera c;
+	c.camType = CameraType::Perspective;
+	c.position = pos;
+	c.pitch = pitch;
+	c.yaw = yaw;
+	c.nearPlane = near;
+	c.farPlane = far;
+
+	c.fov = fov;
+	c.nearDistance = nearDistance;
+	c.farDistance = farDistance;
+	
+
+	return c;
+
+}

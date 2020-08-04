@@ -58,6 +58,8 @@ namespace NCL {
 			void RenderHDRSkybox(int cubeTexture, int glActiveTextureNum);
 			void RenderHDRtoCubemap();
 			void RenderCubemaptoIrradianceMap();
+			void ClearHDRBuffers();
+
 			void DrawHDRCube(OGLShader* shader, OGLTexture* tex);
 			OGLHdr* HdrEnv;
 

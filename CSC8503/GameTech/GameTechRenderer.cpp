@@ -24,7 +24,7 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	glGenTextures(1, &shadowTex);
 	glBindTexture(GL_TEXTURE_2D, shadowTex);
 
-	(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
@@ -80,10 +80,10 @@ void GameTechRenderer::RenderFrame() {
 	RenderCamera();
 
 
-	//RenderHDRSkybox(HdrEnv->cubeTex->GetObjectID(),10);
+	RenderHDRSkybox(HdrEnv->cubeTex->GetObjectID(),10);
 	
 	//todo::error
-	RenderHDRSkybox(HdrEnv->irradianceMap->GetObjectID(),11);
+	//RenderHDRSkybox(HdrEnv->irradianceMap->GetObjectID(),11);
 
 	glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
 	//TODO: 
@@ -152,7 +152,7 @@ void GameTechRenderer::RenderShadowMap() {
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
-
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
 	glClear(GL_DEPTH_BUFFER_BIT);
@@ -377,6 +377,8 @@ void NCL::CSC8503::GameTechRenderer::setupHDR(OGLHdr* hdrEnv)
 	this->HdrEnv = hdrEnv;
 	RenderHDRtoCubemap();
 	RenderCubemaptoIrradianceMap();
+	//todo:test
+	ClearHDRBuffers();
 }
 
 void NCL::CSC8503::GameTechRenderer::CaculateViewPorjMat()
@@ -454,7 +456,7 @@ void NCL::CSC8503::GameTechRenderer::RenderHDRtoCubemap()
 
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glDeleteFramebuffers(1, &HdrEnv->captureFBO);//todo::test
+	//glDeleteFramebuffers(1, &HdrEnv->captureFBO);//todo::test
 
 }
 
@@ -499,6 +501,12 @@ void NCL::CSC8503::GameTechRenderer::RenderCubemaptoIrradianceMap()
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+}
+
+void GameTechRenderer::ClearHDRBuffers()
+{
+	glDeleteFramebuffers(1, &HdrEnv->captureFBO);//todo::test
+	glDeleteRenderbuffers(1, &HdrEnv->captureRBO);
 }
 
 void NCL::CSC8503::GameTechRenderer::DrawHDRCube(OGLShader* shader, OGLTexture* tex)

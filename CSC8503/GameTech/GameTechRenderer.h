@@ -25,7 +25,7 @@ namespace NCL {
 			OGLShader* CompareShader;
 			Camera* gameWorldCamera;
 
-
+			OGLTexture* tempTex ;
 		protected:
 			void RenderFrame()	override;
 			void RendercameraFrame();
@@ -41,8 +41,9 @@ namespace NCL {
 			void CaculateViewPorjMat();
 			void RenderDOVCamera();
 			void caculateDovCamera();
-			
 
+			void drawFullScreenQuad(OGLShader* shader, OGLTexture* tex);
+		
 			
 
 			void SetupDebugMatrix(OGLShader*s) override;
@@ -61,7 +62,7 @@ namespace NCL {
 			GLuint		cameraTex;
 			GLuint		cameraFBO;
 		
-
+			Model* ScreenQuad = nullptr;
 
 			float screenAspect ;
 			Matrix4 viewMatrix ;

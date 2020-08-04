@@ -69,9 +69,10 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	Matrix4 projMatrix;
 	CompareShader = nullptr;
 	cubeTexture = 0;
+	ScreenQuad = new Model(Assets::MESHDIR + "PLANE" + ".obj", 0);
 
 	gameWorldCamera=world.GetMainCamera();
-
+	tempTex = new OGLTexture();
 }
 
 GameTechRenderer::~GameTechRenderer() {
@@ -86,6 +87,8 @@ GameTechRenderer::~GameTechRenderer() {
 	//todo:check
 	delete HdrEnv;
 	delete CompareShader;
+	delete ScreenQuad;
+	delete tempTex;
 
 	for (auto& i : lightArry) {
 		delete i;
@@ -391,16 +394,43 @@ void NCL::CSC8503::GameTechRenderer::CaculateViewPorjMat()
 
 }
 
+void GameTechRenderer::drawFullScreenQuad(OGLShader* shader, OGLTexture* tex)
+{
+	
+	projMatrix = Matrix4::Orthographic(-1, 1, 1, -1, -1, 1);
+	viewMatrix = Matrix4();
+	Matrix4 modelMatrix = Matrix4();
+	//Matrix4 MVP = projMatrix * viewMatrix * modelMatrix;
+	
+	Transform* quadtransform = new Transform();
+	quadtransform->SetLocalOrientation(Quaternion::AxisAngleToQuaterion(Vector3(0, 0, 1), 90.0f));
+	
+	BindShader(shader);
+
+	shader->setMat4("modelMatrix", modelMatrix);
+	shader->setMat4("viewMatrix", viewMatrix);
+	shader->setMat4("projMatrix", projMatrix);
+	//Transform* parentTransform, OGLMesh* mesh, TextureBase* colourtex, ShaderBase* shader
+	RenderObject* i = new RenderObject(quadtransform, ScreenQuad, tex, shader);
+}
+
 void GameTechRenderer::caculateDovCamera()
 {
+	
 
 }
 
 void GameTechRenderer::RenderDOVCamera()
 {
+
+	
+	
 	RendercameraFrame();
 
-
+	OGLTexture* tempTex = new OGLTexture();
+	drawFullScreenQuad(cameraDovPostShader,tempTex);
+	
+	
 
 }
 

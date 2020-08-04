@@ -38,6 +38,9 @@ namespace NCL {
 			unsigned int captureFBO;
 			unsigned int captureRBO;
 
+			unsigned int captureFBO1;
+			unsigned int captureRBO1;
+
 			int cubeTexSize;
 			int cubeIrradianceTexSize;
 			

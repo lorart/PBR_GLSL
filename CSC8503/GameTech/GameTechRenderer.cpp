@@ -73,17 +73,19 @@ void GameTechRenderer::RenderFrame() {
 	
 	//todo:delete
 	//setupHDR(HdrEnv);
+	RenderCubemaptoIrradianceMap();
 
 	BuildObjectList();
 	SortObjectList();
 	RenderShadowMap();
 	RenderCamera();
 
-
-	RenderHDRSkybox(HdrEnv->cubeTex->GetObjectID(),10);
 	
-	//todo::error
-	//RenderHDRSkybox(HdrEnv->irradianceMap->GetObjectID(),11);
+
+	//RenderHDRSkybox(HdrEnv->cubeTex,10);
+	
+	//todo::error***************
+  RenderHDRSkybox(HdrEnv->irradianceMap,11);
 
 	glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
 	//TODO: 
@@ -110,44 +112,7 @@ void GameTechRenderer::BuildObjectList() {
 void GameTechRenderer::SortObjectList() {
 
 }
-//todo:shadowMap
-//void GameTechRenderer::RenderShadowMap() {
-//
-//	glEnable(GL_DEPTH_TEST);
-//	glDepthFunc(GL_LESS);
-//
-//	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-//	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
-//	glClear(GL_DEPTH_BUFFER_BIT);//	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);//	glViewport(0, 0, SHADOWSIZE, SHADOWSIZE);
-//
-//	glCullFace(GL_FRONT);
-//
-//	
-//	BindShader(shadowShader);
-//	int mvpLocation = glGetUniformLocation(shadowShader->GetProgramID(), "mvpMatrix");
-//
-//	Matrix4 shadowViewMatrix = Matrix4::BuildViewMatrix(lightArry[0]->lightPosition, Vector3(0, 0, 0), Vector3(0,1,0));
-//
-//	Matrix4 shadowProjMatrix = Matrix4::Perspective(100.0f, 500.0f, 1, 45.0f);
-//
-//	Matrix4 mvMatrix = shadowProjMatrix * shadowViewMatrix;
-//
-//	shadowMatrix = biasMatrix * mvMatrix; //we'll use this one later on
-//
-//	for (const auto&i : activeObjects) {
-//		Matrix4 modelMatrix = (*i).GetTransform()->GetWorldMatrix();
-//		Matrix4 mvpMatrix	= mvMatrix * modelMatrix;
-//		glUniformMatrix4fv(mvpLocation, 1, false, (float*)&mvpMatrix);
-//		BindMesh((*i).GetMesh());
-//		DrawBoundMesh();
-//	}	
-//
-//	glViewport(0, 0, currentWidth, currentHeight);
-//	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-//	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-//
-//	glCullFace(GL_BACK);
-//}
+
 void GameTechRenderer::RenderShadowMap() {
 
 	glEnable(GL_DEPTH_TEST);
@@ -164,7 +129,9 @@ void GameTechRenderer::RenderShadowMap() {
 	BindShader(shadowShader);
 	int mvpLocation = glGetUniformLocation(shadowShader->GetProgramID(), "mvpMatrix");
 
-	Matrix4 shadowViewMatrix = Matrix4::BuildViewMatrix(lightArry[0]->lightPosition, Vector3(0, 0, 0), Vector3(0, 1, 0));
+	//todo:check***********
+	//Matrix4 shadowViewMatrix = Matrix4::BuildViewMatrix(lightArry[0]->lightPosition, Vector3(0, 0, 0), Vector3(0, 1, 0));
+	Matrix4 shadowViewMatrix = Matrix4::BuildViewMatrix(Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0, 1, 0));
 	Matrix4 shadowProjMatrix = Matrix4::Perspective(100.0f, 500.0f, 1, 45.0f);
 
 	Matrix4 mvMatrix = shadowProjMatrix * shadowViewMatrix;
@@ -389,7 +356,7 @@ void NCL::CSC8503::GameTechRenderer::CaculateViewPorjMat()
 
 }
 
-void NCL::CSC8503::GameTechRenderer::RenderHDRSkybox( int cubeTexture,int glActiveTextureNum)
+void NCL::CSC8503::GameTechRenderer::RenderHDRSkybox(OGLTexture* cubeTexture,int glActiveTextureNum)
 {
 	static int cubeTexNum = 0;
 	glDepthFunc(GL_LEQUAL);
@@ -401,7 +368,7 @@ void NCL::CSC8503::GameTechRenderer::RenderHDRSkybox( int cubeTexture,int glActi
 	//todo::test
 	
 		glActiveTexture(GL_TEXTURE0+ glActiveTextureNum);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, cubeTexture);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubeTexture->GetObjectID());
 
 		HdrEnv->SkyboxShader->use();
 		HdrEnv->SkyboxShader->setMat4("projection", this->projMatrix);
@@ -410,7 +377,8 @@ void NCL::CSC8503::GameTechRenderer::RenderHDRSkybox( int cubeTexture,int glActi
 		HdrEnv->SkyboxShader->setInt("environmentMap", 0+ glActiveTextureNum);
 	
 
-	DrawHDRCube(HdrEnv->SkyboxShader, HdrEnv->cubeTex);
+	//DrawHDRCube(HdrEnv->SkyboxShader, HdrEnv->cubeTex);
+		DrawHDRCube(HdrEnv->SkyboxShader, cubeTexture);
 
 
 
@@ -445,6 +413,7 @@ void NCL::CSC8503::GameTechRenderer::RenderHDRtoCubemap()
 
 	//glBindFramebuffer(GL_FRAMEBUFFER, HdrEnv->captureFBO);
 	generate_bind_Fbo(HdrEnv->captureFBO);
+	std::cout << "captureFBO= " << HdrEnv->captureFBO<< std::endl;
 
 	for (int i = 0; i < 6; i++)
 	{
@@ -456,7 +425,7 @@ void NCL::CSC8503::GameTechRenderer::RenderHDRtoCubemap()
 
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	//glDeleteFramebuffers(1, &HdrEnv->captureFBO);//todo::test
+	glDeleteFramebuffers(1, &HdrEnv->captureFBO);//todo::test
 
 }
 
@@ -478,29 +447,31 @@ void NCL::CSC8503::GameTechRenderer::RenderCubemaptoIrradianceMap()
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, HdrEnv->cubeIrradianceTexSize,
 		HdrEnv->cubeIrradianceTexSize);
 	HdrEnv->irradianceShader->use();
-	HdrEnv->irradianceShader->setInt("environmentMap", 11);
+	HdrEnv->irradianceShader->setInt("environmentMap", 9);
 	HdrEnv->irradianceShader->setMat4("projection", captureProjection);
-	glActiveTexture(GL_TEXTURE11);
+	glActiveTexture(GL_TEXTURE9);
 	//todo::check
 	glBindTexture(GL_TEXTURE_CUBE_MAP, HdrEnv->cubeTex->GetObjectID());
 
 	glViewport(0, 0, 32, 32); // don't forget to configure the viewport to the capture dimensions.
 
 	//todo::test
-	//glBindFramebuffer(GL_FRAMEBUFFER, HdrEnv->captureFBO);
-	generate_bind_Fbo(HdrEnv->captureFBO);
-
+	//glBindFramebuffer(GL_FRAMEBUFFER, HdrEnv->captureFBO1);
+	generate_bind_Fbo(HdrEnv->captureFBO1);
+	//std::cout << "captureFBO1= " << HdrEnv->captureFBO1 << std::endl;
 
 	for (unsigned int i = 0; i < 6; ++i)
 	{
 		HdrEnv->irradianceShader->setMat4("view", captureViews[i]);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, HdrEnv->irradianceMap->GetObjectID(), 0);
+		//std::cout << "HdrEnv->irradianceMap->GetObjectID()= " << HdrEnv->irradianceMap->GetObjectID() << std::endl;
+		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		//todo::check
 		DrawHDRCube(HdrEnv->irradianceShader, HdrEnv->HdrTexture);
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
+	//glDeleteFramebuffers(1, &HdrEnv->captureFBO);
 }
 
 void GameTechRenderer::ClearHDRBuffers()

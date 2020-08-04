@@ -11,6 +11,7 @@ using namespace CSC8503;
 
 #define SHADOWSIZE 4096
 
+
 Matrix4 biasMatrix = Matrix4::Translation(Vector3(0.5, 0.5, 0.5)) * Matrix4::Scale(Vector3(0.5, 0.5, 0.5));
 
 GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetWindow()), gameWorld(world) {
@@ -82,10 +83,10 @@ void GameTechRenderer::RenderFrame() {
 
 	
 
-	//RenderHDRSkybox(HdrEnv->cubeTex,10);
+	RenderHDRSkybox(HdrEnv->cubeTex,10);
 	
 	//todo::error***************
-  RenderHDRSkybox(HdrEnv->irradianceMap,11);
+   RenderHDRSkybox(HdrEnv->irradianceMap,11);
 
 	glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
 	//TODO: 
@@ -120,6 +121,7 @@ void GameTechRenderer::RenderShadowMap() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
+	std::cout << "****shadowFBO= " << shadowFBO << std::endl;
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 	glViewport(0, 0, SHADOWSIZE, SHADOWSIZE);
@@ -431,7 +433,7 @@ void NCL::CSC8503::GameTechRenderer::RenderHDRtoCubemap()
 
 void NCL::CSC8503::GameTechRenderer::RenderCubemaptoIrradianceMap()
 {
-
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
 	glm::mat4 captureViews[] =
 	{
@@ -456,9 +458,8 @@ void NCL::CSC8503::GameTechRenderer::RenderCubemaptoIrradianceMap()
 	glViewport(0, 0, 32, 32); // don't forget to configure the viewport to the capture dimensions.
 
 	//todo::test
-	//glBindFramebuffer(GL_FRAMEBUFFER, HdrEnv->captureFBO1);
 	generate_bind_Fbo(HdrEnv->captureFBO1);
-	//std::cout << "captureFBO1= " << HdrEnv->captureFBO1 << std::endl;
+
 
 	for (unsigned int i = 0; i < 6; ++i)
 	{

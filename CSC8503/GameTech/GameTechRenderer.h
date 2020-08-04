@@ -23,10 +23,12 @@ namespace NCL {
 			void setupHDR(OGLHdr* HdrEnv);
 			bool isUsedPBR;
 			OGLShader* CompareShader;
+			Camera* gameWorldCamera;
 
 
 		protected:
 			void RenderFrame()	override;
+			void RendercameraFrame();
 
 			OGLShader*		defaultShader;
 
@@ -37,6 +39,10 @@ namespace NCL {
 			void RenderShadowMap();
 			void RenderCamera(); 
 			void CaculateViewPorjMat();
+			void RenderDOVCamera();
+			void caculateDovCamera();
+			
+
 			
 
 			void SetupDebugMatrix(OGLShader*s) override;
@@ -48,6 +54,13 @@ namespace NCL {
 			GLuint		shadowTex;
 			GLuint		shadowFBO;
 			Matrix4     shadowMatrix;
+
+
+			OGLShader* cameraDovPostShader;
+			OGLShader* cameraDovCaculateShader;
+			GLuint		cameraTex;
+			GLuint		cameraFBO;
+		
 
 
 			float screenAspect ;

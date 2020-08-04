@@ -24,7 +24,7 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 
 	glGenTextures(1, &shadowTex);
 	glBindTexture(GL_TEXTURE_2D, shadowTex);
-
+	
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -43,6 +43,25 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 
 	glClearColor(1, 1, 1, 1);
 #pragma endregion
+
+#pragma region  camera
+	cameraDovCaculateShader = new OGLShader("cameraDov_caculate_Vert","cameraDov_caculate_Frag");
+	cameraDovPostShader = new OGLShader("cameraDov_post_Vert","cameraDov_post_Frag");
+	glGenFramebuffers(1, &cameraFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, cameraFBO);
+
+	glGenTextures(1, &cameraTex);
+	glBindTexture(GL_TEXTURE_2D, cameraTex);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, currentWidth, currentHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);  //why nullptr
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cameraTex, 0);
+	glDrawBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+#pragma endregion
+
 	isUsedPBR = true;
 	HdrEnv = nullptr;
 	float screenAspect = 0;
@@ -51,10 +70,17 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	CompareShader = nullptr;
 	cubeTexture = 0;
 
+	gameWorldCamera=world.GetMainCamera();
 
 }
 
 GameTechRenderer::~GameTechRenderer() {
+	glDeleteTextures(1, &cameraTex);
+	glDeleteFramebuffers(1, &cameraFBO);
+	delete cameraDovCaculateShader;
+	delete cameraDovPostShader;
+
+	
 	glDeleteTextures(1, &shadowTex);
 	glDeleteFramebuffers(1, &shadowFBO);
 	//todo:check
@@ -72,22 +98,9 @@ void GameTechRenderer::RenderFrame() {
 	glEnable(GL_CULL_FACE);
 	glClearColor(1, 1, 1, 1);
 	
-	//todo:delete
-	//setupHDR(HdrEnv);
-	RenderCubemaptoIrradianceMap();
-
-	BuildObjectList();
-	SortObjectList();
-	RenderShadowMap();
-	RenderCamera();
-
+	RenderDOVCamera();
 	
-
-	RenderHDRSkybox(HdrEnv->cubeTex,10);
 	
-	//todo::error***************
-   RenderHDRSkybox(HdrEnv->irradianceMap,11);
-
 	glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
 	//TODO: 
 }
@@ -118,10 +131,9 @@ void GameTechRenderer::RenderShadowMap() {
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
-	std::cout << "****shadowFBO= " << shadowFBO << std::endl;
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 	glViewport(0, 0, SHADOWSIZE, SHADOWSIZE);
@@ -344,10 +356,31 @@ void GameTechRenderer::SetupDebugMatrix(OGLShader* s) {
 void NCL::CSC8503::GameTechRenderer::setupHDR(OGLHdr* hdrEnv)
 {
 	this->HdrEnv = hdrEnv;
+
 	RenderHDRtoCubemap();
 	RenderCubemaptoIrradianceMap();
 	//todo:test
 	ClearHDRBuffers();
+}
+
+void GameTechRenderer::RendercameraFrame()
+{
+	//todo:delete
+	//setupHDR(HdrEnv);
+	RenderCubemaptoIrradianceMap();
+
+	BuildObjectList();
+	SortObjectList();
+	RenderShadowMap();
+	RenderCamera();
+
+
+
+	RenderHDRSkybox(HdrEnv->cubeTex, 10);
+
+	//todo::error***************
+  // RenderHDRSkybox(HdrEnv->irradianceMap,11);
+
 }
 
 void NCL::CSC8503::GameTechRenderer::CaculateViewPorjMat()
@@ -355,6 +388,19 @@ void NCL::CSC8503::GameTechRenderer::CaculateViewPorjMat()
 	this->screenAspect = (float)currentWidth / (float)currentHeight;
 	this->viewMatrix = gameWorld.GetMainCamera()->BuildViewMatrix();
 	this->projMatrix = gameWorld.GetMainCamera()->BuildProjectionMatrix(screenAspect);
+
+}
+
+void GameTechRenderer::caculateDovCamera()
+{
+
+}
+
+void GameTechRenderer::RenderDOVCamera()
+{
+	RendercameraFrame();
+
+
 
 }
 
@@ -433,6 +479,9 @@ void NCL::CSC8503::GameTechRenderer::RenderHDRtoCubemap()
 
 void NCL::CSC8503::GameTechRenderer::RenderCubemaptoIrradianceMap()
 {
+	
+
+
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
 	glm::mat4 captureViews[] =
@@ -469,7 +518,9 @@ void NCL::CSC8503::GameTechRenderer::RenderCubemaptoIrradianceMap()
 		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		//todo::check
+
 		DrawHDRCube(HdrEnv->irradianceShader, HdrEnv->HdrTexture);
+		//DrawHDRCube(HdrEnv->HdrToCubemapShader, HdrEnv->HdrTexture);
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	//glDeleteFramebuffers(1, &HdrEnv->captureFBO);

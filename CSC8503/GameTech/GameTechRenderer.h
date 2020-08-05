@@ -22,7 +22,7 @@ namespace NCL {
 		
 			void setupHDR(OGLHdr* HdrEnv);
 			bool isUsedPBR;
-			OGLShader* CompareShader;
+		//	OGLShader* CompareShader;
 			Camera* gameWorldCamera;
 
 			OGLTexture* tempTex ;

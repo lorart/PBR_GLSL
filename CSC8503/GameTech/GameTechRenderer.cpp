@@ -68,7 +68,7 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	float screenAspect = 0;
 	Matrix4 viewMatrix;
 	Matrix4 projMatrix;
-	CompareShader = nullptr;
+	
 	cubeTexture = 0;
 	ScreenQuad = new Model(Assets::MESHDIR + "PLANE" + ".obj", 0);
 
@@ -87,7 +87,7 @@ GameTechRenderer::~GameTechRenderer() {
 	glDeleteFramebuffers(1, &shadowFBO);
 	//todo:check
 	delete HdrEnv;
-	delete CompareShader;
+	
 	delete ScreenQuad;
 	delete tempTex;
 
@@ -166,8 +166,9 @@ void GameTechRenderer::RenderShadowMap() {
 
 	glViewport(0, 0, currentWidth, currentHeight);
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, cameraFBO);
+	//todo:FboChange
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	//glBindFramebuffer(GL_FRAMEBUFFER, cameraFBO);
 
 	glCullFace(GL_BACK);
 }
@@ -210,11 +211,12 @@ void GameTechRenderer::RenderCamera() {
 		const auto i = activeObjects[l];
 	
 		 if (isUsedPBR) {
-		 shader = (OGLShader*)(*i).GetShader();
+		// shader = (OGLShader*)(*i).GetShader();
 			// shader = CompareShader;
+			 shader = i->GetOGLMaterial()->matShader;
 		 }
 		 else {
-			 shader=CompareShader;
+			 shader = i->GetOGLMaterial()->FengShader;
 		 }
 	
 	
@@ -259,8 +261,10 @@ void GameTechRenderer::RenderCamera() {
 
 			}
 			else {
-			
-				BindTextureToShader((OGLTexture*)(*i).GetDefaultTexture(), "mainTex", 6);
+				auto tempMaterial = (*i).GetOGLMaterial();
+				OGLTexture* tempAlbedo = (OGLTexture*)tempMaterial->pbrTexArry[TextureType::ALBEDO_MAP];
+				BindTextureToShader(tempAlbedo, "mainTex", 6);
+			//	BindTextureToShader((OGLTexture*)(*i).GetDefaultTexture(), "mainTex", 6);
 
 				hasTexLocation = glGetUniformLocation(shader->GetProgramID(), "hasTexture");
 
@@ -283,6 +287,7 @@ void GameTechRenderer::RenderCamera() {
 
 			albedoValueLocation = glGetUniformLocation(shader->GetProgramID(), "albedoValue");
 			glUniform3fv(albedoValueLocation, 1, (float*)&(tempMaterial->albedoValue));
+
 			projLocation = glGetUniformLocation(shader->GetProgramID(), "projMatrix");
 			viewLocation = glGetUniformLocation(shader->GetProgramID(), "viewMatrix");
 			modelLocation = glGetUniformLocation(shader->GetProgramID(), "modelMatrix");
@@ -438,10 +443,10 @@ void GameTechRenderer::caculateDovCamera()
 void GameTechRenderer::RenderDOVCamera()
 {
 
-	
-	glBindFramebuffer(GL_FRAMEBUFFER,cameraFBO);
+	//todo: fbochange
+	//glBindFramebuffer(GL_FRAMEBUFFER,cameraFBO);
 	//todo: test
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cameraTex->GetObjectID(), 0);
+
 
 	glEnable(GL_DEPTH_TEST); 
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -452,9 +457,9 @@ void GameTechRenderer::RenderDOVCamera()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glDisable(GL_DEPTH_TEST);
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); 
-	drawFullScreenQuad(cameraDovPostShader, tempTex);
+	//todo: fbochange
 	//drawFullScreenQuad(cameraDovPostShader, tempTex);
-	
+
 	
 
 }

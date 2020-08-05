@@ -62,7 +62,7 @@ void TutorialGame::InitialiseAssets() {
 	CompareVertName = "Feng_Vert.glsl";
 	CompareFragName = "Feng_Frag.glsl";
 	FongShader = new OGLShader("Feng_Vert.glsl", "Feng_Frag.glsl");
-	renderer->CompareShader = FongShader;
+
 
 	string hdrFilename = "fireplace_1k.hdr";
 	hdrEnvmap = new OGLHdr(hdrFilename);
@@ -231,103 +231,7 @@ void NCL::CSC8503::TutorialGame::LightMovement()
 }
 
 
-//void TutorialGame::DebugObjectMovement() {
-////If we've selected an object, we can manipulate it with some key presses
-//	if (inSelectionMode && selectionObject) {
-//		//Twist the selected object!
-//		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::LEFT)) {
-//			selectionObject->GetPhysicsObject()->AddTorque(Vector3(-10, 0, 0));
-//		}
-//
-//		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
-//			selectionObject->GetPhysicsObject()->AddTorque(Vector3(10, 0, 0));
-//		}
-//
-//		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM7)) {
-//			selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, 10, 0));
-//		}
-//
-//		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM8)) {
-//			selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, -10, 0));
-//		}
-//
-//		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
-//			selectionObject->GetPhysicsObject()->AddTorque(Vector3(10, 0, 0));
-//		}
-//
-//		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::UP)) {
-//			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 0, -10));
-//		}
-//
-//		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::DOWN)) {
-//			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 0, 10));
-//		}
-//
-//		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM5)) {
-//			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, -10, 0));
-//		}
-//	}
-//}
 
-/*
-
-Every frame, this code will let you perform a raycast, to see if there's an object
-underneath the cursor, and if so 'select it' into a pointer, so that it can be
-manipulated later. Pressing Q will let you toggle between this behaviour and instead
-letting you move the camera around.
-
-*/
-//bool TutorialGame::SelectObject() {
-//	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::Q)) {
-//		inSelectionMode = !inSelectionMode;
-//		if (inSelectionMode) {
-//			Window::GetWindow()->ShowOSPointer(true);
-//			Window::GetWindow()->LockMouseToWindow(false);
-//		}
-//		else {
-//			Window::GetWindow()->ShowOSPointer(false);
-//			Window::GetWindow()->LockMouseToWindow(true);
-//		}
-//	}
-//	if (inSelectionMode) {
-//		renderer->DrawString("Press Q to change to camera mode!", Vector2(10, 0));
-//
-//		if (Window::GetMouse()->ButtonDown(NCL::MouseButtons::LEFT)) {
-//			if (selectionObject) {	//set colour to deselected;
-//				selectionObject->GetRenderObject()->SetColour(Vector4(1, 1, 1, 1));
-//				selectionObject = nullptr;
-//			}
-//
-//			Ray ray = CollisionDetection::BuildRayFromMouse(*world->GetMainCamera());
-//
-//			RayCollision closestCollision;
-//			if (world->Raycast(ray, closestCollision, true)) {
-//				selectionObject = (GameObject*)closestCollision.node;
-//				selectionObject->GetRenderObject()->SetColour(Vector4(0, 1, 0, 1));
-//				return true;
-//			}
-//			else {
-//				return false;
-//			}
-//		}
-//		if (Window::GetKeyboard()->KeyPressed(NCL::KeyboardKeys::L)) {
-//			if (selectionObject) {
-//				if (lockedObject == selectionObject) {
-//					lockedObject = nullptr;
-//				}
-//				else {
-//					lockedObject = selectionObject;
-//				}
-//			}
-//		}
-//	}
-//	else {
-//		renderer->DrawString("Change Shader: G", Vector2(20, 0));
-//		renderer->DrawString("MOVE Camera: S D Shift Space ", Vector2(20, 20));
-//		renderer->DrawString("MOVE Light: I J K L ", Vector2(20, 40));
-//	}
-//	return false;
-//}
 
 /*
 If an object has been clicked, it can be pushed with the right mouse button, by an amount
@@ -354,8 +258,8 @@ void TutorialGame::InitWorld() {
 	
 	bool isPBR=true;
 
-//	AddModelToWorld(testmodel, Vector3(0, 0, 0), Vector3(5, 5, 5), isPBR);
-	testShaderBySpheres();
+    AddModelToWorld(testmodel, Vector3(0, 0, 0), Vector3(5, 5, 5), isPBR);
+//	testShaderBySpheres();
 	AddLightToWorld(Vector4(1, 1, 1, 1), 100, Vector3(0, 80, 0));
 
 

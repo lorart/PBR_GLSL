@@ -39,11 +39,19 @@ namespace NCL {
 			void LockedObjectMovement();
 			void LockedCameraMovement();
 			void ChangeShader();
+			void ChangeModels();
+			bool isShowSphereTest;
+			
+
+			vector<GameObject*> senceModel;
+			vector<GameObject*> senceSphere;
+			vector < vector<GameObject*> > senceSphereArry;
+
 
 			void LightMovement();
 
 			OGLLight* AddLightToWorld(Vector4 lightColour, float lightRadius, Vector3 lightPosition);
-			void AddModelToWorld(Model* model, const Vector3& position, Vector3 dimensions, bool ispbr);
+			vector<GameObject*> AddModelToWorld(Model* model, const Vector3& position, Vector3 dimensions, bool ispbr);
 			void testShaderBySpheres();
 			
 

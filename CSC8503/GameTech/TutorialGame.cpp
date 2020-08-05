@@ -67,6 +67,7 @@ void TutorialGame::InitialiseAssets() {
 	string hdrFilename = "fireplace_1k.hdr";
 	hdrEnvmap = new OGLHdr(hdrFilename);
 	renderer->setupHDR(hdrEnvmap);
+	isShowSphereTest = true;
 
 	InitCamera();
 	InitWorld();
@@ -134,6 +135,7 @@ void TutorialGame::UpdateKeys() {
 	}
 	LightMovement();
 	ChangeShader();
+	ChangeModels();
 	
 }
 
@@ -195,8 +197,9 @@ void TutorialGame::ChangeShader()
 
 void TutorialGame::DrawDebugInformation()
 {
-	renderer->DrawString("Change Shader: G", Vector2(20, 0));
-	renderer->DrawString("MOVE Camera: S D Shift Space ", Vector2(20, 20));
+	renderer->DrawString("Change Shader: G", Vector2(20, 20));
+	renderer->DrawString("Change Mesh: F", Vector2(20, 60));
+	renderer->DrawString("MOVE Camera: S D Shift Space ", Vector2(20, 0));
 	renderer->DrawString("MOVE Light: I J K L ", Vector2(20, 40));
 
 	if (renderer->isUsedPBR) {
@@ -207,6 +210,38 @@ void TutorialGame::DrawDebugInformation()
 	}
 
 
+
+}
+
+void TutorialGame::ChangeModels()
+{
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F)) {
+		std::cout << "***E pressed " << std::endl;
+		isShowSphereTest = !isShowSphereTest;
+		if (isShowSphereTest) {
+
+			std::cout << "***testShaderBySpheres" << std::endl;
+			testShaderBySpheres();
+			for (auto& i : senceModel) {
+				world->RemoveGameObject(i);
+			}
+
+		}
+	else {
+		std::cout << "***AddModelToWorld" << std::endl;
+		bool isPBR = true;
+		senceModel=	AddModelToWorld(testmodel, Vector3(0, 0, 0), Vector3(2, 2, 2), isPBR);
+		for (auto& i :senceSphereArry)
+		{
+			for (auto& j : i) {
+				world->RemoveGameObject(j);
+			}
+
+		}
+
+	}
+}
+	
 }
 
 void NCL::CSC8503::TutorialGame::LightMovement()
@@ -258,8 +293,8 @@ void TutorialGame::InitWorld() {
 	
 	bool isPBR=true;
 
-    //AddModelToWorld(testmodel, Vector3(0, 0, 0), Vector3(5, 5, 5), isPBR);
-	testShaderBySpheres();
+	//senceModel =AddModelToWorld(testmodel, Vector3(0, 0, 0), Vector3(5, 5, 5), isPBR);
+	 testShaderBySpheres();
 	AddLightToWorld(Vector4(1, 1, 1, 1), 100, Vector3(0, 80, 0));
 
 
@@ -270,9 +305,11 @@ void TutorialGame::InitWorld() {
 //From here on it's functions to add in objects to the world!
 
 
-void TutorialGame::AddModelToWorld(Model* model,const Vector3& position, Vector3 dimensions, bool ispbr) {
+vector<GameObject*> TutorialGame::AddModelToWorld(Model* model,const Vector3& position, Vector3 dimensions, bool ispbr) {
+	vector<GameObject*> tempGameObjectArry;
 	for (size_t i = 0; i < model->meshes.size(); i++)
 	{
+		
 		GameObject* modelObject = new GameObject();
 		AABBVolume* volume = new AABBVolume(dimensions);
 		modelObject->SetBoundingVolume((CollisionVolume*)volume);
@@ -304,7 +341,9 @@ void TutorialGame::AddModelToWorld(Model* model,const Vector3& position, Vector3
 		modelObject->GetPhysicsObject()->InitCubeInertia();
 
 		world->AddGameObject(modelObject);
+		tempGameObjectArry.push_back(modelObject);
 	}
+	return tempGameObjectArry;
 
 }
 
@@ -332,7 +371,7 @@ void NCL::CSC8503::TutorialGame::testShaderBySpheres()
 			sphere = new Model(Assets::MESHDIR + "sphere" + ".obj", 0);
 			testShaderModelVector.push_back(sphere);
 			tempValue =wide*(1.0 /5.0);
-			AddModelToWorld(sphere, Vector3(-hight * length, wide * length, 0), Vector3(5, 5, 5), IsUsePBRshader);
+			senceSphere=	AddModelToWorld(sphere, Vector3(-hight * length, wide * length, 0), Vector3(5, 5, 5), IsUsePBRshader);
 			
 				sphere->meshes[0]->material->metallicValue = hight * (1.0 / 5.0);
 				
@@ -340,7 +379,8 @@ void NCL::CSC8503::TutorialGame::testShaderBySpheres()
 				//std::cout << "  hight=" << hight << "  wide=" << wide << "  tempValue=" << tempValue << "  wide* 1 /5=" << wide * 1 / 5 << std::endl;
 			
 				sphere->meshes[0]->material->albedoValue = clolor;
-
+				senceSphereArry.push_back(senceSphere);
+			
 			
 		}
 	}

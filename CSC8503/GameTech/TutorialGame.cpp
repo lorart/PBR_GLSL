@@ -51,8 +51,6 @@ void TutorialGame::InitialiseAssets() {
 	string modelname = "apple";
 	testmodel = new Model(Assets::MESHDIR + modelname + ".obj", 0);
 
-
-
 	basicTex = (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
 	//basicShader = new OGLShader("PBR_Vert.glsl", "PBR_Frag.glsl");
 	basicVertName = "PBR_Vert.glsl";
@@ -62,7 +60,6 @@ void TutorialGame::InitialiseAssets() {
 	CompareVertName = "Feng_Vert.glsl";
 	CompareFragName = "Feng_Frag.glsl";
 	FongShader = new OGLShader("Feng_Vert.glsl", "Feng_Frag.glsl");
-
 
 	string hdrFilename = "fireplace_1k.hdr";
 	hdrEnvmap = new OGLHdr(hdrFilename);
@@ -280,7 +277,7 @@ void TutorialGame::MoveSelectedObject() {
 }
 
 void TutorialGame::InitCamera() {
-	world->GetMainCamera()->SetNearPlane(0.5f);
+	world->GetMainCamera()->SetNearPlane(30.0f);
 	world->GetMainCamera()->SetFarPlane(500.0f);
 	world->GetMainCamera()->SetPitch(-15.0f);
 	world->GetMainCamera()->SetYaw(315.0f);
@@ -293,9 +290,8 @@ void TutorialGame::InitWorld() {
 	
 	bool isPBR=true;
 
-	//senceModel =AddModelToWorld(testmodel, Vector3(0, 0, 0), Vector3(5, 5, 5), isPBR);
 	 testShaderBySpheres();
-	AddLightToWorld(Vector4(1, 1, 1, 1), 100, Vector3(0, 80, 0));
+	AddLightToWorld(Vector4(1, 1, 1, 1), 100, Vector3(10, 80, 10));
 
 
 	//physics->Clear();

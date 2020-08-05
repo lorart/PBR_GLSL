@@ -440,7 +440,9 @@ void GameTechRenderer::RenderDOVCamera()
 
 	
 	glBindFramebuffer(GL_FRAMEBUFFER,cameraFBO);
-	
+	//todo: test
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cameraTex->GetObjectID(), 0);
+
 	glEnable(GL_DEPTH_TEST); 
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -576,7 +578,7 @@ void NCL::CSC8503::GameTechRenderer::RenderCubemaptoIrradianceMap()
 		//DrawHDRCube(HdrEnv->HdrToCubemapShader, HdrEnv->HdrTexture);
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	//glDeleteFramebuffers(1, &HdrEnv->captureFBO);
+	glDeleteFramebuffers(1, &HdrEnv->captureFBO);
 }
 
 void GameTechRenderer::ClearHDRBuffers()

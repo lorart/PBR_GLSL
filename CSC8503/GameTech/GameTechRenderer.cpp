@@ -45,8 +45,8 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 #pragma endregion
 
 #pragma region  camera
-	cameraDovCaculateShader = new OGLShader("cameraDov_caculate_Vert","cameraDov_caculate_Frag");
-	cameraDovPostShader = new OGLShader("cameraDov_post_Vert","cameraDov_post_Frag");
+//	cameraDovCaculateShader = new OGLShader("cameraDov_caculate_Vert.glsl","cameraDov_caculate_Frag.glsl");
+	cameraDovPostShader = new OGLShader("cameraDov_post_Vert.glsl","cameraDov_post_Frag.glsl");
 	glGenFramebuffers(1, &cameraFBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, cameraFBO);
 
@@ -72,7 +72,7 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	ScreenQuad = new Model(Assets::MESHDIR + "PLANE" + ".obj", 0);
 
 	gameWorldCamera=world.GetMainCamera();
-	tempTex = new OGLTexture();
+	tempTex =  (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
 }
 
 GameTechRenderer::~GameTechRenderer() {
@@ -370,6 +370,9 @@ void GameTechRenderer::RendercameraFrame()
 {
 	//todo:delete
 	//setupHDR(HdrEnv);
+
+	
+
 	RenderCubemaptoIrradianceMap();
 
 	BuildObjectList();
@@ -381,6 +384,7 @@ void GameTechRenderer::RendercameraFrame()
 
 	RenderHDRSkybox(HdrEnv->cubeTex, 10);
 
+	
 	//todo::error***************
   // RenderHDRSkybox(HdrEnv->irradianceMap,11);
 
@@ -396,14 +400,18 @@ void NCL::CSC8503::GameTechRenderer::CaculateViewPorjMat()
 
 void GameTechRenderer::drawFullScreenQuad(OGLShader* shader, OGLTexture* tex)
 {
-	
+	//Matrix4 projMatrix = gameWorld.GetMainCamera()->BuildProjectionMatrix(screenAspect);
 	projMatrix = Matrix4::Orthographic(-1, 1, 1, -1, -1, 1);
 	viewMatrix = Matrix4();
+
 	Matrix4 modelMatrix = Matrix4();
+	//Matrix4 modelMatrix = modelObject->GetTransform().SetWorldPosition(position);
 	//Matrix4 MVP = projMatrix * viewMatrix * modelMatrix;
 	
+	modelMatrix.Rotation(90.0f, Vector3(1, 1, 1));
+
 	Transform* quadtransform = new Transform();
-	quadtransform->SetLocalOrientation(Quaternion::AxisAngleToQuaterion(Vector3(0, 0, 1), 90.0f));
+	
 	
 	BindShader(shader);
 
@@ -411,7 +419,9 @@ void GameTechRenderer::drawFullScreenQuad(OGLShader* shader, OGLTexture* tex)
 	shader->setMat4("viewMatrix", viewMatrix);
 	shader->setMat4("projMatrix", projMatrix);
 	//Transform* parentTransform, OGLMesh* mesh, TextureBase* colourtex, ShaderBase* shader
-	RenderObject* i = new RenderObject(quadtransform, ScreenQuad, tex, shader);
+	RenderObject* i = new RenderObject(quadtransform, ScreenQuad->meshes[0], tex, shader);
+	BindMesh((*i).GetMesh());
+	DrawBoundMesh();
 }
 
 void GameTechRenderer::caculateDovCamera()
@@ -426,9 +436,9 @@ void GameTechRenderer::RenderDOVCamera()
 	
 	
 	RendercameraFrame();
-
-	OGLTexture* tempTex = new OGLTexture();
-	drawFullScreenQuad(cameraDovPostShader,tempTex);
+	glDisable(GL_DEPTH_TEST);
+	drawFullScreenQuad(cameraDovPostShader, tempTex);
+	//drawFullScreenQuad(cameraDovPostShader, tempTex);
 	
 	
 

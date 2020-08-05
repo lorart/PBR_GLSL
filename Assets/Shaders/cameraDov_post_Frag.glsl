@@ -1,12 +1,20 @@
-#version 330
-uniform sampler2D diffuseTex;
+#version 330 core
+uniform sampler2D mainTex;
 
-
-in Vertex{
-	
-	vec2 	texCoord;
-	vec3 	position;
+in Vertex
+{                                               
+	//vec4 colour;
+	vec2 texCoord;
+	vec4 shadowProj;
+	vec3 normal;
+	vec3 tangent;
+	vec3 binormal;
+	vec3 worldPos;
 } IN;
+
+out vec4 fragColor;
+
 void main(void) {
-	gl_FragColor = vec4(1.0,0,0,1);
+
+	fragColor= vec4(1.0,0,0,1);
 }

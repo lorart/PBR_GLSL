@@ -382,13 +382,11 @@ void GameTechRenderer::RendercameraFrame()
 	RenderShadowMap();
 	RenderCamera();
 
-
-
-//	RenderHDRSkybox(HdrEnv->cubeTex, 10);
+	RenderHDRSkybox(HdrEnv->cubeTex, 10);
 
 	
 	//todo::error***************
-	 RenderHDRSkybox(HdrEnv->irradianceMap,11);
+//	RenderHDRSkybox(HdrEnv->irradianceMap,11);
 
 }
 

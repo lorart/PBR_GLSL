@@ -50,14 +50,15 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	glGenFramebuffers(1, &cameraFBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, cameraFBO);
 
-	glGenTextures(1, &cameraTex);
-	glBindTexture(GL_TEXTURE_2D, cameraTex);
+
+	cameraTex = new OGLTexture();
+	glBindTexture(GL_TEXTURE_2D, cameraTex->GetObjectID());
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, currentWidth, currentHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);  //why nullptr
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cameraTex, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cameraTex->GetObjectID(), 0);
 	glDrawBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 #pragma endregion
@@ -76,7 +77,7 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 }
 
 GameTechRenderer::~GameTechRenderer() {
-	glDeleteTextures(1, &cameraTex);
+	delete cameraTex;
 	glDeleteFramebuffers(1, &cameraFBO);
 	delete cameraDovCaculateShader;
 	delete cameraDovPostShader;
@@ -165,7 +166,8 @@ void GameTechRenderer::RenderShadowMap() {
 
 	glViewport(0, 0, currentWidth, currentHeight);
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, cameraFBO);
 
 	glCullFace(GL_BACK);
 }
@@ -373,7 +375,7 @@ void GameTechRenderer::RendercameraFrame()
 
 	
 
-	RenderCubemaptoIrradianceMap();
+//	RenderCubemaptoIrradianceMap();
 
 	BuildObjectList();
 	SortObjectList();
@@ -418,6 +420,9 @@ void GameTechRenderer::drawFullScreenQuad(OGLShader* shader, OGLTexture* tex)
 	shader->setMat4("modelMatrix", modelMatrix);
 	shader->setMat4("viewMatrix", viewMatrix);
 	shader->setMat4("projMatrix", projMatrix);
+	BindTextureToShader(cameraTex,"mainTex",0);
+	
+
 	//Transform* parentTransform, OGLMesh* mesh, TextureBase* colourtex, ShaderBase* shader
 	RenderObject* i = new RenderObject(quadtransform, ScreenQuad->meshes[0], tex, shader);
 	BindMesh((*i).GetMesh());
@@ -434,9 +439,17 @@ void GameTechRenderer::RenderDOVCamera()
 {
 
 	
+	glBindFramebuffer(GL_FRAMEBUFFER,cameraFBO);
 	
+	glEnable(GL_DEPTH_TEST); 
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	RendercameraFrame();
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glDisable(GL_DEPTH_TEST);
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); 
 	drawFullScreenQuad(cameraDovPostShader, tempTex);
 	//drawFullScreenQuad(cameraDovPostShader, tempTex);
 	

@@ -59,7 +59,8 @@ namespace NCL {
 
 			OGLShader* cameraDovPostShader;
 			OGLShader* cameraDovCaculateShader;
-			GLuint		cameraTex;
+		//	GLuint		cameraTex;
+			OGLTexture* cameraTex;
 			GLuint		cameraFBO;
 		
 			Model* ScreenQuad = nullptr;

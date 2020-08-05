@@ -375,12 +375,7 @@ void NCL::CSC8503::GameTechRenderer::setupHDR(OGLHdr* hdrEnv)
 
 void GameTechRenderer::RendercameraFrame()
 {
-	//todo:delete
-	//setupHDR(HdrEnv);
 
-	
-
-//	RenderCubemaptoIrradianceMap();
 
 	BuildObjectList();
 	SortObjectList();
@@ -389,11 +384,11 @@ void GameTechRenderer::RendercameraFrame()
 
 
 
-	RenderHDRSkybox(HdrEnv->cubeTex, 10);
+//	RenderHDRSkybox(HdrEnv->cubeTex, 10);
 
 	
 	//todo::error***************
-  // RenderHDRSkybox(HdrEnv->irradianceMap,11);
+	 RenderHDRSkybox(HdrEnv->irradianceMap,11);
 
 }
 
@@ -521,7 +516,7 @@ void NCL::CSC8503::GameTechRenderer::RenderHDRtoCubemap()
 
 	//glBindFramebuffer(GL_FRAMEBUFFER, HdrEnv->captureFBO);
 	generate_bind_Fbo(HdrEnv->captureFBO);
-	std::cout << "captureFBO= " << HdrEnv->captureFBO<< std::endl;
+	//std::cout << "captureFBO= " << HdrEnv->captureFBO<< std::endl;
 
 	for (int i = 0; i < 6; i++)
 	{
@@ -533,7 +528,7 @@ void NCL::CSC8503::GameTechRenderer::RenderHDRtoCubemap()
 
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glDeleteFramebuffers(1, &HdrEnv->captureFBO);//todo::test
+//	glDeleteFramebuffers(1, &HdrEnv->captureFBO);//todo::test
 
 }
 
@@ -583,7 +578,7 @@ void NCL::CSC8503::GameTechRenderer::RenderCubemaptoIrradianceMap()
 		//DrawHDRCube(HdrEnv->HdrToCubemapShader, HdrEnv->HdrTexture);
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glDeleteFramebuffers(1, &HdrEnv->captureFBO);
+	//glDeleteFramebuffers(1, &HdrEnv->captureFBO);
 }
 
 void GameTechRenderer::ClearHDRBuffers()

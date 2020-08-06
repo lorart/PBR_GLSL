@@ -385,7 +385,7 @@ void GameTechRenderer::RendercameraFrame()
 	BuildObjectList();
 	SortObjectList();
 	RenderShadowMap();
-	glBindFramebuffer(GL_FRAMEBUFFER, cameraFBO);
+//	glBindFramebuffer(GL_FRAMEBUFFER, cameraFBO);
 	RenderCamera();
 
 	RenderHDRSkybox(HdrEnv->cubeTex, 10);
@@ -455,7 +455,7 @@ void GameTechRenderer::RenderDOVCamera()
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); 
 
 
-	drawFullScreenQuad(cameraDovPostShader, cameraTex);
+	//drawFullScreenQuad(cameraDovPostShader, cameraTex);
 	//drawFullScreenQuad(cameraDovPostShader, tempTex);
 	//drawFullScreenQuad(cameraDovPostShader, shadowTex);
 

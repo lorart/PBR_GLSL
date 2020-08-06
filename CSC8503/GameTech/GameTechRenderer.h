@@ -52,7 +52,7 @@ namespace NCL {
 
 			//shadow mapping things
 			OGLShader*	shadowShader;
-			GLuint		shadowTex;
+			//GLuint		shadowTex;
 			GLuint		shadowFBO;
 			Matrix4     shadowMatrix;
 
@@ -61,6 +61,8 @@ namespace NCL {
 			OGLShader* cameraDovCaculateShader;
 		//	GLuint		cameraTex;
 			OGLTexture* cameraTex;
+
+			OGLTexture* shadowTex;
 			GLuint		cameraFBO;
 		
 			Model* ScreenQuad = nullptr;

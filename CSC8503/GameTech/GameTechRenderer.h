@@ -66,7 +66,9 @@ namespace NCL {
 
 			OGLTexture* shadowTex;
 			GLuint		cameraFBO;
-			GLuint		cameraMsaaFBO;
+			GLuint		cameraMsaa_FBO;
+			GLuint		cameraMsaa_COL_RBO;
+			GLuint		cameraMsaa_DEP_RBO;
 			GLuint		cameraPosFBO;
 		
 			Model* ScreenQuad = nullptr;

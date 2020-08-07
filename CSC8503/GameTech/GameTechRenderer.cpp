@@ -91,7 +91,20 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cameraBufferTex[2]->GetObjectID(), 0);
 
 	/******************/
+	glGenFramebuffers(1, &cameraMsaa_FBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, cameraMsaa_FBO);
 
+	generate_bind_Rbo(cameraMsaa_COL_RBO);
+	glRenderbufferStorageMultisample(GL_FRAMEBUFFER,4,GL_RGB,currentWidth,currentHeight);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_RENDERBUFFER, cameraMsaa_COL_RBO);
+
+	generate_bind_Rbo(cameraMsaa_DEP_RBO);
+	glRenderbufferStorageMultisample(GL_FRAMEBUFFER, 4, GL_DEPTH_COMPONENT24, currentWidth, currentHeight);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, cameraMsaa_DEP_RBO);
+	
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 #pragma endregion
@@ -113,8 +126,16 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 
 GameTechRenderer::~GameTechRenderer() {
 	delete cameraBufferTex;
+
 	glDeleteFramebuffers(1, &cameraFBO);
 	glDeleteFramebuffers(1, &cameraPosFBO);
+
+	glDeleteRenderbuffers(1,&cameraMsaa_COL_RBO);
+	glDeleteRenderbuffers(1,&cameraMsaa_DEP_RBO);
+	glDeleteFramebuffers(1, &cameraMsaa_FBO);
+
+	
+
 	delete cameraDovPosShader;
 	delete ScreenQuadShader;
 	delete cameraDepBufferTex;

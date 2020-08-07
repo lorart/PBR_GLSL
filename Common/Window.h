@@ -90,5 +90,7 @@ namespace NCL {
 		static Keyboard*	keyboard;
 		static Mouse*		mouse;
 		static GameTimer*	timer;
+		
+		
 	};
 }

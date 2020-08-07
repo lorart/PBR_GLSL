@@ -61,7 +61,7 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	glGenFramebuffers(1, &cameraFBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, cameraFBO);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cameraTex->GetObjectID(), 0);
-	glDrawBuffer(GL_NONE);
+//	glDrawBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClearColor(1, 1, 1, 1);
 #pragma endregion
@@ -441,7 +441,7 @@ void GameTechRenderer::caculateDovCamera()
 
 void GameTechRenderer::RenderDOVCamera()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER,cameraFBO);
+	//glBindFramebuffer(GL_FRAMEBUFFER,cameraFBO);
 
 	glEnable(GL_DEPTH_TEST); 
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);

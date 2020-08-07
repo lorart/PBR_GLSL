@@ -23,6 +23,7 @@ namespace NCL {
 			void setupHDR(OGLHdr* HdrEnv);
 			bool isUsedPBR;
 			bool isUsedCamPos;
+			bool isUsedMSAA;
 		//	OGLShader* CompareShader;
 			Camera* gameWorldCamera;
 
@@ -85,6 +86,8 @@ namespace NCL {
 
 			void DrawHDRCube(OGLShader* shader, OGLTexture* tex);
 			OGLHdr* HdrEnv;
+
+			GLenum status;
 
 			int cubeTexture;
 			

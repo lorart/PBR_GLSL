@@ -41,6 +41,7 @@ namespace NCL {
 			void ChangeShader();
 			void ChangeModels();
 			void ChangePossProcess();
+			void ChangeMsaa();
 			bool isShowSphereTest;
 			bool isShowCamreaPos;
 			

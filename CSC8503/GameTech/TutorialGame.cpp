@@ -134,6 +134,7 @@ void TutorialGame::UpdateKeys() {
 	ChangeShader();
 	ChangeModels();
 	ChangePossProcess();
+	ChangeMsaa();
 	
 }
 
@@ -195,6 +196,7 @@ void TutorialGame::ChangeShader()
 
 void TutorialGame::DrawDebugInformation()
 {
+	renderer->DrawString("Anti-Aliasing on/off: T", Vector2(20, 80));
 	renderer->DrawString("Change camera: R", Vector2(20, 80));
 	renderer->DrawString("Change Shader: G", Vector2(20, 20));
 	renderer->DrawString("Change Mesh: F", Vector2(20, 60));
@@ -212,6 +214,12 @@ void TutorialGame::DrawDebugInformation()
 	}
 	else {
 		renderer->DrawString("Normal Camerar", Vector2(20, 620));
+	}
+	if (renderer->isUsedMSAA) {
+		renderer->DrawString("Anti-Aliasing(MSAA) ON", Vector2(20, 640));
+	}
+	else {
+		renderer->DrawString("Anti-Aliasing OFF", Vector2(20, 640));
 	}
 
 
@@ -257,6 +265,15 @@ void TutorialGame::ChangePossProcess()
 		renderer->isUsedCamPos = !renderer->isUsedCamPos;
 	}
 		
+}
+
+void NCL::CSC8503::TutorialGame::ChangeMsaa()
+{
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::T)) {
+		//std::cout << "***R pressed " << std::endl;
+		renderer->isUsedMSAA = !renderer->isUsedMSAA;
+	}
+
 }
 
 void NCL::CSC8503::TutorialGame::LightMovement()

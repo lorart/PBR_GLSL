@@ -52,7 +52,7 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	{
 		cameraBufferTex[i] = new OGLTexture();
 		glBindTexture(GL_TEXTURE_2D, cameraBufferTex[i]->GetObjectID());
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, currentWidth, currentHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);  //why nullptr
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, currentWidth, currentHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);  //why nullptr
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -94,13 +94,16 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	glGenFramebuffers(1, &cameraMsaa_FBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, cameraMsaa_FBO);
 
-	generate_bind_Rbo(cameraMsaa_COL_RBO);
-	glRenderbufferStorageMultisample(GL_FRAMEBUFFER,4,GL_RGB,currentWidth,currentHeight);
+	//glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	glGenRenderbuffers(1, &cameraMsaa_COL_RBO);
+	glBindRenderbuffer(GL_RENDERBUFFER, cameraMsaa_COL_RBO);
+	glRenderbufferStorageMultisample(GL_RENDERBUFFER,4,GL_RGB,currentWidth,currentHeight);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_RENDERBUFFER, cameraMsaa_COL_RBO);
 
-	generate_bind_Rbo(cameraMsaa_DEP_RBO);
-	glRenderbufferStorageMultisample(GL_FRAMEBUFFER, 4, GL_DEPTH_COMPONENT24, currentWidth, currentHeight);
+	glGenRenderbuffers(1, &cameraMsaa_DEP_RBO);
+	glBindRenderbuffer(GL_RENDERBUFFER, cameraMsaa_DEP_RBO);
+	glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH_COMPONENT, currentWidth, currentHeight);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, cameraMsaa_DEP_RBO);
 	
@@ -111,11 +114,14 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 
 	isUsedPBR = true;
 	isUsedCamPos = true;
+	isUsedMSAA = true;
+	//isUsedMSAA = false;
 
 	HdrEnv = nullptr;
 	float screenAspect = 0;
 	Matrix4 viewMatrix;
 	Matrix4 projMatrix;
+	
 	
 	cubeTexture = 0;
 	ScreenQuad = new Model(Assets::MESHDIR + "PLANE" + ".obj", 0);
@@ -441,7 +447,13 @@ void GameTechRenderer::RendercameraFrame()
 	BuildObjectList();
 	SortObjectList();
 	RenderShadowMap();
-	glBindFramebuffer(GL_FRAMEBUFFER, cameraFBO);
+	if (isUsedMSAA) {
+		glBindFramebuffer(GL_FRAMEBUFFER, cameraMsaa_FBO);
+	}
+	else {
+
+		glBindFramebuffer(GL_FRAMEBUFFER, cameraFBO);
+	}
 	RenderCamera();
 
 	RenderHDRSkybox(HdrEnv->cubeTex, 10);
@@ -497,7 +509,44 @@ void GameTechRenderer::caculateDovCamera()
 
 void GameTechRenderer::RenderDOVCamera()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER,cameraFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	if (isUsedMSAA) {
+		glBindFramebuffer(GL_FRAMEBUFFER, cameraMsaa_FBO);
+		status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+		if (status != GL_FRAMEBUFFER_COMPLETE)
+		{
+
+			/*if (status = GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT) {
+				std::cout << 1<< std::endl;
+			}
+			else if(status = GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT)
+			{
+				std::cout << 2 << std::endl;
+			}
+			else if (status = GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER)
+			{
+				std::cout << 3 << std::endl;
+			}
+
+			else if (status = GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER)
+			{
+				std::cout << 4<< std::endl;
+			}
+
+			else if (status = GL_FRAMEBUFFER_UNSUPPORTED)
+			{
+				std::cout << 5<< std::endl;
+			}*/
+
+			
+			std::cout << status << "   The frame buffer status is not complete!" << std::endl;
+			return;
+		}
+	}
+	else {
+
+		glBindFramebuffer(GL_FRAMEBUFFER, cameraFBO);
+	}
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glEnable(GL_DEPTH_TEST); 
@@ -511,14 +560,57 @@ void GameTechRenderer::RenderDOVCamera()
 	glDisable(GL_DEPTH_TEST);
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); 
 
-	if (isUsedCamPos)
-	{
-		drawFullScreenQuad(cameraDovPosShader, cameraBufferTex[1]);
-	} 
-	else
-	{
-		drawFullScreenQuad(ScreenQuadShader, cameraBufferTex[1]);
+	if (isUsedMSAA) {
+		glBindFramebuffer(GL_READ_FRAMEBUFFER,cameraMsaa_FBO);
+		status = glCheckFramebufferStatus(GL_READ_FRAMEBUFFER);
+		if (status != GL_FRAMEBUFFER_COMPLETE)
+		{
+			/*
+GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT 0x8CD6
+ GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT 0x8CD7
+ GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER 0x8CDB
+ GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER 0x8CDC
+ GL_FRAMEBUFFER_UNSUPPORTED 0x8CDD
+ */
+			std::cout << status<< "   The frame buffer status is not complete!" << std::endl;
+			return;
+		}
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, cameraFBO);
+		status = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
+		if (status != GL_FRAMEBUFFER_COMPLETE)
+		{
+			std::cout << "The frame buffer status is not complete!" << std::endl;
+			return;
+		}
+		glBlitFramebuffer(0, 0, currentWidth, currentHeight,
+			0, 0, currentWidth, currentWidth,
+			GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, GL_LINEAR);
+		
+
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+		if (isUsedCamPos)
+		{
+			
+			drawFullScreenQuad(cameraDovPosShader, cameraBufferTex[1]);//todo:
+		}
+		else
+		{
+			drawFullScreenQuad(ScreenQuadShader, cameraBufferTex[1]);
+		}
 	}
+	else {
+
+		if (isUsedCamPos)
+		{
+			drawFullScreenQuad(cameraDovPosShader, cameraBufferTex[1]);//todo:
+		}
+		else
+		{
+			drawFullScreenQuad(ScreenQuadShader, cameraBufferTex[1]);
+		}
+	}
+	
 
 	
 

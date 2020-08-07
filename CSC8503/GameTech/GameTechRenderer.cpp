@@ -45,28 +45,60 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 #pragma endregion
 
 #pragma region  camera
-//	cameraDovCaculateShader = new OGLShader("cameraDov_caculate_Vert.glsl","cameraDov_caculate_Frag.glsl");
-	cameraDovPostShader = new OGLShader("cameraDov_post_Vert.glsl","cameraDov_post_Frag.glsl");
+	cameraDovPosShader = new OGLShader("ScreenQuad_Vert.glsl","cameraDov_post_Frag.glsl");
+	ScreenQuadShader = new OGLShader("ScreenQuad_Vert.glsl","ScreenQuad_Frag.glsl");
 
-	cameraTex = new OGLTexture();
-	glBindTexture(GL_TEXTURE_2D, cameraTex->GetObjectID());
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, currentWidth, currentHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);  //why nullptr
+	for (int i=0;i<2;i++)
+	{
+		cameraBufferTex[i] = new OGLTexture();
+		glBindTexture(GL_TEXTURE_2D, cameraBufferTex[i]->GetObjectID());
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, currentWidth, currentHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);  //why nullptr
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+	
+
+	glGenFramebuffers(1, &cameraFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, cameraFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cameraBufferTex[1]->GetObjectID(), 0);
+//	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, cameraBufferTex->GetObjectID(), 0);
+
+	/************/
+	cameraDepBufferTex = new OGLTexture();
+	glBindTexture(GL_TEXTURE_2D, cameraDepBufferTex->GetObjectID());
+	//test
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, currentWidth, currentHeight, 0,
+		GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, nullptr); 
+		
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, cameraDepBufferTex->GetObjectID(), 0);
 
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	glGenFramebuffers(1, &cameraFBO);
-	glBindFramebuffer(GL_FRAMEBUFFER, cameraFBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cameraTex->GetObjectID(), 0);
-	glDrawBuffer(GL_NONE);
+	//glDrawBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClearColor(1, 1, 1, 1);
+
+	/******************/
+	glGenFramebuffers(1, &cameraPosFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, cameraPosFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cameraBufferTex[2]->GetObjectID(), 0);
+
+	/******************/
+
+
+	glBindTexture(GL_TEXTURE_2D, 0);
 #pragma endregion
 
 	isUsedPBR = true;
+	isUsedCamPos = true;
+
 	HdrEnv = nullptr;
 	float screenAspect = 0;
 	Matrix4 viewMatrix;
@@ -80,11 +112,13 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 }
 
 GameTechRenderer::~GameTechRenderer() {
-	delete cameraTex;
+	delete cameraBufferTex;
 	glDeleteFramebuffers(1, &cameraFBO);
-	delete cameraDovCaculateShader;
-	delete cameraDovPostShader;
-
+	glDeleteFramebuffers(1, &cameraPosFBO);
+	delete cameraDovPosShader;
+	delete ScreenQuadShader;
+	delete cameraDepBufferTex;
+	delete cameraDepBufferTex;
 	
 //	glDeleteTextures(1, &shadowTex);
 	delete shadowTex;
@@ -105,6 +139,7 @@ void GameTechRenderer::RenderFrame() {
 	CaculateViewPorjMat();
 	glEnable(GL_CULL_FACE);
 	glClearColor(1, 1, 1, 1);
+
 	
 	RenderDOVCamera();
 	
@@ -442,6 +477,7 @@ void GameTechRenderer::caculateDovCamera()
 void GameTechRenderer::RenderDOVCamera()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER,cameraFBO);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glEnable(GL_DEPTH_TEST); 
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -454,10 +490,16 @@ void GameTechRenderer::RenderDOVCamera()
 	glDisable(GL_DEPTH_TEST);
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); 
 
+	if (isUsedCamPos)
+	{
+		drawFullScreenQuad(cameraDovPosShader, cameraBufferTex[1]);
+	} 
+	else
+	{
+		drawFullScreenQuad(ScreenQuadShader, cameraBufferTex[1]);
+	}
 
-	drawFullScreenQuad(cameraDovPostShader, cameraTex);
-	//drawFullScreenQuad(cameraDovPostShader, tempTex);
-	//drawFullScreenQuad(cameraDovPostShader, shadowTex);
+	
 
 }
 

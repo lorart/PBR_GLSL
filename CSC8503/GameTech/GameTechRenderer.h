@@ -22,6 +22,7 @@ namespace NCL {
 		
 			void setupHDR(OGLHdr* HdrEnv);
 			bool isUsedPBR;
+			bool isUsedCamPos;
 		//	OGLShader* CompareShader;
 			Camera* gameWorldCamera;
 
@@ -57,13 +58,16 @@ namespace NCL {
 			Matrix4     shadowMatrix;
 
 
-			OGLShader* cameraDovPostShader;
-			OGLShader* cameraDovCaculateShader;
-		//	GLuint		cameraTex;
-			OGLTexture* cameraTex;
+			OGLShader* ScreenQuadShader;
+			OGLShader* cameraDovPosShader;
+			OGLTexture* cameraBufferTex[2];
+			OGLTexture* cameraDepBufferTex;
+			
 
 			OGLTexture* shadowTex;
 			GLuint		cameraFBO;
+			GLuint		cameraMsaaFBO;
+			GLuint		cameraPosFBO;
 		
 			Model* ScreenQuad = nullptr;
 

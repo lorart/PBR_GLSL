@@ -40,7 +40,9 @@ namespace NCL {
 			void LockedCameraMovement();
 			void ChangeShader();
 			void ChangeModels();
+			void ChangePossProcess();
 			bool isShowSphereTest;
+			bool isShowCamreaPos;
 			
 
 			vector<GameObject*> senceModel;
@@ -66,6 +68,7 @@ namespace NCL {
 			bool useGravity;
 			bool inSelectionMode;
 			bool IsUsePBRshader;
+	
 
 			float		forceMagnitude;
 

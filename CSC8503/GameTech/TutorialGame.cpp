@@ -133,6 +133,7 @@ void TutorialGame::UpdateKeys() {
 	LightMovement();
 	ChangeShader();
 	ChangeModels();
+	ChangePossProcess();
 	
 }
 
@@ -194,16 +195,23 @@ void TutorialGame::ChangeShader()
 
 void TutorialGame::DrawDebugInformation()
 {
+	renderer->DrawString("Change camera: R", Vector2(20, 80));
 	renderer->DrawString("Change Shader: G", Vector2(20, 20));
 	renderer->DrawString("Change Mesh: F", Vector2(20, 60));
 	renderer->DrawString("MOVE Camera: S D Shift Space ", Vector2(20, 0));
 	renderer->DrawString("MOVE Light: I J K L ", Vector2(20, 40));
 
 	if (renderer->isUsedPBR) {
-		renderer->DrawString("PBR shader", Vector2(20, 620));
+		renderer->DrawString("PBR shader", Vector2(20, 600));
 	}
 	else {
 		renderer->DrawString("Bilin-pohng shader", Vector2(20, 600));
+	}
+	if (renderer->isUsedCamPos) {
+		renderer->DrawString("Physic Camera", Vector2(20, 620));
+	}
+	else {
+		renderer->DrawString("Normal Camerar", Vector2(20, 620));
 	}
 
 
@@ -213,11 +221,11 @@ void TutorialGame::DrawDebugInformation()
 void TutorialGame::ChangeModels()
 {
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F)) {
-		std::cout << "***E pressed " << std::endl;
+	//	std::cout << "***E pressed " << std::endl;
 		isShowSphereTest = !isShowSphereTest;
 		if (isShowSphereTest) {
 
-			std::cout << "***testShaderBySpheres" << std::endl;
+			//std::cout << "***testShaderBySpheres" << std::endl;
 			testShaderBySpheres();
 			for (auto& i : senceModel) {
 				world->RemoveGameObject(i);
@@ -225,7 +233,7 @@ void TutorialGame::ChangeModels()
 
 		}
 	else {
-		std::cout << "***AddModelToWorld" << std::endl;
+	//	std::cout << "***AddModelToWorld" << std::endl;
 		bool isPBR = true;
 		senceModel=	AddModelToWorld(testmodel, Vector3(0, 0, 0), Vector3(2, 2, 2), isPBR);
 		for (auto& i :senceSphereArry)
@@ -239,6 +247,16 @@ void TutorialGame::ChangeModels()
 	}
 }
 	
+}
+
+void TutorialGame::ChangePossProcess()
+{
+
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::R)) {
+		//std::cout << "***R pressed " << std::endl;
+		renderer->isUsedCamPos = !renderer->isUsedCamPos;
+	}
+		
 }
 
 void NCL::CSC8503::TutorialGame::LightMovement()

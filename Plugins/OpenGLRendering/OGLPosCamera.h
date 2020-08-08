@@ -22,8 +22,6 @@ namespace NCL {
 			Model* ScreenQuad = nullptr;
 		
 
-			
-
 			OGLShader* ScreenQuadShader;
 			OGLShader* cameraDovPosShader;
 			OGLTexture* cameraBufferTex[2];

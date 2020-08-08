@@ -409,10 +409,12 @@ void GameTechRenderer::drawFullScreenQuad(OGLShader* shader, OGLTexture* tex)
 	
 	
 	BindShader(shader);
+	int multyN = 0;
 
 	shader->setMat4("modelMatrix", modelMatrix);
 	shader->setMat4("viewMatrix", viewMatrix);
 	shader->setMat4("projMatrix", projMatrix);
+	shader->setInt("nMultiSample", 0);
 	BindTextureToShader(tex,"mainTex",0);
 	
 
@@ -442,6 +444,7 @@ void GameTechRenderer::drawFullScreenQuad(OGLShader* shader, OGLTexture* mutiTex
 	shader->setMat4("modelMatrix", modelMatrix);
 	shader->setMat4("viewMatrix", viewMatrix);
 	shader->setMat4("projMatrix", projMatrix);
+
 	//todo:check
 	BindTextureToShader(mutiTex, "MutiTex", 0);
 	shader->setInt("nMultiSample", sampleN);
@@ -526,11 +529,11 @@ void GameTechRenderer::RenderDOVCamera()
 		if (isUsedCamPos)
 		{
 			glDisable(GL_MULTISAMPLE);
-			drawFullScreenQuad(posCamera->cameraDovPosShader, posCamera->cameraBufferTex[1]);//todo:
+			drawFullScreenQuad(posCamera->cameraDovPosShader, posCamera->cameraBufferTex[1],posCamera->mutiNum);//todo:
 		}
 		else
 		{
-			drawFullScreenQuad(posCamera->ScreenQuadShader, posCamera->cameraBufferTex[1]);
+			drawFullScreenQuad(posCamera->ScreenQuadShader, posCamera->cameraBufferTex[1], posCamera->mutiNum);
 		}
 	}
 	else {

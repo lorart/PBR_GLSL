@@ -5,11 +5,8 @@ in Vertex
 {                                               
 	//vec4 colour;
 	vec2 texCoord;
-	vec4 shadowProj;
-	vec3 normal;
-	vec3 tangent;
-	vec3 binormal;
 	vec3 worldPos;
+	vec2 Cood;
 } IN;
 
 out vec4 fragColor;

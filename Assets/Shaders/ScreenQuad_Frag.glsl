@@ -1,5 +1,7 @@
 #version 330 core
 uniform sampler2D mainTex;
+uniform sampler2DMS MutiTex;
+uniform int nMultiSample;　
 
 in Vertex
 {                                               
@@ -17,5 +19,21 @@ out vec4 fragColor;
 void main(void) {
 	fragColor=texture(mainTex,IN.texCoord);
 
-	//fragColor= vec4(1.0,0,0,1);
-}
+	 ivec2 texSize = textureSize(MutiTex);
+ 
+     vec4 fTexCol = vec4(0.0);
+ 
+    if( 0 == nMultiSample )
+     {
+         FragColor = texelFetch(MutiTex,ivec2(Coord * texSize),0);
+     }
+     else
+     {
+         for( int i = 0 ; i < nMultiSample ; i++ )
+         {
+             fTexCol += texelFetch(MutiTex, ivec2(Coord * texSize), i);　
+         }
+         FragColor = fTexCol / nMultiSample;
+     }
+
+	

@@ -45,69 +45,9 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 #pragma endregion
 
 #pragma region  camera
-	cameraDovPosShader = new OGLShader("ScreenQuad_Vert.glsl","cameraDov_post_Frag.glsl");
-	ScreenQuadShader = new OGLShader("ScreenQuad_Vert.glsl","ScreenQuad_Frag.glsl");
-
-	for (int i=0;i<2;i++)
-	{
-		cameraBufferTex[i] = new OGLTexture();
-		glBindTexture(GL_TEXTURE_2D, cameraBufferTex[i]->GetObjectID());
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, currentWidth, currentHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);  //why nullptr
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	posCamera = new OGLPosCamera( currentWidth,currentHeight);
 
 
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-	
-
-	glGenFramebuffers(1, &cameraFBO);
-	glBindFramebuffer(GL_FRAMEBUFFER, cameraFBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cameraBufferTex[1]->GetObjectID(), 0);
-//	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, cameraBufferTex->GetObjectID(), 0);
-
-	/************/
-	cameraDepBufferTex = new OGLTexture();
-	glBindTexture(GL_TEXTURE_2D, cameraDepBufferTex->GetObjectID());
-	//test
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, currentWidth, currentHeight, 0,
-		GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, nullptr); 
-		
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, cameraDepBufferTex->GetObjectID(), 0);
-
-	//glDrawBuffer(GL_NONE);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glClearColor(1, 1, 1, 1);
-
-	/******************/
-	glGenFramebuffers(1, &cameraPosFBO);
-	glBindFramebuffer(GL_FRAMEBUFFER, cameraPosFBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cameraBufferTex[2]->GetObjectID(), 0);
-
-	/******************/
-	glGenFramebuffers(1, &cameraMsaa_FBO);
-	glBindFramebuffer(GL_FRAMEBUFFER, cameraMsaa_FBO);
-
-	//glBindRenderbuffer(GL_RENDERBUFFER, 0);
-	glGenRenderbuffers(1, &cameraMsaa_COL_RBO);
-	glBindRenderbuffer(GL_RENDERBUFFER, cameraMsaa_COL_RBO);
-	glRenderbufferStorageMultisample(GL_RENDERBUFFER,4,GL_RGB,currentWidth,currentHeight);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_RENDERBUFFER, cameraMsaa_COL_RBO);
-
-	glGenRenderbuffers(1, &cameraMsaa_DEP_RBO);
-	glBindRenderbuffer(GL_RENDERBUFFER, cameraMsaa_DEP_RBO);
-	glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH_COMPONENT, currentWidth, currentHeight);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, cameraMsaa_DEP_RBO);
-	
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 #pragma endregion
@@ -121,39 +61,25 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	float screenAspect = 0;
 	Matrix4 viewMatrix;
 	Matrix4 projMatrix;
-	
+
 	
 	cubeTexture = 0;
-	ScreenQuad = new Model(Assets::MESHDIR + "PLANE" + ".obj", 0);
+	
 
 	gameWorldCamera=world.GetMainCamera();
 	tempTex =  (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
 }
 
 GameTechRenderer::~GameTechRenderer() {
-	delete cameraBufferTex;
-
-	glDeleteFramebuffers(1, &cameraFBO);
-	glDeleteFramebuffers(1, &cameraPosFBO);
-
-	glDeleteRenderbuffers(1,&cameraMsaa_COL_RBO);
-	glDeleteRenderbuffers(1,&cameraMsaa_DEP_RBO);
-	glDeleteFramebuffers(1, &cameraMsaa_FBO);
-
 	
-
-	delete cameraDovPosShader;
-	delete ScreenQuadShader;
-	delete cameraDepBufferTex;
-	delete cameraDepBufferTex;
-	
+	delete posCamera;
 //	glDeleteTextures(1, &shadowTex);
 	delete shadowTex;
 	glDeleteFramebuffers(1, &shadowFBO);
 	//todo:check
 	delete HdrEnv;
 	
-	delete ScreenQuad;
+
 	delete tempTex;
 
 	for (auto& i : lightArry) {
@@ -448,11 +374,12 @@ void GameTechRenderer::RendercameraFrame()
 	SortObjectList();
 	RenderShadowMap();
 	if (isUsedMSAA) {
-		glBindFramebuffer(GL_FRAMEBUFFER, cameraMsaa_FBO);
+		glBindFramebuffer(GL_FRAMEBUFFER, posCamera->cameraMsaa_FBO);
+	
 	}
 	else {
 
-		glBindFramebuffer(GL_FRAMEBUFFER, cameraFBO);
+		glBindFramebuffer(GL_FRAMEBUFFER, posCamera->cameraFBO);
 	}
 	RenderCamera();
 
@@ -464,13 +391,7 @@ void GameTechRenderer::RendercameraFrame()
 
 }
 
-void NCL::CSC8503::GameTechRenderer::CaculateViewPorjMat()
-{
-	this->screenAspect = (float)currentWidth / (float)currentHeight;
-	this->viewMatrix = gameWorld.GetMainCamera()->BuildViewMatrix();
-	this->projMatrix = gameWorld.GetMainCamera()->BuildProjectionMatrix(screenAspect);
 
-}
 
 void GameTechRenderer::drawFullScreenQuad(OGLShader* shader, OGLTexture* tex)
 {
@@ -496,7 +417,7 @@ void GameTechRenderer::drawFullScreenQuad(OGLShader* shader, OGLTexture* tex)
 	
 
 	//Transform* parentTransform, OGLMesh* mesh, TextureBase* colourtex, ShaderBase* shader
-	RenderObject* i = new RenderObject(quadtransform, ScreenQuad->meshes[0], tex, shader);
+	RenderObject* i = new RenderObject(quadtransform, posCamera->ScreenQuad->meshes[0], tex, shader);
 	BindMesh((*i).GetMesh());
 	DrawBoundMesh();
 }
@@ -528,7 +449,7 @@ void GameTechRenderer::drawFullScreenQuad(OGLShader* shader, OGLTexture* mutiTex
 
 
 	//Transform* parentTransform, OGLMesh* mesh, TextureBase* colourtex, ShaderBase* shader
-	RenderObject* i = new RenderObject(quadtransform, ScreenQuad->meshes[0], mutiTex, shader);
+	RenderObject* i = new RenderObject(quadtransform, posCamera->ScreenQuad->meshes[0], mutiTex, shader);
 	BindMesh((*i).GetMesh());
 	DrawBoundMesh();
 }
@@ -544,41 +465,19 @@ void GameTechRenderer::RenderDOVCamera()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	if (isUsedMSAA) {
-		glBindFramebuffer(GL_FRAMEBUFFER, cameraMsaa_FBO);
+		glBindFramebuffer(GL_FRAMEBUFFER, posCamera->cameraMsaa_FBO);
 		status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 		if (status != GL_FRAMEBUFFER_COMPLETE)
 		{
 
-			/*if (status = GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT) {
-				std::cout << 1<< std::endl;
-			}
-			else if(status = GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT)
-			{
-				std::cout << 2 << std::endl;
-			}
-			else if (status = GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER)
-			{
-				std::cout << 3 << std::endl;
-			}
-
-			else if (status = GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER)
-			{
-				std::cout << 4<< std::endl;
-			}
-
-			else if (status = GL_FRAMEBUFFER_UNSUPPORTED)
-			{
-				std::cout << 5<< std::endl;
-			}*/
-
-			
 			std::cout << status << "   The frame buffer status is not complete!" << std::endl;
 			return;
+			glEnable(GL_MULTISAMPLE);
 		}
 	}
 	else {
 
-		glBindFramebuffer(GL_FRAMEBUFFER, cameraFBO);
+		glBindFramebuffer(GL_FRAMEBUFFER, posCamera->cameraFBO);
 	}
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -594,21 +493,20 @@ void GameTechRenderer::RenderDOVCamera()
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); 
 
 	if (isUsedMSAA) {
-		glBindFramebuffer(GL_READ_FRAMEBUFFER,cameraMsaa_FBO);
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, posCamera->cameraMsaa_FBO);
 		status = glCheckFramebufferStatus(GL_READ_FRAMEBUFFER);
 		if (status != GL_FRAMEBUFFER_COMPLETE)
 		{
-						/*
-			GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT 0x8CD6
-			 GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT 0x8CD7
-			 GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER 0x8CDB
-			 GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER 0x8CDC
-			 GL_FRAMEBUFFER_UNSUPPORTED 0x8CDD
-			 */
-			std::cout << status<< "   The frame buffer status is not complete!" << std::endl;
+			std::cout << status << "   The frame buffer status is not complete!" << std::endl;
 			return;
 		}
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, cameraFBO);
+	
+
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, posCamera->cameraMsaa_FBO);
+	//	std::cout << posCamera->cameraMsaa_FBO << std::endl;
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, posCamera->cameraFBO);
+	//	std::cout << posCamera->cameraFBO << std::endl;
+
 		status = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
 		if (status != GL_FRAMEBUFFER_COMPLETE)
 		{
@@ -618,34 +516,44 @@ void GameTechRenderer::RenderDOVCamera()
 		glBlitFramebuffer(0, 0, currentWidth, currentHeight,
 			0, 0, currentWidth, currentWidth,
 			GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, GL_LINEAR);
-		
+
 
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+		
+
+	
 		if (isUsedCamPos)
 		{
-			
-			drawFullScreenQuad(cameraDovPosShader, cameraBufferTex[1]);//todo:
+			glDisable(GL_MULTISAMPLE);
+			drawFullScreenQuad(posCamera->cameraDovPosShader, posCamera->cameraBufferTex[1]);//todo:
 		}
 		else
 		{
-			drawFullScreenQuad(ScreenQuadShader, cameraBufferTex[1]);
+			drawFullScreenQuad(posCamera->ScreenQuadShader, posCamera->cameraBufferTex[1]);
 		}
 	}
 	else {
 
 		if (isUsedCamPos)
 		{
-			drawFullScreenQuad(cameraDovPosShader, cameraBufferTex[1]);//todo:
+			drawFullScreenQuad(posCamera->cameraDovPosShader, posCamera->cameraBufferTex[1]);//todo:
 		}
 		else
 		{
-			drawFullScreenQuad(ScreenQuadShader, cameraBufferTex[1]);
+			drawFullScreenQuad(posCamera->ScreenQuadShader, posCamera->cameraBufferTex[1]);
 		}
 	}
 	
 
 	
+
+}
+void NCL::CSC8503::GameTechRenderer::CaculateViewPorjMat()
+{
+	posCamera->screenAspect = (float)currentWidth / (float)currentHeight;
+	posCamera->viewMatrix = gameWorld.GetMainCamera()->BuildViewMatrix();
+	posCamera->projMatrix = gameWorld.GetMainCamera()->BuildProjectionMatrix(posCamera->screenAspect);
 
 }
 

@@ -45,6 +45,8 @@ namespace NCL {
 			void caculateDovCamera();
 
 			void drawFullScreenQuad(OGLShader* shader, OGLTexture* tex);
+
+			void drawFullScreenQuad(OGLShader* shader, OGLTexture* mutiTex, int sampleN);
 		
 			
 

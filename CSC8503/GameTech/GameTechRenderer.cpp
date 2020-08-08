@@ -501,6 +501,39 @@ void GameTechRenderer::drawFullScreenQuad(OGLShader* shader, OGLTexture* tex)
 	DrawBoundMesh();
 }
 
+void GameTechRenderer::drawFullScreenQuad(OGLShader* shader, OGLTexture* mutiTex, int sampleN)
+{
+	//Matrix4 projMatrix = gameWorld.GetMainCamera()->BuildProjectionMatrix(screenAspect);
+	projMatrix = Matrix4::Orthographic(-1, 1, 1, -1, -1, 1);
+	viewMatrix = Matrix4();
+
+	Matrix4 modelMatrix = Matrix4();
+	//Matrix4 modelMatrix = modelObject->GetTransform().SetWorldPosition(position);
+	//Matrix4 MVP = projMatrix * viewMatrix * modelMatrix;
+
+	modelMatrix.Rotation(90.0f, Vector3(1, 1, 1));
+
+	Transform* quadtransform = new Transform();
+
+
+	BindShader(shader);
+
+	shader->setMat4("modelMatrix", modelMatrix);
+	shader->setMat4("viewMatrix", viewMatrix);
+	shader->setMat4("projMatrix", projMatrix);
+	//todo:check
+	BindTextureToShader(mutiTex, "MutiTex", 0);
+	shader->setInt("nMultiSample", sampleN);
+
+
+
+	//Transform* parentTransform, OGLMesh* mesh, TextureBase* colourtex, ShaderBase* shader
+	RenderObject* i = new RenderObject(quadtransform, ScreenQuad->meshes[0], mutiTex, shader);
+	BindMesh((*i).GetMesh());
+	DrawBoundMesh();
+}
+
+
 void GameTechRenderer::caculateDovCamera()
 {
 	
@@ -565,13 +598,13 @@ void GameTechRenderer::RenderDOVCamera()
 		status = glCheckFramebufferStatus(GL_READ_FRAMEBUFFER);
 		if (status != GL_FRAMEBUFFER_COMPLETE)
 		{
-			/*
-GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT 0x8CD6
- GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT 0x8CD7
- GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER 0x8CDB
- GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER 0x8CDC
- GL_FRAMEBUFFER_UNSUPPORTED 0x8CDD
- */
+						/*
+			GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT 0x8CD6
+			 GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT 0x8CD7
+			 GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER 0x8CDB
+			 GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER 0x8CDC
+			 GL_FRAMEBUFFER_UNSUPPORTED 0x8CDD
+			 */
 			std::cout << status<< "   The frame buffer status is not complete!" << std::endl;
 			return;
 		}

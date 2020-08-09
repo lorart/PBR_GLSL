@@ -10,7 +10,7 @@ out Vertex
 {
 	//vec4 colour;
 	vec2 texCoord;
-	vec3 worldPos;
+//	vec3 worldPos;
 	vec2 Cood;
 } OUT;
 void main(void) {

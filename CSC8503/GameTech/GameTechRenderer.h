@@ -59,7 +59,7 @@ namespace NCL {
 			OGLShader*	shadowShader;
 			GLuint		shadowFBO;
 			Matrix4     shadowMatrix;
-			OGLTexture* shadowTex;
+	        OGLTexture* shadowTex;
 
 			OGLPosCamera* posCamera;
 

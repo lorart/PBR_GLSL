@@ -7,8 +7,8 @@ in Vertex
 {
 	//vec4 colour;
 	vec2 texCoord;
-	vec3 worldPos;
-	vec2 Cood;
+//	vec3 worldPos;
+//	vec2 Cood;
 } IN;
 
 out vec4 fragColor;

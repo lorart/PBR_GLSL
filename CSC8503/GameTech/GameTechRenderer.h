@@ -6,6 +6,7 @@
 #include "../CSC8503Common/GameWorld.h"
 #include "../../Plugins/OpenGLRendering/OGLLight.h"
 #include "../../Plugins/OpenGLRendering/OGLHdr.h"
+#include "../../Plugins/OpenGLRendering/OGLPosCamera.h"
 
 
 namespace NCL {
@@ -14,32 +15,32 @@ namespace NCL {
 	namespace CSC8503 {
 		class RenderObject;
 
-		class GameTechRenderer : public OGLRenderer	{
+		class GameTechRenderer : public OGLRenderer {
 		public:
 			GameTechRenderer(GameWorld& world);
 			~GameTechRenderer();
 			vector<OGLLight*> lightArry;
-		
+
 			void setupHDR(OGLHdr* HdrEnv);
 			bool isUsedPBR;
 			bool isUsedCamPos;
 			bool isUsedMSAA;
-		//	OGLShader* CompareShader;
+			//	OGLShader* CompareShader;
 			Camera* gameWorldCamera;
 
-			OGLTexture* tempTex ;
+			OGLTexture* tempTex;
 		protected:
 			void RenderFrame()	override;
 			void RendercameraFrame();
 
-			OGLShader*		defaultShader;
+			OGLShader* defaultShader;
 
-			GameWorld&	gameWorld;
+			GameWorld& gameWorld;
 
 			void BuildObjectList();
 			void SortObjectList();
 			void RenderShadowMap();
-			void RenderCamera(); 
+			void RenderCamera();
 			void CaculateViewPorjMat();
 			void RenderDOVCamera();
 			void caculateDovCamera();
@@ -47,40 +48,41 @@ namespace NCL {
 			void drawFullScreenQuad(OGLShader* shader, OGLTexture* tex);
 
 			void drawFullScreenQuad(OGLShader* shader, OGLTexture* mutiTex, int sampleN);
-		
-			
 
-			void SetupDebugMatrix(OGLShader*s) override;
+
+
+			void SetupDebugMatrix(OGLShader* s) override;
 
 			vector<const RenderObject*> activeObjects;
 
-			//shadow mapping things
-			OGLShader*	shadowShader;
-			//GLuint		shadowTex;
+
+			OGLShader* shadowShader;
 			GLuint		shadowFBO;
 			Matrix4     shadowMatrix;
-
-
-			OGLShader* ScreenQuadShader;
-			OGLShader* cameraDovPosShader;
-			OGLTexture* cameraBufferTex[2];
-			OGLTexture* cameraDepBufferTex;
-			
-
 			OGLTexture* shadowTex;
-			GLuint		cameraFBO;
+
+			OGLPosCamera* posCamera;
+
+			//OGLShader* ScreenQuadShader;
+			//OGLShader* cameraDovPosShader;
+			//OGLTexture* cameraBufferTex[2];
+			//OGLTexture* cameraDepBufferTex;
+
+
+
+		/*	GLuint		cameraFBO;
 			GLuint		cameraMsaa_FBO;
-			GLuint		cameraMsaa_COL_RBO;
-			GLuint		cameraMsaa_DEP_RBO;
+			OGLTexture* cameraMsaa_mutiTex;
+
 			GLuint		cameraPosFBO;
-		
-			Model* ScreenQuad = nullptr;
 
-			float screenAspect ;
-			Matrix4 viewMatrix ;
-			Matrix4 projMatrix;
+			Model* ScreenQuad = nullptr;*/
 
-			
+			/*		float screenAspect ;
+					Matrix4 viewMatrix ;
+					Matrix4 projMatrix;*/
+
+
 			void RenderHDRSkybox(OGLTexture* cubeTexture, int glActiveTextureNum);
 			void RenderHDRtoCubemap();
 			void RenderCubemaptoIrradianceMap();
@@ -92,8 +94,9 @@ namespace NCL {
 			GLenum status;
 
 			int cubeTexture;
-			
-	
+
+			Matrix4 viewMatrix;
+			Matrix4 projMatrix;
 
 
 

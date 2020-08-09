@@ -373,14 +373,12 @@ void GameTechRenderer::RendercameraFrame()
 	RenderShadowMap();
 	if (isUsedMSAA) {
 		glBindFramebuffer(GL_FRAMEBUFFER, posCamera->cameraMsaa_FBO);
-
 	}
 	else {
-
 		glBindFramebuffer(GL_FRAMEBUFFER, posCamera->cameraFBO);
 	}
+	
 	RenderCamera();
-
 	RenderHDRSkybox(HdrEnv->cubeTex, 10);
 
 
@@ -491,7 +489,7 @@ void GameTechRenderer::RenderDOVCamera()
 //	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 	if (isUsedMSAA) {
-    	std::cout << "mutiSample" << std::endl;
+    	//std::cout << "mutiSample" << std::endl;
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, posCamera->cameraMsaa_FBO);
 		status = glCheckFramebufferStatus(GL_READ_FRAMEBUFFER);
 		if (status != GL_FRAMEBUFFER_COMPLETE)

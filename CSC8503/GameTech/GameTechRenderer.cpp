@@ -517,35 +517,22 @@ void GameTechRenderer::RenderDOVCamera()
 
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+		glDisable(GL_MULTISAMPLE);
 
 
 		glBindFramebuffer(GL_FRAMEBUFFER, posCamera->cameraFBO);
-
-		if (isUsedCamPos)
-		{
-			glDisable(GL_MULTISAMPLE);
-			drawFullScreenQuad(posCamera->cameraDovPosShader, posCamera->cameraBufferTex[1], posCamera->mutiNum);//todo:
-		}
-		else
-		{
-			drawFullScreenQuad(posCamera->ScreenQuadShader, posCamera->cameraBufferTex[1], posCamera->mutiNum);
-		}
 	}
-	else {
-
-		if (isUsedCamPos)
-		{
-			drawFullScreenQuad(posCamera->cameraDovPosShader, posCamera->cameraBufferTex[1]);//todo:
-		}
-		else
-		{
-			drawFullScreenQuad(posCamera->ScreenQuadShader, posCamera->cameraBufferTex[1]);
-		}
-	}
-
-
-
-
+	drawFullScreenQuad(posCamera->cameraDovPosShader, posCamera->cameraBufferTex[1]);//todo:
+		//if (isUsedCamPos)
+		//{
+		//	
+		//	drawFullScreenQuad(posCamera->cameraDovPosShader,posCamera->cameraBufferTex[1]);//todo:
+		//}
+		//else
+		//{
+		//	drawFullScreenQuad(posCamera->ScreenQuadShader, posCamera->cameraBufferTex[1]);
+		//}
+	
 }
 void NCL::CSC8503::GameTechRenderer::CaculateViewPorjMat()
 {

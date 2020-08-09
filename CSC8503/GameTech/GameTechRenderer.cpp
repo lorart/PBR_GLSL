@@ -518,7 +518,7 @@ void GameTechRenderer::RenderDOVCamera()
 		}
 		glBlitFramebuffer(0, 0, currentWidth, currentHeight,
 			0, 0, currentWidth, currentHeight,
-			GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, GL_LINEAR);
+			GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 
 
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);

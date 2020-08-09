@@ -408,8 +408,8 @@ void GameTechRenderer::drawFullScreenQuad(OGLShader* shader, OGLTexture* tex)
 	int multyN = 0;
 
 	shader->setMat4("modelMatrix", modelMatrix);
-	shader->setMat4("viewMatrix", viewMatrix);
-	shader->setMat4("projMatrix", projMatrix);
+	shader->setMat4("viewMatrix", posCamera->viewMatrix);
+	shader->setMat4("projMatrix", posCamera->projMatrix);
 	shader->setInt("nMultiSample", 0);
 	BindTextureToShader(tex, "mainTex", 0);
 

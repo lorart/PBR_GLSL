@@ -482,16 +482,16 @@ void GameTechRenderer::RenderDOVCamera()
 	glEnable(GL_DEPTH_TEST);
 	//glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(0, 0, currentWidth, currentHeight);
 
 	RendercameraFrame();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glDisable(GL_DEPTH_TEST);
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+//	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 	if (isUsedMSAA) {
+    	std::cout << "mutiSample" << std::endl;
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, posCamera->cameraMsaa_FBO);
 		status = glCheckFramebufferStatus(GL_READ_FRAMEBUFFER);
 		if (status != GL_FRAMEBUFFER_COMPLETE)
@@ -520,18 +520,19 @@ void GameTechRenderer::RenderDOVCamera()
 		glDisable(GL_MULTISAMPLE);
 
 
-		glBindFramebuffer(GL_FRAMEBUFFER, posCamera->cameraFBO);
+		//glBindFramebuffer(GL_FRAMEBUFFER, posCamera->cameraFBO);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
-	drawFullScreenQuad(posCamera->cameraDovPosShader, posCamera->cameraBufferTex[1]);//todo:
-		//if (isUsedCamPos)
-		//{
-		//	
-		//	drawFullScreenQuad(posCamera->cameraDovPosShader,posCamera->cameraBufferTex[1]);//todo:
-		//}
-		//else
-		//{
-		//	drawFullScreenQuad(posCamera->ScreenQuadShader, posCamera->cameraBufferTex[1]);
-		//}
+
+		if (isUsedCamPos)
+		{
+			
+			drawFullScreenQuad(posCamera->cameraDovPosShader,posCamera->cameraBufferTex[1]);//todo:
+		}
+		else
+		{
+			drawFullScreenQuad(posCamera->ScreenQuadShader, posCamera->cameraBufferTex[1]);
+		}
 	
 }
 void NCL::CSC8503::GameTechRenderer::CaculateViewPorjMat()

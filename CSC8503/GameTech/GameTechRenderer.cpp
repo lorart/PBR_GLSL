@@ -368,8 +368,6 @@ void NCL::CSC8503::GameTechRenderer::setupHDR(OGLHdr* hdrEnv)
 
 void GameTechRenderer::RendercameraFrame()
 {
-
-
 	BuildObjectList();
 	SortObjectList();
 	RenderShadowMap();
@@ -431,9 +429,6 @@ void GameTechRenderer::drawFullScreenQuad(OGLShader* shader, OGLTexture* mutiTex
 	viewMatrix = Matrix4();
 
 	Matrix4 modelMatrix = Matrix4();
-	//Matrix4 modelMatrix = modelObject->GetTransform().SetWorldPosition(position);
-	//Matrix4 MVP = projMatrix * viewMatrix * modelMatrix;
-
 	modelMatrix.Rotation(90.0f, Vector3(1, 1, 1));
 
 	Transform* quadtransform = new Transform();
@@ -475,8 +470,8 @@ void GameTechRenderer::RenderDOVCamera()
 
 			std::cout << status << "   The frame buffer status is not complete!" << std::endl;
 			return;
-			glEnable(GL_MULTISAMPLE);
 		}
+		glEnable(GL_MULTISAMPLE);
 	}
 	else {
 
@@ -485,8 +480,9 @@ void GameTechRenderer::RenderDOVCamera()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glEnable(GL_DEPTH_TEST);
-	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(0, 0, currentWidth, currentHeight);
 
 	RendercameraFrame();
@@ -506,9 +502,8 @@ void GameTechRenderer::RenderDOVCamera()
 
 
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, posCamera->cameraMsaa_FBO);
-		//	std::cout << posCamera->cameraMsaa_FBO << std::endl;
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, posCamera->cameraFBO);
-		//	std::cout << posCamera->cameraFBO << std::endl;
+
 
 		status = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
 		if (status != GL_FRAMEBUFFER_COMPLETE)
@@ -520,11 +515,11 @@ void GameTechRenderer::RenderDOVCamera()
 			0, 0, currentWidth, currentHeight,
 			GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 
-
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
 
+		glBindFramebuffer(GL_FRAMEBUFFER, posCamera->cameraFBO);
 
 		if (isUsedCamPos)
 		{

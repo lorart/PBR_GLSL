@@ -30,6 +30,7 @@ void main(void) {
 		fTexCol+=texelFetch(MutiTex,ivec2(Coord*texSize),i);
 		}
 		fragColor = fTexCol / nMultiSample;
-		//	fragColor = texture(mainTex,IN.texCoord);
+	
+		fragColor = vec4(0.8);
 	}
 }

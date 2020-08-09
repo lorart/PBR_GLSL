@@ -196,7 +196,7 @@ void TutorialGame::ChangeShader()
 
 void TutorialGame::DrawDebugInformation()
 {
-	renderer->DrawString("Anti-Aliasing on/off: T", Vector2(20, 80));
+	renderer->DrawString("Anti-Aliasing on/off: T", Vector2(20, 100));
 	renderer->DrawString("Change camera: R", Vector2(20, 80));
 	renderer->DrawString("Change Shader: G", Vector2(20, 20));
 	renderer->DrawString("Change Mesh: F", Vector2(20, 60));

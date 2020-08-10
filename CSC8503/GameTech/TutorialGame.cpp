@@ -213,7 +213,7 @@ void TutorialGame::DrawDebugInformation()
 		renderer->DrawString("Physic Camera", Vector2(20, 620));
 	}
 	else {
-		renderer->DrawString("Normal Camerar", Vector2(20, 620));
+		renderer->DrawString("Normal Camera", Vector2(20, 620));
 	}
 	if (renderer->isUsedMSAA) {
 		renderer->DrawString("Anti-Aliasing(MSAA) ON", Vector2(20, 640));

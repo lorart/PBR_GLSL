@@ -4,7 +4,7 @@ NCL::Rendering::OGLPosCamera::OGLPosCamera(int currentWidth, int currentHeight)
 {
 	this->currentWidth = currentWidth;
 	this->currentHeight = currentHeight;
-	this->mutiNum = 4;
+	this->mutiNum = 8;
 
 	//ScreenQuad = new Model(Assets::MESHDIR + "PLANE" + ".obj", 0);
 

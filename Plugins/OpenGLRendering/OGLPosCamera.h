@@ -37,9 +37,9 @@ namespace NCL {
 
 
 
-			float screenAspect;
-			Matrix4 viewMatrix;
-			Matrix4 projMatrix;
+			//float screenAspect;
+			//Matrix4 viewMatrix;
+			//Matrix4 projMatrix;
 
 
 		};

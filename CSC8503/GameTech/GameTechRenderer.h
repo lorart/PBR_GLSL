@@ -95,6 +95,7 @@ namespace NCL {
 
 			int cubeTexture;
 
+			float screenAspect;
 			Matrix4 viewMatrix;
 			Matrix4 projMatrix;
 

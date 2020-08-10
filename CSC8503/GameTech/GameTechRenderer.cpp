@@ -391,13 +391,10 @@ void GameTechRenderer::RendercameraFrame()
 
 void GameTechRenderer::drawFullScreenQuad(OGLShader* shader, OGLTexture* tex)
 {
-	//Matrix4 projMatrix = gameWorld.GetMainCamera()->BuildProjectionMatrix(screenAspect);
 	projMatrix = Matrix4::Orthographic(-1, 1, 1, -1, -1, 1);
 	viewMatrix = Matrix4();
 
 	Matrix4 modelMatrix = Matrix4();
-	//Matrix4 modelMatrix = modelObject->GetTransform().SetWorldPosition(position);
-	//Matrix4 MVP = projMatrix * viewMatrix * modelMatrix;
 
 	modelMatrix.Rotation(90.0f, Vector3(1, 1, 1));
 
@@ -408,9 +405,8 @@ void GameTechRenderer::drawFullScreenQuad(OGLShader* shader, OGLTexture* tex)
 	int multyN = 0;
 
 	shader->setMat4("modelMatrix", modelMatrix);
-	shader->setMat4("viewMatrix", posCamera->viewMatrix);
-	shader->setMat4("projMatrix", posCamera->projMatrix);
-	shader->setInt("nMultiSample", 0);
+	shader->setMat4("viewMatrix", viewMatrix);
+	shader->setMat4("projMatrix", projMatrix);
 	BindTextureToShader(tex, "mainTex", 0);
 
 
@@ -535,9 +531,9 @@ void GameTechRenderer::RenderDOVCamera()
 }
 void NCL::CSC8503::GameTechRenderer::CaculateViewPorjMat()
 {
-	posCamera->screenAspect = (float)currentWidth / (float)currentHeight;
-	posCamera->viewMatrix = gameWorld.GetMainCamera()->BuildViewMatrix();
-	posCamera->projMatrix = gameWorld.GetMainCamera()->BuildProjectionMatrix(posCamera->screenAspect);
+	screenAspect = (float)currentWidth / (float)currentHeight;
+	viewMatrix = gameWorld.GetMainCamera()->BuildViewMatrix();
+	projMatrix = gameWorld.GetMainCamera()->BuildProjectionMatrix(screenAspect);
 
 }
 

@@ -136,6 +136,10 @@ void GameTechRenderer::RenderShadowMap() {
 
 	glCullFace(GL_FRONT);
 
+	//todo::test
+	glEnable(GL_POLYGON_OFFSET_FILL);
+	glPolygonOffset(-1.5f, -2.0f);
+
 	BindShader(shadowShader);
 	int mvpLocation = glGetUniformLocation(shadowShader->GetProgramID(), "mvpMatrix");
 
@@ -156,9 +160,13 @@ void GameTechRenderer::RenderShadowMap() {
 		DrawBoundMesh();
 	}
 
+	//todo::test
+	glDisable(GL_POLYGON_OFFSET_FILL);
+
+
+
 	glViewport(0, 0, currentWidth, currentHeight);
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-	//todo:FboChange
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 

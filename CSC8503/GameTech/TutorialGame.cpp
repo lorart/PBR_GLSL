@@ -315,7 +315,7 @@ void TutorialGame::MoveSelectedObject() {
 
 void TutorialGame::InitCamera() {
 	world->GetMainCamera()->SetNearPlane(30.0f);
-	world->GetMainCamera()->SetFarPlane(2000.0f);
+	world->GetMainCamera()->SetFarPlane(5000.0f);
 	world->GetMainCamera()->SetPitch(-15.0f);
 	world->GetMainCamera()->SetYaw(315.0f);
 	world->GetMainCamera()->SetPosition(Vector3(-60, 40, 60));
@@ -328,7 +328,7 @@ void TutorialGame::InitWorld() {
 	bool isPBR=true;
 
 	 testShaderBySpheres();
-	AddLightToWorld(Vector4(1, 1, 1, 1), 500, Vector3(100, 100, 100));
+	AddLightToWorld(Vector4(1, 1, 1, 1), 500, Vector3(50, 200, 50));
 
 
 	//physics->Clear();

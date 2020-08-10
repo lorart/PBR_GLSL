@@ -294,6 +294,8 @@ void NCL::CSC8503::TutorialGame::LightMovement()
 		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::I)) {
 			renderer->lightArry[0]->lightPosition = renderer->lightArry[0]->lightPosition + Vector3(-1, 0, 0);
 		}
+		//todo:delete light
+		//std::cout << renderer->lightArry[0]->lightPosition << std::endl;
 	}
 }
 
@@ -312,7 +314,7 @@ void TutorialGame::MoveSelectedObject() {
 }
 
 void TutorialGame::InitCamera() {
-	world->GetMainCamera()->SetNearPlane(30.0f);
+	world->GetMainCamera()->SetNearPlane(40.0f);
 	world->GetMainCamera()->SetFarPlane(500.0f);
 	world->GetMainCamera()->SetPitch(-15.0f);
 	world->GetMainCamera()->SetYaw(315.0f);
@@ -326,7 +328,7 @@ void TutorialGame::InitWorld() {
 	bool isPBR=true;
 
 	 testShaderBySpheres();
-	AddLightToWorld(Vector4(1, 1, 1, 1), 100, Vector3(10, 80, 10));
+	AddLightToWorld(Vector4(1, 1, 1, 1), 500, Vector3(200, 200, 200));
 
 
 	//physics->Clear();
@@ -392,28 +394,30 @@ void NCL::CSC8503::TutorialGame::testShaderBySpheres()
 	float tempValue = 0;
 	int length=15;
 	Vector3 clolor = Vector3(0, 0, 1);
-	for (int hight = 0; hight < 4; hight++)
-	{
-		 tempValue = 0;
-
-
-		for (int wide = 0; wide <= 5; wide++)
+	//for (int depth = 0; depth < 2; depth++) {
+		for (int hight = 0; hight < 4; hight++)
 		{
-			sphere = new Model(Assets::MESHDIR + "sphere" + ".obj", 0);
-			testShaderModelVector.push_back(sphere);
-			tempValue =wide*(1.0 /5.0);
-			senceSphere=	AddModelToWorld(sphere, Vector3(-hight * length, wide * length, 0), Vector3(5, 5, 5), IsUsePBRshader);
-			
+			tempValue = 0;
+
+
+			for (int wide = 0; wide <= 5; wide++)
+			{
+				sphere = new Model(Assets::MESHDIR + "sphere" + ".obj", 0);
+				testShaderModelVector.push_back(sphere);
+				tempValue = wide * (1.0 / 5.0);
+				senceSphere = AddModelToWorld(sphere, Vector3(-hight * length, wide * length, 1), Vector3(5, 5, 5), IsUsePBRshader);
+
 				sphere->meshes[0]->material->metallicValue = hight * (1.0 / 5.0);
-				
-				sphere->meshes[0]->material->roughnessValue= tempValue;
+
+				sphere->meshes[0]->material->roughnessValue = tempValue;
 				//std::cout << "  hight=" << hight << "  wide=" << wide << "  tempValue=" << tempValue << "  wide* 1 /5=" << wide * 1 / 5 << std::endl;
-			
+
 				sphere->meshes[0]->material->albedoValue = clolor;
 				senceSphereArry.push_back(senceSphere);
-			
-			
-		}
+
+
+			}
+		//}
 	}
 	
 

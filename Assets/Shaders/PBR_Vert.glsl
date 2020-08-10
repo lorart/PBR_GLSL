@@ -3,7 +3,7 @@
 uniform mat4 modelMatrix 	= mat4(1.0f);
 uniform mat4 viewMatrix 	= mat4(1.0f);
 uniform mat4 projMatrix 	= mat4(1.0f);
-uniform mat4 shadowMatrix 	= mat4(1.0f);
+uniform mat4 shadowMatrix ;
 
 layout(location = 0) in vec3 position;
 //layout(location = 1) in vec4 colour;

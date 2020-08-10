@@ -6,11 +6,9 @@ NCL::Rendering::OGLPosCamera::OGLPosCamera(int currentWidth, int currentHeight)
 	this->currentHeight = currentHeight;
 	this->mutiNum = 8;
 
-	//ScreenQuad = new Model(Assets::MESHDIR + "PLANE" + ".obj", 0);
-
 	ScreenQuad = new Model(Assets::MESHDIR + "PLANE1" + ".obj", 0);
-	cameraDovPosShader = new OGLShader("ScreenQuad_Vert.glsl", "cameraDov_post_Frag.glsl");
-	ScreenQuadShader = new OGLShader("ScreenQuad_Vert.glsl", "ScreenQuad_Frag.glsl");
+	cameraDovPosShader = new OGLShader("ScreenQuad_Vert1.glsl", "cameraDov_post_Frag1.glsl");
+	ScreenQuadShader = new OGLShader("ScreenQuad_Vert1.glsl", "ScreenQuad_Frag1.glsl");
 
 	for (int i = 0; i < 2; i++)
 	{

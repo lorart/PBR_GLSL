@@ -52,25 +52,36 @@ void main(void)
 
 
 //vec3 diffuse=texture(albedo_map, IN.texCoord).rgb+albedoValue;
-vec3 diffuse=texture(albedo_map, IN.texCoord).rgb+albedoValue;
+vec3 objColour=texture(albedo_map, IN.texCoord).rgb+albedoValue;
+
+float ambientStrength = 0.1;
+vec3 ambient = ambientStrength * lightColour.rgb;
+vec3 ambientResult = ambient * objColour;
+
 vec3 incident = normalize(lightPos - IN.worldPos);
-float lambert = max(0.0, dot(-incident, N));
+float diffuse = max(0.0, dot(N,incident));
+vec3 diffuseResult = diffuse * lightColour.rgb;
 
 float dist = length(lightPos - IN.worldPos);
-	float atten = 1.0 - clamp(dist / lightRadius, 0.0, 1.0);
+float atten = 1.0 - clamp(dist / lightRadius, 0.0, 1.0);
 
-	vec3 viewDir = normalize(cameraPos - IN.worldPos);
-	vec3 halfDir = normalize(incident + viewDir);
+vec3 viewDir = normalize(cameraPos - IN.worldPos);
+vec3 halfDir = normalize(incident + viewDir);
 
 	float rFactor = max(0.0, dot(halfDir, N)); // Different !
-	float sFactor = pow(rFactor, 33.0);
-
+	float sFactor = pow(rFactor, 33.0);//specular light
+	float specularStrength=0.5;
+vec3 specularResult=	sFactor*lightColour.rgb*specularStrength;
+/*
 vec3 colour = (diffuse.rgb * lightColour.rgb);
 	colour += (lightColour.rgb * sFactor) * 0.33;
 	fragColor = vec4(colour * atten * lambert, 1);
 	fragColor.rgb += (diffuse.rgb * lightColour.rgb) * 0.1;
 	fragColor*=1.1;
 	//fragColor.rgb= N;
+	*/
+fragColor.rgb = (ambientResult + diffuseResult + specularResult) *
+ objColour;	
 
 
 }

@@ -56,7 +56,7 @@ float NoramlDistirbution_GGX(float roughnessValue,float NdotH){ //trowbridge-Rei
 	float nom=roughnessValue4;
 	float denom= NdotH*NdotH*(roughnessValue4-1.0)+1.0;      
 	denom=denom*denom*PI;
-	return nom/denom;
+	return nom/max(denom,0.001);
 }
 
 
@@ -67,25 +67,15 @@ float NoramlDistirbution_GGX(float roughnessValue,float NdotH){ //trowbridge-Rei
 float Geometry_lmplicit(float NdotL,float NdotV){
 	return NdotL*NdotV;
 }
-/*
+
 float Geometry_SchlickGGX(float roughnessValue,float NdotV)
 {
-	float k=(roughnessValue+1)*(roughnessValue+1)/8.0;
+	float k=((roughnessValue+1)*(roughnessValue+1))/8.0;
 	float nom=NdotV;
 	float denom=NdotV*(1-k)+k;
 	return nom/denom;
 
 }
-*/
-
-float Geometry_Geometry_SchlickGGX(float roughnessValue,float NdotV){
-	float k=roughnessValue*roughnessValue/2;
-	float nom=NdotV;
-	float denom=NdotV*(1-k)+k;
-		return nom/denom;
-}
-
-
 
 /*********************************************/
 
@@ -138,12 +128,10 @@ F0=mix(F0,albedoValue,metallicValue);
 
 /*********************************/
 
-float NorD=Geometry_Geometry_SchlickGGX( roughnessValue,NdotV);
-
-
+float NorD=NoramlDistirbution_GGX( roughnessValue, NdotH);
 vec3 Fre=Fresnel_Schlick(F0, HdotV);//?
-//float Geo=  Geometry_Geometry_SchlickGGX( roughnessValue, NdotV);
-float Geo= Geometry_lmplicit( NdotL, NdotV);
+float Geo=  Geometry_SchlickGGX(roughnessValue,NdotV);
+//float Geo= Geometry_lmplicit( NdotL, NdotV);
 
 vec3 specular=Cook_Torrance( NorD,Geo, Fre, NdotV, NdotL );//strange
 
@@ -158,17 +146,24 @@ vec3 kd=vec3(1.0)-ks;
  kd *= 1.0 - metallicValue;	
 float shadow =CaculateShadow();
 
-vec3 colour=(kd*albedoValue/PI+ specular)*radiance*NdotL;
+vec3 Lo=(kd*albedoValue/PI+ specular)*radiance*NdotL;
 
+vec3 ambient = vec3(0.03) * albedoValue ;
+vec3 color = ambient + Lo;
 
+// HDR tonemapping
+color = color / (color + vec3(1.0));
+// gamma correct
+color = pow(color, vec3(1.0/2.2)); 
 
-
-//fragColor.rgb=NorD*Geo*Fre;
+ 
+fragColor.rgb=color;
 
 //fragColor.rgb=vec3(Geo);
+
 //fragColor.rgb= specular;
-//fragColor.rgb= specular
-fragColor.rgb=vec3(shadow);
+
+//fragColor.rgb=vec3(shadow);
 //fragColor.rgb=colour;
 
 

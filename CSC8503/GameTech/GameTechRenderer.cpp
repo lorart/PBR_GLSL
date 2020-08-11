@@ -161,7 +161,7 @@ void GameTechRenderer::RenderShadowMap() {
 	}
 
 	//todo::test
-	glDisable(GL_POLYGON_OFFSET_FILL);
+
 
 
 
@@ -249,6 +249,10 @@ void GameTechRenderer::RenderCamera() {
 					BindTextureToShader(tempMetallic, "metallic_map", 2);
 					BindTextureToShader(tempRoughness, "roughness_map", 3);
 					BindTextureToShader(tempAO, "ao_map", 4);
+					glActiveTexture(GL_TEXTURE0 + 5);
+					glBindTexture(GL_TEXTURE_CUBE_MAP, HdrEnv->irradianceMap->GetObjectID());
+
+					HdrEnv->SkyboxShader->setInt("irradianceMap", 0 + 5);
 				}
 
 
@@ -648,7 +652,7 @@ void NCL::CSC8503::GameTechRenderer::RenderCubemaptoIrradianceMap()
 	glViewport(0, 0, 32, 32); // don't forget to configure the viewport to the capture dimensions.
 
 	//todo::test
-	generate_bind_Fbo(HdrEnv->captureFBO1);
+	generate_bind_Fbo(HdrEnv->captureFBO_irr);
 
 
 	for (unsigned int i = 0; i < 6; ++i)
@@ -671,6 +675,8 @@ void GameTechRenderer::ClearHDRBuffers()
 {
 	glDeleteFramebuffers(1, &HdrEnv->captureFBO);//todo::test
 	glDeleteRenderbuffers(1, &HdrEnv->captureRBO);
+	glDeleteFramebuffers(1, &HdrEnv->captureFBO_irr);//todo::test
+	glDeleteRenderbuffers(1, &HdrEnv->captureRBO_irr);
 }
 
 void NCL::CSC8503::GameTechRenderer::DrawHDRCube(OGLShader* shader, OGLTexture* tex)

@@ -151,7 +151,7 @@ float NdotL=max(dot(N,L),0.0);
     vec3 irradiance = texture(irradianceMap, N).rgb;
     vec3 diffuse      = irradiance * albedoValue;
    // vec3 ambient = (kD * diffuse) * ao;
-   vec3 ambient = (kD * diffuse) ;
+   vec3 ambient = (kD * diffuse)*(aoValue+0.8) ;
 
     
     vec3 color = ambient + Lo;
@@ -166,5 +166,4 @@ float NdotL=max(dot(N,L),0.0);
    // fragColor = vec4(color, 1.0);
   // fragColor.rgb=nominator;
    fragColor.rgb=color  ;
- //  fragColor.rgb=ambient;
 }

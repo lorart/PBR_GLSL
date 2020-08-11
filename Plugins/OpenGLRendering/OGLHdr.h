@@ -26,6 +26,7 @@ namespace NCL {
 			OGLTexture* HdrTexture;
 			OGLTexture* cubeTex;
 			OGLTexture* irradianceMap;
+			OGLTexture* prefilterMap;
 
 			Model* cubeModel = nullptr;
 
@@ -33,6 +34,7 @@ namespace NCL {
 			OGLShader* HdrToCubemapShader = nullptr;
 			OGLShader* irradianceShader = nullptr;
 			OGLShader* SkyboxShader = nullptr;
+			OGLShader* prefilterShader = nullptr;
 
 
 			unsigned int captureFBO;
@@ -41,9 +43,12 @@ namespace NCL {
 			unsigned int captureFBO_irr;
 			unsigned int captureRBO_irr;
 
+			unsigned int captureFBO_pre;
+			unsigned int captureRBO_pre;
+
 			int cubeTexSize;
 			int cubeIrradianceTexSize;
-			
+			int prefilterMapTexSize;
 
 		};
 		

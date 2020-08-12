@@ -4,6 +4,8 @@ uniform vec4 		objectColour;
 uniform sampler2D 	mainTex;
 uniform sampler2DShadow shadowTex;
 uniform samplerCube irradianceMap;
+uniform samplerCube prefilterMap;
+uniform sampler2D brdfLUT;
 
 uniform vec3	lightPos;
 uniform float	lightRadius;                    
@@ -150,12 +152,17 @@ float NdotL=max(dot(N,L),0.0);
   
     vec3 irradiance = texture(irradianceMap, N).rgb;
     vec3 diffuse      = irradiance * albedoValue;
-   // vec3 ambient = (kD * diffuse) * ao;
-   vec3 ambient = (kD * diffuse) ;
 
-    
+    const float MAX_REFLECTION_LOD = 4.0;
+     vec3 R = reflect(-V, N); 
+    vec3 prefilteredColor = textureLod(prefilterMap, R,  roughnessValue * MAX_REFLECTION_LOD).rgb;    
+    vec2 brdf  = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughnessValue)).rg;
+    vec3 specular1 = prefilteredColor * (F * brdf.x + brdf.y);
+
+    //vec3 ambient = (kD * diffuse + specular) * ao;
+    vec3 ambient = (kD * diffuse + specular1) ;
     vec3 color = ambient + Lo;
-    
+  
 
 
     // HDR tonemapping

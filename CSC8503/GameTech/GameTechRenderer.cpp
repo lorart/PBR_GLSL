@@ -249,9 +249,16 @@ void GameTechRenderer::RenderCamera() {
 					BindTextureToShader(tempMetallic, "metallic_map", 2);
 					BindTextureToShader(tempRoughness, "roughness_map", 3);
 					BindTextureToShader(tempAO, "ao_map", 4);
+
 					glActiveTexture(GL_TEXTURE0 + 5);
 					glBindTexture(GL_TEXTURE_CUBE_MAP, HdrEnv->irradianceMap->GetObjectID());
 					shader->setInt("irradianceMap",  5);
+
+					glActiveTexture(GL_TEXTURE0 + 6);
+					glBindTexture(GL_TEXTURE_CUBE_MAP, HdrEnv->prefilterMap->GetObjectID());
+					shader->setInt("prefilterMap", 6);
+
+					BindTextureToShader(HdrEnv->brdfLutTex, "brdfLUT", 7);
 				}
 
 
@@ -374,6 +381,7 @@ void NCL::CSC8503::GameTechRenderer::setupHDR(OGLHdr* hdrEnv)
 	RenderHDRtoCubemap();
 	RenderCubemaptoIrradianceMap();
 	RenderPerFilterMap();
+	RenderBrdfMap();
 	//todo:test
 	ClearHDRBuffers();
 }
@@ -675,6 +683,11 @@ void NCL::CSC8503::GameTechRenderer::RenderCubemaptoIrradianceMap()
 
 }
 
+void NCL::CSC8503::GameTechRenderer::RenderBrdfMap()
+{
+
+}
+
 void GameTechRenderer::RenderPerFilterMap()
 {
 	clear_Fbo_Rbo();
@@ -740,6 +753,8 @@ void GameTechRenderer::ClearHDRBuffers()
 	glDeleteRenderbuffers(1, &HdrEnv->captureRBO_irr);
 	glDeleteFramebuffers(1, &HdrEnv->captureFBO_pre);//todo::test
 	glDeleteRenderbuffers(1, &HdrEnv->captureRBO_pre);
+	glDeleteFramebuffers(1, &HdrEnv->captureFBO_lut);//todo::test
+	glDeleteRenderbuffers(1, &HdrEnv->captureRBO_lut);
 }
 
 

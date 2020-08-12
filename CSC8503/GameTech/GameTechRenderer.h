@@ -63,29 +63,13 @@ namespace NCL {
 
 			OGLPosCamera* posCamera;
 
-			//OGLShader* ScreenQuadShader;
-			//OGLShader* cameraDovPosShader;
-			//OGLTexture* cameraBufferTex[2];
-			//OGLTexture* cameraDepBufferTex;
-
-
-		/*	GLuint		cameraFBO;
-			GLuint		cameraMsaa_FBO;
-			OGLTexture* cameraMsaa_mutiTex;
-
-			GLuint		cameraPosFBO;
-
-			Model* ScreenQuad = nullptr;*/
-
-			/*		float screenAspect ;
-					Matrix4 viewMatrix ;
-					Matrix4 projMatrix;*/
 
 
 			void RenderHDRSkybox(OGLTexture* cubeTexture, int glActiveTextureNum);
 			void RenderHDRtoCubemap();
 			void RenderCubemaptoIrradianceMap();
 			void RenderPerFilterMap();
+			void RenderBrdfMap();
 			void ClearHDRBuffers();
 
 			void DrawHDRCube(OGLShader* shader, OGLTexture* tex);

@@ -27,6 +27,7 @@ namespace NCL {
 			OGLTexture* cubeTex;
 			OGLTexture* irradianceMap;
 			OGLTexture* prefilterMap;
+			OGLTexture* brdfLutTex;
 
 			Model* cubeModel = nullptr;
 
@@ -46,9 +47,13 @@ namespace NCL {
 			unsigned int captureFBO_pre;
 			unsigned int captureRBO_pre;
 
+			unsigned int captureFBO_lut;
+			unsigned int captureRBO_lut;
+
 			int cubeTexSize;
 			int cubeIrradianceTexSize;
 			int prefilterMapTexSize;
+			int brdfLutTexSize;
 
 		};
 		

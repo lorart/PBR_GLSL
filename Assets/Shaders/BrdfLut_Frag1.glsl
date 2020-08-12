@@ -110,6 +110,6 @@ void main()
 {
     vec2 integratedBRDF = IntegrateBRDF(TexCoords.x, TexCoords.y);
   //  FragColor = integratedBRDF;
-    // FragColor.rg =vec2(TexCoords.x*0.5,TexCoords.y*0.5),
-      FragColor=vec3(0);
+     FragColor.rg =vec2(TexCoords.x*0.5,TexCoords.y*0.5);
+   // FragColor=vec3(0);
 }

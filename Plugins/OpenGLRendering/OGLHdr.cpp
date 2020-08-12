@@ -9,6 +9,7 @@ NCL::Rendering::OGLHdr::OGLHdr(std::string& HdrFilename)
 	prefilterMapTexSize = 128;
 	brdfLutTexSize = 512;
 
+	brdfLutTex_Load = (OGLTexture*)TextureLoader::LoadAPITexture("ibl_brdf_lut.jpg");
 
 	cubeTex = (OGLTexture*)NCL::Rendering::OGLTexture::AllocateCubeTexture(cubeTexSize);
 	irradianceMap= (OGLTexture*)NCL::Rendering::OGLTexture::AllocateCubeTexture(cubeIrradianceTexSize);

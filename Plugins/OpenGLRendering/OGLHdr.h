@@ -28,6 +28,8 @@ namespace NCL {
 			OGLTexture* irradianceMap;
 			OGLTexture* prefilterMap;
 			OGLTexture* brdfLutTex;
+			OGLTexture* brdfLutTex_Load;
+
 
 			Model* cubeModel = nullptr;
 
@@ -37,6 +39,7 @@ namespace NCL {
 			OGLShader* SkyboxShader = nullptr;
 			OGLShader* prefilterShader = nullptr;
 			OGLShader* brdfLutShader = nullptr;
+
 
 
 

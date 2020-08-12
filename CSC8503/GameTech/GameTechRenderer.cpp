@@ -258,7 +258,7 @@ void GameTechRenderer::RenderCamera() {
 					glBindTexture(GL_TEXTURE_CUBE_MAP, HdrEnv->prefilterMap->GetObjectID());
 					shader->setInt("prefilterMap", 6);
 
-					BindTextureToShader(HdrEnv->brdfLutTex, "brdfLUT", 7);
+					BindTextureToShader(HdrEnv->brdfLutTex_Load, "brdfLUT", 7);
 				}
 
 
@@ -381,7 +381,7 @@ void NCL::CSC8503::GameTechRenderer::setupHDR(OGLHdr* hdrEnv)
 	RenderHDRtoCubemap();
 	RenderCubemaptoIrradianceMap();
 	RenderPerFilterMap();
-	RenderBrdfLutMap();
+	//RenderBrdfLutMap();
 	//todo:test
 	ClearHDRBuffers();
 }
@@ -399,8 +399,8 @@ void GameTechRenderer::RendercameraFrame()
 	}
 
 	//todo:delete
-	RenderPerFilterMap();
-	RenderBrdfLutMap();
+	//RenderPerFilterMap();
+	//RenderBrdfLutMap();
 	
 	RenderCamera();
 	RenderHDRSkybox(HdrEnv->cubeTex, 10);
@@ -421,7 +421,8 @@ void GameTechRenderer::drawQuad(OGLShader* shader)
 	RenderObject* i = new RenderObject(quadtransform, posCamera->ScreenQuad->meshes[0], tex, shader);
 	BindMesh((*i).GetMesh());
 	DrawBoundMesh();
-
+	
+	
 }
 
 

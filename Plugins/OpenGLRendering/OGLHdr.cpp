@@ -28,7 +28,7 @@ NCL::Rendering::OGLHdr::OGLHdr(std::string& HdrFilename)
 	SkyboxShader = new OGLShader("Skybox_Vert.glsl","Skybox_Frag.glsl");
 	irradianceShader = new OGLShader("HDR_toCubeMap_Vert.glsl","HDR_irradiance_Frag.glsl");
 	prefilterShader = new OGLShader("HDR_toCubeMap_Vert.glsl","preFilter_Frag.glsl");
-	prefilterShader = new OGLShader("BrdfLut_Vert.glsl", "BrdfLut_Frag.glsl");
+	brdfLutShader= new OGLShader("BrdfLut_Vert.glsl", "BrdfLut_Frag1.glsl");
 	
 
 
@@ -85,6 +85,7 @@ NCL::Rendering::OGLHdr::~OGLHdr()
 	delete irradianceMap;
 	delete prefilterShader;
 	delete prefilterMap;
+	delete brdfLutShader;
 
 }
 

@@ -381,7 +381,7 @@ void NCL::CSC8503::GameTechRenderer::setupHDR(OGLHdr* hdrEnv)
 	RenderHDRtoCubemap();
 	RenderCubemaptoIrradianceMap();
 	RenderPerFilterMap();
-	RenderBrdfMap();
+	RenderBrdfLutMap();
 	//todo:test
 	ClearHDRBuffers();
 }
@@ -397,17 +397,30 @@ void GameTechRenderer::RendercameraFrame()
 	else {
 		glBindFramebuffer(GL_FRAMEBUFFER, posCamera->cameraFBO);
 	}
+
+	//todo:delete
+	RenderPerFilterMap();
+	RenderBrdfLutMap();
 	
 	RenderCamera();
 	RenderHDRSkybox(HdrEnv->cubeTex, 10);
 
-	//todo:delete
-	//RenderPerFilterMap();
-	//RenderHDRSkybox(HdrEnv->prefilterMap, 10);
+	
 
 
 	//todo::error***************
 //	RenderHDRSkybox(HdrEnv->irradianceMap,11);
+
+}
+
+void GameTechRenderer::drawQuad(OGLShader* shader)
+{
+	OGLTexture* tex = tempTex;
+	Transform* quadtransform = new Transform();
+	BindShader(shader);
+	RenderObject* i = new RenderObject(quadtransform, posCamera->ScreenQuad->meshes[0], tex, shader);
+	BindMesh((*i).GetMesh());
+	DrawBoundMesh();
 
 }
 
@@ -561,6 +574,7 @@ void NCL::CSC8503::GameTechRenderer::CaculateViewPorjMat()
 
 }
 
+
 void NCL::CSC8503::GameTechRenderer::RenderHDRSkybox(OGLTexture* cubeTexture, int glActiveTextureNum)
 {
 	static int cubeTexNum = 0;
@@ -683,9 +697,20 @@ void NCL::CSC8503::GameTechRenderer::RenderCubemaptoIrradianceMap()
 
 }
 
-void NCL::CSC8503::GameTechRenderer::RenderBrdfMap()
+void NCL::CSC8503::GameTechRenderer::RenderBrdfLutMap()
 {
+	glBindFramebuffer(GL_FRAMEBUFFER, HdrEnv->captureFBO_lut);
+	glBindRenderbuffer(GL_RENDERBUFFER, HdrEnv->captureRBO_lut);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, HdrEnv->brdfLutTexSize, HdrEnv->brdfLutTexSize);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, HdrEnv->brdfLutTex->GetObjectID(), 0);
 
+	glViewport(0, 0, 512, 512);
+	HdrEnv->brdfLutShader->use();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	drawQuad(HdrEnv->brdfLutShader);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glViewport(0, 0, currentWidth, currentHeight);
 }
 
 void GameTechRenderer::RenderPerFilterMap()

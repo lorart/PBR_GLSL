@@ -45,6 +45,8 @@ namespace NCL {
 			void RenderDOVCamera();
 			void caculateDovCamera();
 
+			void drawQuad(OGLShader* shader);
+
 			void drawFullScreenQuad(OGLShader* shader, OGLTexture* tex);
 
 			void drawFullScreenQuad(OGLShader* shader, OGLTexture* mutiTex, int sampleN);
@@ -69,7 +71,7 @@ namespace NCL {
 			void RenderHDRtoCubemap();
 			void RenderCubemaptoIrradianceMap();
 			void RenderPerFilterMap();
-			void RenderBrdfMap();
+			void RenderBrdfLutMap();
 			void ClearHDRBuffers();
 
 			void DrawHDRCube(OGLShader* shader, OGLTexture* tex);

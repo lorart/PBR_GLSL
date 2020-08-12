@@ -36,6 +36,8 @@ namespace NCL {
 			OGLShader* irradianceShader = nullptr;
 			OGLShader* SkyboxShader = nullptr;
 			OGLShader* prefilterShader = nullptr;
+			OGLShader* brdfLutShader = nullptr;
+
 
 
 			unsigned int captureFBO;

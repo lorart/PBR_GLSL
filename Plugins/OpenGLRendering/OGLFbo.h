@@ -40,8 +40,9 @@ namespace NCL {
 			glGenFramebuffers(1, &fboId);
 			glBindFramebuffer(GL_FRAMEBUFFER, fboId);
 		}
-		static void clear_Fbo() {
+		static void clear_Fbo_Rbo() {
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			glBindRenderbuffer(GL_RENDERBUFFER, 0);
 		}
 		static void generate_bind_Rbo(GLuint rboId) {
 			glGenRenderbuffers(1, &rboId);

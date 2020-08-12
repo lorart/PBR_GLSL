@@ -69,7 +69,6 @@ namespace NCL {
 			//OGLTexture* cameraDepBufferTex;
 
 
-
 		/*	GLuint		cameraFBO;
 			GLuint		cameraMsaa_FBO;
 			OGLTexture* cameraMsaa_mutiTex;

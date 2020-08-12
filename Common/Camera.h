@@ -25,6 +25,8 @@ namespace NCL {
 			farPlane	= 100.0f;
 
 			camType		= CameraType::Perspective;
+			this->nearDistance = 10;
+			this->farDistance = 10;
 		};
 
 		Camera(float pitch, float yaw, const Vector3& position) : Camera() {

@@ -20,6 +20,8 @@ namespace NCL {
 			OGLHdr(std::string& HdrFilename);
 			~OGLHdr();
 
+			void clearHDRBuffers();
+
 			//void generateHdrCubeMaps();
 			//void renderCube();
 

@@ -717,10 +717,7 @@ void NCL::CSC8503::GameTechRenderer::RenderBrdfLutMap()
 void GameTechRenderer::RenderPerFilterMap()
 {
 	clear_Fbo_Rbo();
-	generate_bind_Fbo(HdrEnv->captureFBO_pre);
-	generate_bind_Rbo(HdrEnv->captureRBO_pre);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512,512);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, HdrEnv->captureRBO_pre);
+	
 	glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
 	glm::mat4 captureViews[] =
 	{
@@ -739,48 +736,61 @@ void GameTechRenderer::RenderPerFilterMap()
 	glActiveTexture(GL_TEXTURE6);
     glBindTexture(GL_TEXTURE_CUBE_MAP, HdrEnv->prefilterMap->GetObjectID());
 
-   
 	unsigned int maxMipLevels = 5;
 	for (unsigned int mip = 0; mip < maxMipLevels; ++mip)
 	{
 		// reisze framebuffer according to mip-level size.
 		unsigned int mipWidth = HdrEnv->prefilterMapTexSize * std::pow(0.5, mip);
 		unsigned int mipHeight = HdrEnv->prefilterMapTexSize * std::pow(0.5, mip);
-
-
-		//glBindRenderbuffer(GL_RENDERBUFFER, HdrEnv->captureRBO_pre);
+		glBindRenderbuffer(GL_RENDERBUFFER, HdrEnv->captureRBO);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, mipWidth, mipHeight);
-		std::cout << "************"<<mipWidth << mipHeight << std::endl;
 		glViewport(0, 0, mipWidth, mipHeight);
-
 
 		float roughness = (float)mip / (float)(maxMipLevels - 1);
 		HdrEnv->prefilterShader->setFloat("roughness", roughness);
 		for (unsigned int i = 0; i < 6; ++i)
 		{
 			HdrEnv->prefilterShader->setMat4("view", captureViews[i]);
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-				GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, HdrEnv->prefilterMap->GetObjectID(), mip);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, HdrEnv->prefilterMap->GetObjectID(), mip);
 
-		
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			DrawHDRCube(HdrEnv->prefilterShader, HdrEnv->HdrTexture);
 		}
 	}
+
+	//unsigned int maxMipLevels = 5;
+	//for (unsigned int mip = 0; mip < maxMipLevels; ++mip)
+	//{
+	//	// reisze framebuffer according to mip-level size.
+	//	unsigned int mipWidth = HdrEnv->prefilterMapTexSize * std::pow(0.5, mip);
+	//	unsigned int mipHeight = HdrEnv->prefilterMapTexSize * std::pow(0.5, mip);
+	//
+	//	glBindRenderbuffer(GL_RENDERBUFFER, HdrEnv->captureRBO_pre);
+	//	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, mipWidth, mipHeight);
+	//	std::cout << "************"<<mipWidth << mipHeight << std::endl;
+	//	glViewport(0, 0, mipWidth, mipHeight);
+
+
+	//	float roughness = (float)mip / (float)(maxMipLevels - 1);
+	//	HdrEnv->prefilterShader->setFloat("roughness", roughness);
+	//	for (unsigned int i = 0; i < 6; ++i)
+	//	{
+	//		HdrEnv->prefilterShader->setMat4("view", captureViews[i]);
+	//		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+	//			GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, HdrEnv->prefilterMap->GetObjectID(), mip);
+
+	//	
+	//		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//		DrawHDRCube(HdrEnv->prefilterShader, HdrEnv->HdrTexture);
+	//	}
+	//}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 }
 
 void GameTechRenderer::ClearHDRBuffers()
 {
-	glDeleteFramebuffers(1, &HdrEnv->captureFBO);//todo::test
-	glDeleteRenderbuffers(1, &HdrEnv->captureRBO);
-	glDeleteFramebuffers(1, &HdrEnv->captureFBO_irr);//todo::test
-	glDeleteRenderbuffers(1, &HdrEnv->captureRBO_irr);
-	glDeleteFramebuffers(1, &HdrEnv->captureFBO_pre);//todo::test
-	glDeleteRenderbuffers(1, &HdrEnv->captureRBO_pre);
-	glDeleteFramebuffers(1, &HdrEnv->captureFBO_lut);//todo::test
-	glDeleteRenderbuffers(1, &HdrEnv->captureRBO_lut);
+	HdrEnv->clearHDRBuffers();
 }
 
 

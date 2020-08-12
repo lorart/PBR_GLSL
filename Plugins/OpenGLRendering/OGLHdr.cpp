@@ -46,33 +46,35 @@ NCL::Rendering::OGLHdr::OGLHdr(std::string& HdrFilename)
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO_irr);
 	clear_Fbo_Rbo();
 
-	//generate_bind_Fbo(captureFBO_pre);
-	//generate_bind_Rbo(captureRBO_pre);
+
+
+	generate_bind_Fbo(captureFBO_pre);
+	generate_bind_Rbo(captureRBO_pre);
 	//glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, prefilterMapTexSize, prefilterMapTexSize);
 	//glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO_pre);
 	//clear_Fbo_Rbo();
 
 
 	brdfLutTex = new OGLTexture();
-	// pre-allocate enough memory for the LUT texture.
+
 	glBindTexture(GL_TEXTURE_2D, brdfLutTex->GetObjectID());
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RG16F, 512, 512, 0, GL_RG, GL_FLOAT, 0);
-	// be sure to set wrapping mode to GL_CLAMP_TO_EDGE
+
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	// then re-configure capture framebuffer object and render screen-space quad with BRDF shader.
-	glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
-	glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
+	generate_bind_Fbo(captureFBO_lut);
+	generate_bind_Rbo(captureRBO_lut);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, brdfLutTexSize, brdfLutTexSize);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, brdfLutTex->GetObjectID(), 0);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO_lut);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	
-	
+	clear_Fbo_Rbo();
 }
 
 NCL::Rendering::OGLHdr::~OGLHdr()
@@ -88,5 +90,17 @@ NCL::Rendering::OGLHdr::~OGLHdr()
 	delete prefilterMap;
 	delete brdfLutShader;
 
+}
+
+void NCL::Rendering::OGLHdr::clearHDRBuffers()
+{
+	glDeleteFramebuffers(1, &this->captureFBO);
+	glDeleteRenderbuffers(1, &this->captureRBO);
+	glDeleteFramebuffers(1, &this->captureFBO_irr);
+	glDeleteRenderbuffers(1, &this->captureRBO_irr);
+	glDeleteFramebuffers(1, &this->captureFBO_pre);
+	glDeleteRenderbuffers(1, &this->captureRBO_pre);
+	glDeleteFramebuffers(1, &this->captureFBO_lut);//todo::test
+	glDeleteRenderbuffers(1, &this->captureRBO_lut);
 }
 

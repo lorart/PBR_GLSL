@@ -400,7 +400,7 @@ void GameTechRenderer::RendercameraFrame()
 
 	//todo:delete
 	//RenderCubemaptoIrradianceMap();
-	RenderPerFilterMap();
+	//RenderPerFilterMap();
 	//RenderBrdfLutMap();
 	
 	RenderCamera();
@@ -430,22 +430,26 @@ void GameTechRenderer::drawQuad(OGLShader* shader)
 
 void GameTechRenderer::drawFullScreenQuad(OGLShader* shader, OGLTexture* tex)
 {
-	projMatrix = Matrix4::Orthographic(-1, 1, 1, -1, -1, 1);
-	viewMatrix = Matrix4();
+	OGLShader* activeShader = nullptr;
 
-	Matrix4 modelMatrix = Matrix4();
+	Transform* quadtransform = new Transform(); {
+		projMatrix = Matrix4::Orthographic(-1, 1, 1, -1, -1, 1);
+		viewMatrix = Matrix4();
 
-	modelMatrix.Rotation(90.0f, Vector3(1, 1, 1));
+		Matrix4 modelMatrix = Matrix4();
 
-	Transform* quadtransform = new Transform();
+		modelMatrix.Rotation(90.0f, Vector3(1, 1, 1));
+
+		//Transform* quadtransform = new Transform();
 
 
-	BindShader(shader);
-	int multyN = 0;
+		BindShader(shader);
+		int multyN = 0;
 
-	shader->setMat4("modelMatrix", modelMatrix);
-	shader->setMat4("viewMatrix", viewMatrix);
-	shader->setMat4("projMatrix", projMatrix);
+		shader->setMat4("modelMatrix", modelMatrix);
+		shader->setMat4("viewMatrix", viewMatrix);
+		shader->setMat4("projMatrix", projMatrix);
+	}
 	BindTextureToShader(tex, "mainTex", 0);
 
 
@@ -454,6 +458,43 @@ void GameTechRenderer::drawFullScreenQuad(OGLShader* shader, OGLTexture* tex)
 	BindMesh((*i).GetMesh());
 	DrawBoundMesh();
 }
+
+void GameTechRenderer::drawPosFullScreenQuad(OGLShader* shader, OGLTexture* tex)
+{
+	OGLShader* activeShader = nullptr;
+
+	Transform* quadtransform = new Transform();
+	if (activeShader != shader) {
+		projMatrix = Matrix4::Orthographic(-1, 1, 1, -1, -1, 1);
+		viewMatrix = Matrix4();
+
+		Matrix4 modelMatrix = Matrix4();
+
+		modelMatrix.Rotation(90.0f, Vector3(1, 1, 1));
+
+		//Transform* quadtransform = new Transform();
+
+
+		BindShader(shader);
+		int multyN = 0;
+
+		shader->setMat4("modelMatrix", modelMatrix);
+		shader->setMat4("viewMatrix", viewMatrix);
+		shader->setMat4("projMatrix", projMatrix);
+		shader->setInt("texWide", currentWidth);
+		shader->setInt("texHight", currentHeight);
+	}
+	
+	BindTextureToShader(tex, "mainTex", 0);
+
+
+	//Transform* parentTransform, OGLMesh* mesh, TextureBase* colourtex, ShaderBase* shader
+	RenderObject* i = new RenderObject(quadtransform, posCamera->ScreenQuad->meshes[0], tex, shader);
+	BindMesh((*i).GetMesh());
+	DrawBoundMesh();
+	activeShader = shader;
+}
+
 
 void GameTechRenderer::drawFullScreenQuad(OGLShader* shader, OGLTexture* mutiTex, int sampleN)
 {
@@ -560,7 +601,7 @@ void GameTechRenderer::RenderDOVCamera()
 		if (isUsedCamPos)
 		{
 			
-			drawFullScreenQuad(posCamera->cameraDovPosShader,posCamera->cameraBufferTex[1]);//todo:
+			drawPosFullScreenQuad(posCamera->cameraDovPosShader,posCamera->cameraBufferTex[1]);//todo:
 		}
 		else
 		{

@@ -48,9 +48,10 @@ namespace NCL {
 			void drawQuad(OGLShader* shader);
 
 			void drawFullScreenQuad(OGLShader* shader, OGLTexture* tex);
-
 			void drawFullScreenQuad(OGLShader* shader, OGLTexture* mutiTex, int sampleN);
 
+			void drawPosFullScreenQuad(OGLShader* shader, OGLTexture* tex);
+			
 
 
 			void SetupDebugMatrix(OGLShader* s) override;

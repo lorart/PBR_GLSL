@@ -399,7 +399,7 @@ void GameTechRenderer::RendercameraFrame()
 	}
 
 	//todo:delete
-	RenderCubemaptoIrradianceMap();
+	//RenderCubemaptoIrradianceMap();
 	RenderPerFilterMap();
 	//RenderBrdfLutMap();
 	
@@ -652,7 +652,9 @@ void NCL::CSC8503::GameTechRenderer::RenderHDRtoCubemap()
 
 void NCL::CSC8503::GameTechRenderer::RenderCubemaptoIrradianceMap()
 {
-	
+
+	glBindFramebuffer(GL_FRAMEBUFFER, HdrEnv->captureFBO_irr);
+	glBindRenderbuffer(GL_RENDERBUFFER, HdrEnv->captureRBO_irr);
 	
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
@@ -665,10 +667,10 @@ void NCL::CSC8503::GameTechRenderer::RenderCubemaptoIrradianceMap()
 		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
 		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
 	};
-
+	/*
 	//todo:test
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, HdrEnv->cubeIrradianceTexSize,
-		HdrEnv->cubeIrradianceTexSize);
+		HdrEnv->cubeIrradianceTexSize);*/
 	HdrEnv->irradianceShader->use();
 	HdrEnv->irradianceShader->setInt("environmentMap", 9);
 	HdrEnv->irradianceShader->setMat4("projection", captureProjection);
@@ -717,7 +719,14 @@ void NCL::CSC8503::GameTechRenderer::RenderBrdfLutMap()
 void GameTechRenderer::RenderPerFilterMap()
 {
 	clear_Fbo_Rbo();
-	
+	generate_bind_Fbo(HdrEnv->captureFBO_irr);
+	/*generate_bind_Rbo(HdrEnv->captureRBO_irr);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, HdrEnv->cubeIrradianceTexSize, HdrEnv->cubeIrradianceTexSize);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, HdrEnv->captureRBO_irr);*/
+
+
+	glBindFramebuffer(GL_FRAMEBUFFER, HdrEnv->captureFBO_pre);
+	glBindRenderbuffer(GL_RENDERBUFFER, HdrEnv->captureRBO_pre);
 	glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
 	glm::mat4 captureViews[] =
 	{
@@ -733,13 +742,10 @@ void GameTechRenderer::RenderPerFilterMap()
 	HdrEnv->prefilterShader->setInt("environmentMap", 9);
 	HdrEnv->prefilterShader->setMat4("projection", captureProjection);
 	glActiveTexture(GL_TEXTURE9);
-	//todo::check
+
 	glBindTexture(GL_TEXTURE_CUBE_MAP, HdrEnv->cubeTex->GetObjectID());
 
-
-
-	glActiveTexture(GL_TEXTURE6);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, HdrEnv->prefilterMap->GetObjectID());
+	
 
 	unsigned int maxMipLevels = 5;
 	for (unsigned int mip = 0; mip < maxMipLevels; ++mip)
@@ -747,7 +753,7 @@ void GameTechRenderer::RenderPerFilterMap()
 		// reisze framebuffer according to mip-level size.
 		unsigned int mipWidth = HdrEnv->prefilterMapTexSize * std::pow(0.5, mip);
 		unsigned int mipHeight = HdrEnv->prefilterMapTexSize * std::pow(0.5, mip);
-		glBindRenderbuffer(GL_RENDERBUFFER, HdrEnv->captureRBO);
+	
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, mipWidth, mipHeight);
 		glViewport(0, 0, mipWidth, mipHeight);
 

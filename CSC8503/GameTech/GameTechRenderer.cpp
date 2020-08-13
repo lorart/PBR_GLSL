@@ -720,9 +720,9 @@ void GameTechRenderer::RenderPerFilterMap()
 {
 	clear_Fbo_Rbo();
 	generate_bind_Fbo(HdrEnv->captureFBO_irr);
-	/*generate_bind_Rbo(HdrEnv->captureRBO_irr);
+	generate_bind_Rbo(HdrEnv->captureRBO_irr);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, HdrEnv->cubeIrradianceTexSize, HdrEnv->cubeIrradianceTexSize);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, HdrEnv->captureRBO_irr);*/
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, HdrEnv->captureRBO_irr);
 
 
 	glBindFramebuffer(GL_FRAMEBUFFER, HdrEnv->captureFBO_pre);
@@ -753,7 +753,8 @@ void GameTechRenderer::RenderPerFilterMap()
 		// reisze framebuffer according to mip-level size.
 		unsigned int mipWidth = HdrEnv->prefilterMapTexSize * std::pow(0.5, mip);
 		unsigned int mipHeight = HdrEnv->prefilterMapTexSize * std::pow(0.5, mip);
-	
+
+		//glBindRenderbuffer(GL_RENDERBUFFER, HdrEnv->captureRBO_pre);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, mipWidth, mipHeight);
 		glViewport(0, 0, mipWidth, mipHeight);
 

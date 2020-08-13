@@ -399,7 +399,8 @@ void GameTechRenderer::RendercameraFrame()
 	}
 
 	//todo:delete
-	//RenderPerFilterMap();
+	RenderCubemaptoIrradianceMap();
+	RenderPerFilterMap();
 	//RenderBrdfLutMap();
 	
 	RenderCamera();
@@ -651,9 +652,8 @@ void NCL::CSC8503::GameTechRenderer::RenderHDRtoCubemap()
 
 void NCL::CSC8503::GameTechRenderer::RenderCubemaptoIrradianceMap()
 {
-
-
-
+	
+	
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
 	glm::mat4 captureViews[] =
@@ -730,8 +730,13 @@ void GameTechRenderer::RenderPerFilterMap()
 	};
 
 	HdrEnv->prefilterShader->use();
-	HdrEnv->prefilterShader->setInt("environmentMap", 0);
+	HdrEnv->prefilterShader->setInt("environmentMap", 9);
 	HdrEnv->prefilterShader->setMat4("projection", captureProjection);
+	glActiveTexture(GL_TEXTURE9);
+	//todo::check
+	glBindTexture(GL_TEXTURE_CUBE_MAP, HdrEnv->cubeTex->GetObjectID());
+
+
 
 	glActiveTexture(GL_TEXTURE6);
     glBindTexture(GL_TEXTURE_CUBE_MAP, HdrEnv->prefilterMap->GetObjectID());
@@ -758,32 +763,7 @@ void GameTechRenderer::RenderPerFilterMap()
 		}
 	}
 
-	//unsigned int maxMipLevels = 5;
-	//for (unsigned int mip = 0; mip < maxMipLevels; ++mip)
-	//{
-	//	// reisze framebuffer according to mip-level size.
-	//	unsigned int mipWidth = HdrEnv->prefilterMapTexSize * std::pow(0.5, mip);
-	//	unsigned int mipHeight = HdrEnv->prefilterMapTexSize * std::pow(0.5, mip);
-	//
-	//	glBindRenderbuffer(GL_RENDERBUFFER, HdrEnv->captureRBO_pre);
-	//	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, mipWidth, mipHeight);
-	//	std::cout << "************"<<mipWidth << mipHeight << std::endl;
-	//	glViewport(0, 0, mipWidth, mipHeight);
-
-
-	//	float roughness = (float)mip / (float)(maxMipLevels - 1);
-	//	HdrEnv->prefilterShader->setFloat("roughness", roughness);
-	//	for (unsigned int i = 0; i < 6; ++i)
-	//	{
-	//		HdrEnv->prefilterShader->setMat4("view", captureViews[i]);
-	//		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-	//			GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, HdrEnv->prefilterMap->GetObjectID(), mip);
-
-	//	
-	//		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//		DrawHDRCube(HdrEnv->prefilterShader, HdrEnv->HdrTexture);
-	//	}
-	//}
+	
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 }

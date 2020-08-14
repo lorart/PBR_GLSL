@@ -9,12 +9,7 @@
 namespace NCL {
 	namespace CSC8503 {
 		class TutorialGame		{
-			struct debugStringStruct
-			{
-				string Str;
-				Vector2 position;
-
-			};
+	
 			enum ScreenPosition
 			{
 			LeftUp,
@@ -30,18 +25,19 @@ namespace NCL {
 
 			virtual void UpdateGame(float dt);
 
+		
+			
 		protected:
 			void InitialiseAssets();
 
 			void InitCamera();
 			void UpdateKeys();
+
 			void DrawDebugInformation();
-			void addDebugStringArry(string debugString, ScreenPosition Spos, bool condition );
-			void addDebugStringArry_Switch(string debugString1, string debugString2, ScreenPosition Spos, bool IsString1);
-			void initDebugStringArry();
+			void drawDebugString(string debugString, Vector2 Spos, bool condition );
+			void drawDebugString_Switch(string debugString1, string debugString2, bool IsString1, Vector2 Spos);
 			
-
-
+		
 			void InitWorld();
 
 		
@@ -121,7 +117,7 @@ namespace NCL {
 
 			string CompareFragName;
 			string CompareVertName;
-			vector<debugStringStruct> debugStringArry;
+			
 		
 
 		};

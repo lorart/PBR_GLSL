@@ -1,6 +1,6 @@
 #include "OGLPosCamera.h"
 
-NCL::Rendering::OGLPosCamera::OGLPosCamera(int currentWidth, int currentHeight)
+NCL::Rendering::OGLPosCamera::OGLPosCamera(int currentWidth, int currentHeight, Camera* gameCamera)
 {
 	this->currentWidth = currentWidth;
 	this->currentHeight = currentHeight;
@@ -8,6 +8,7 @@ NCL::Rendering::OGLPosCamera::OGLPosCamera(int currentWidth, int currentHeight)
 
 	ScreenQuad = new Model(Assets::MESHDIR + "PLANE2" + ".obj", 0);
 	cameraDovPosShader = new OGLShader("ScreenQuad_Vert1.glsl", "cameraDov_post_Frag1.glsl");
+	cameraDovPosShader_2 = new OGLShader("ScreenQuad_Vert1.glsl", "cameraDov_post_Frag2.glsl");
 	ScreenQuadShader = new OGLShader("ScreenQuad_Vert1.glsl", "ScreenQuad_Frag1.glsl");
 
 	for (int i = 0; i < 2; i++)
@@ -137,7 +138,7 @@ NCL::Rendering::OGLPosCamera::~OGLPosCamera()
 	glDeleteFramebuffers(1, &cameraMsaa_FBO);
 
 
-
+	delete cameraDovPosShader_2;
 	delete cameraDovPosShader;
 	delete ScreenQuadShader;
 	delete cameraDepBufferTex;

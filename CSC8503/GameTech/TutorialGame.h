@@ -9,6 +9,21 @@
 namespace NCL {
 	namespace CSC8503 {
 		class TutorialGame		{
+			struct debugStringStruct
+			{
+				string Str;
+				Vector2 position;
+
+			};
+			enum ScreenPosition
+			{
+			LeftUp,
+			LeftDown,
+			RightUp,
+			RightDown
+
+			};
+
 		public:
 			TutorialGame();
 			~TutorialGame();
@@ -21,6 +36,12 @@ namespace NCL {
 			void InitCamera();
 			void UpdateKeys();
 			void DrawDebugInformation();
+			void addDebugStringArry(string debugString, ScreenPosition Spos, bool condition );
+			void addDebugStringArry_Switch(string debugString1, string debugString2, ScreenPosition Spos, bool IsString1);
+			void initDebugStringArry();
+			
+
+
 			void InitWorld();
 
 		
@@ -40,6 +61,7 @@ namespace NCL {
 			void LockedCameraMovement();
 			void ChangeShader();
 			void ChangeModels();
+			void ChangeCameraFOVs();
 			void ChangePossProcess();
 			void ChangeMsaa();
 			bool isShowSphereTest;
@@ -99,6 +121,8 @@ namespace NCL {
 
 			string CompareFragName;
 			string CompareVertName;
+			vector<debugStringStruct> debugStringArry;
+		
 
 		};
 	}

@@ -9,14 +9,16 @@
 #include "OGLTexture.h"
 #include "OGLRenderer.h"
 #include "Model.h"
+#include "..\..\Common\Camera.h"
 
 namespace NCL {
 	namespace Rendering {
 		class OGLPosCamera
 		{
 		public:
-			OGLPosCamera(int currentWidth, int currentHeight);
+			OGLPosCamera(int currentWidth, int currentHeight,Camera* gameCamera);
 			~OGLPosCamera();
+			
 			int currentWidth;
 			int currentHeight;
 			Model* ScreenQuad = nullptr;
@@ -24,6 +26,7 @@ namespace NCL {
 
 			OGLShader* ScreenQuadShader;
 			OGLShader* cameraDovPosShader;
+			OGLShader* cameraDovPosShader_2;
 			OGLTexture* cameraBufferTex[2];
 			OGLTexture* cameraDepBufferTex;
 			GLuint		cameraFBO;

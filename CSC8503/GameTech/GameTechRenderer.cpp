@@ -45,7 +45,7 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 #pragma endregion
 
 #pragma region  camera
-	posCamera = new OGLPosCamera(currentWidth, currentHeight);
+
 
 
 
@@ -67,6 +67,7 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 
 
 	gameWorldCamera = world.GetMainCamera();
+	posCamera = new OGLPosCamera(currentWidth, currentHeight, gameWorldCamera);
 	tempTex = (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
 }
 
@@ -601,7 +602,7 @@ void GameTechRenderer::RenderDOVCamera()
 		if (isUsedCamPos)
 		{
 			
-			drawPosFullScreenQuad(posCamera->cameraDovPosShader,posCamera->cameraBufferTex[1]);//todo:
+			drawPosFullScreenQuad(posCamera->cameraDovPosShader_2,posCamera->cameraBufferTex[1]);//todo:
 		}
 		else
 		{

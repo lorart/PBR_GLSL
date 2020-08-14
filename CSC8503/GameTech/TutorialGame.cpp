@@ -67,8 +67,11 @@ void TutorialGame::InitialiseAssets() {
 	renderer->setupHDR(hdrEnvmap);
 	isShowSphereTest = true;
 
+	initDebugStringArry();
+
 	InitCamera();
 	InitWorld();
+
 }
 
 TutorialGame::~TutorialGame()	{
@@ -131,11 +134,13 @@ void TutorialGame::UpdateKeys() {
 	else {
 		//DebugObjectMovement();
 	}
+	
 	LightMovement();
 	ChangeShader();
 	ChangeModels();
 	ChangePossProcess();
 	ChangeMsaa();
+	ChangeCameraFOVs();
 	
 }
 
@@ -197,34 +202,11 @@ void TutorialGame::ChangeShader()
 
 void TutorialGame::DrawDebugInformation()
 {
-	renderer->DrawString("Anti-Aliasing on/off: T", Vector2(20, 100));
-	renderer->DrawString("Change camera: R", Vector2(20, 80));
-	renderer->DrawString("Change Shader: G", Vector2(20, 20));
-	renderer->DrawString("Change Mesh: F", Vector2(20, 60));
-	renderer->DrawString("MOVE Camera: S D Shift Space ", Vector2(20, 0));
-	renderer->DrawString("MOVE Light: I J K L ", Vector2(20, 40));
-
-	if (renderer->isUsedPBR) {
-		renderer->DrawString("PBR shader", Vector2(20, 600));
+	for (auto& i : debugStringArry)
+	{
+		renderer->DrawString(i.Str, i.position);
 	}
-	else {
-		renderer->DrawString("Bilin-pohng shader", Vector2(20, 600));
-	}
-	if (renderer->isUsedCamPos) {
-		renderer->DrawString("Physic Camera", Vector2(20, 620));
-	}
-	else {
-		renderer->DrawString("Normal Camera", Vector2(20, 620));
-	}
-	if (renderer->isUsedMSAA) {
-		renderer->DrawString("Anti-Aliasing(MSAA) ON", Vector2(20, 640));
-	}
-	else {
-		renderer->DrawString("Anti-Aliasing OFF", Vector2(20, 640));
-	}
-
-
-
+	
 }
 
 void TutorialGame::ChangeModels()
@@ -268,12 +250,120 @@ void TutorialGame::ChangePossProcess()
 		
 }
 
+void TutorialGame::ChangeCameraFOVs()
+{
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::Y)) {
+		float temp = world->GetMainCamera()->GetFieldOfVision();
+		world->GetMainCamera()->SetFov(temp+10);
+	}
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::H)) {
+		float temp = world->GetMainCamera()->GetFieldOfVision();
+		world->GetMainCamera()->SetFov(temp -10);
+	}
+
+	 
+}
+
+
+void TutorialGame::addDebugStringArry(string debugString,ScreenPosition Spos  ,bool condition=true)
+{
+	if (condition) {
+		int scale = 20;
+		static int leftUp = 0;
+		static int rightUp = 0;
+		static int leftDown = 0;
+		static int rightDown = 0;
+		if (Spos == LeftUp) {
+			debugStringStruct temp = { debugString , Vector2(20,650 - leftUp * scale) };
+			debugStringArry.push_back(temp);
+			leftUp++;
+		}
+		else if (Spos ==LeftDown) {
+			debugStringStruct temp = { debugString , Vector2(20,10 + leftDown * scale) };
+			debugStringArry.push_back(temp);
+			leftDown++;
+		}
+	}
+
+
+}
+void TutorialGame::addDebugStringArry_Switch(string debugString1, string debugString2,ScreenPosition Spos, bool IsString1 = true)
+{
+	string usedString;
+	if (IsString1) {
+		usedString = debugString1;
+	}
+	else {
+		usedString = debugString2;
+	}
+		int scale = 20;
+		static int leftUp = 0;
+		static int rightUp = 0;
+		static int leftDown = 0;
+		static int rightDown = 0;
+		if (Spos == LeftUp) {
+			debugStringStruct temp = { usedString , Vector2(20,650 - leftUp * scale) };
+			debugStringArry.push_back(temp);
+			leftUp++;
+		}
+		else if (Spos == LeftDown) {
+			debugStringStruct temp = { usedString , Vector2(20,10 + leftDown * scale) };
+			debugStringArry.push_back(temp);
+			leftDown++;
+		}
+	
+
+
+}
+
+void TutorialGame::initDebugStringArry()
+{
+	/*left down */
+	addDebugStringArry("MOVE Light: I J K L ", LeftDown);
+	addDebugStringArry("MOVE Camera: S D Shift Space ", LeftDown);
+	addDebugStringArry("Field of View: Y+ H-", LeftDown);
+	addDebugStringArry("Change camera: R", LeftDown);
+	addDebugStringArry("Change Shader: G", LeftDown);
+	addDebugStringArry("Change Mesh: F", LeftDown);
+
+	/*left up*/
+	addDebugStringArry("PBR shader", LeftUp, renderer->isUsedPBR);
+
+	/*left up */
+	/*
+
+	
+
+	if (renderer->isUsedPBR) {
+		renderer->DrawString("PBR shader", Vector2(20, 600));
+	}
+	else {
+		renderer->DrawString("Bilin-pohng shader", Vector2(20, 600));
+	}
+	if (renderer->isUsedCamPos) {
+		renderer->DrawString("Physic Camera", Vector2(20, 620));
+	}
+	else {
+		renderer->DrawString("Normal Camera", Vector2(20, 620));
+	}
+	if (renderer->isUsedMSAA) {
+		renderer->DrawString("Anti-Aliasing(MSAA) ON", Vector2(20, 640));
+	}
+	else {
+		renderer->DrawString("Anti-Aliasing OFF", Vector2(20, 640));
+	}
+	string t =std::to_string( world->GetMainCamera()->GetFieldOfVision());
+	renderer->DrawString("Camera Field of View   "+t , Vector2(20, 660))
+	*/;
+}
+
 void NCL::CSC8503::TutorialGame::ChangeMsaa()
 {
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::T)) {
 		//std::cout << "***R pressed " << std::endl;
 		renderer->isUsedMSAA = !renderer->isUsedMSAA;
 	}
+
 
 }
 

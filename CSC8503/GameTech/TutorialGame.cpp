@@ -211,12 +211,13 @@ void TutorialGame::DrawDebugInformation()
 	 int rightDown=0;
 	int debugScale=20;
 
+	string temp;
 
 	/*left down */
 	Vector2 LeftDownP = Vector2(20,0);
 	drawDebugString("MOVE Light: I J K L ",				LeftDownP + Vector2(0, debugScale * leftDown),1);				leftDown++;
 	drawDebugString("MOVE Camera: S D Shift Space ",	LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
-	drawDebugString("Field of View: Y+ H-",				LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
+	drawDebugString("Focal Lens: Y+ H-",				LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
 	drawDebugString("Change camera: R",					LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
 	drawDebugString("Change Shader: G",					LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
 	drawDebugString("Change Mesh: F",					LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
@@ -230,12 +231,27 @@ void TutorialGame::DrawDebugInformation()
 	drawDebugString_Switch("Anti-Aliasing(MSAA) ON", "Anti-Aliasing OFF", renderer->isUsedMSAA,
 							LeftUpP - Vector2(0, debugScale * leftUp)); leftUp++;
 
-	drawDebugString_Switch("Physic Camera", "Normal Camera", renderer->isUsedCamPos,
+
+	drawDebugString_Switch("Physic Camera:", "Normal Camera", renderer->isUsedCamPos,
 							LeftUpP - Vector2(0, debugScale * leftUp)); leftUp++;
 
-	string t = std::to_string(world->GetMainCamera()->GetFieldOfVision());
-	drawDebugString("Camera Field of View   " + t, 
-		                    LeftUpP - Vector2(0, debugScale * leftUp), 1); leftUp++;
+
+	drawDebugString("",
+		LeftUpP - Vector2(0, debugScale * leftUp), renderer->isUsedCamPos); leftUp++;
+
+	drawDebugString("Full Frame Camrera",
+		LeftUpP - Vector2(0, debugScale * leftUp), renderer->isUsedCamPos); leftUp++;
+	temp = std::to_string(world->GetMainCamera()->getLens());
+	drawDebugString("Camera Lens  " + temp+" mm",
+		LeftUpP - Vector2(0, debugScale * leftUp), renderer->isUsedCamPos); leftUp++;
+
+	temp = std::to_string(world->GetMainCamera()->GetFieldOfVision());
+	drawDebugString("Camera Field of View  " + temp,
+		                    LeftUpP - Vector2(0, debugScale * leftUp), renderer->isUsedCamPos); leftUp++;
+	
+	drawDebugString("",
+		LeftUpP - Vector2(0, debugScale * leftUp), renderer->isUsedCamPos); leftUp++;
+
 
 	
 	
@@ -285,19 +301,21 @@ void TutorialGame::ChangePossProcess()
 void TutorialGame::ChangeCameraFOVs()
 {
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::Y)) {
-		float temp = world->GetMainCamera()->GetFieldOfVision();
-		world->GetMainCamera()->SetFov(temp+10);
+		float temp = world->GetMainCamera()->getLens();
+		world->GetMainCamera()->setLens(temp+5);
+		world->GetMainCamera()->SetFov(world->GetMainCamera()->caculateFieldofView());
 	}
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::H)) {
-		float temp = world->GetMainCamera()->GetFieldOfVision();
-		world->GetMainCamera()->SetFov(temp -10);
+		float temp = world->GetMainCamera()-> getLens();
+		world->GetMainCamera()->setLens(temp -5);
+		world->GetMainCamera()->SetFov(world->GetMainCamera()->caculateFieldofView());
 	}
 
 	 
 }
 
 
-void TutorialGame::drawDebugString(string debugString,Vector2 Spos ,bool condition=true)
+void TutorialGame::drawDebugString(string debugString,Vector2 Spos ,bool condition)
 {
 	if (condition) {
 		Debug::Print(debugString, Spos);

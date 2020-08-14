@@ -137,3 +137,9 @@ Camera Camera::BuildVOFCamera(const Vector3& pos, float pitch, float yaw, float 
 	return c;
 
 }
+float Camera::caculateFieldofView()
+{
+
+	
+	return(atan(43.3 / (2 * this->lens))*2*180/3.14159);
+}

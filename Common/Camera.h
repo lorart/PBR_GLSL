@@ -20,9 +20,11 @@ namespace NCL {
 			pitch		= 0.0f;
 			yaw			= 0.0f;
 
-			fov			= 45.0f;
+			fov			= 63.0f;
 			nearPlane	= 1.0f;
 			farPlane	= 100.0f;
+
+			lens = 35;
 
 			camType		= CameraType::Perspective;
 			this->nearDistance = 10;
@@ -34,13 +36,14 @@ namespace NCL {
 			this->yaw		= yaw;
 			this->position	= position;
 
-			this->fov		= 45.0f;
+			this->fov		= 63.0f;
 			this->nearPlane = 1.0f;
 			this->farPlane	= 100.0f;
 
 			this->camType	= CameraType::Perspective;
 			this->nearDistance = 10;
 			this->farDistance = 10;
+			this->lens = 35;
 		}
 
 		~Camera(void) {};
@@ -91,6 +94,14 @@ namespace NCL {
 		void   SetFov(float Fov) {
 			fov = Fov;
 		}
+		int getLens() {
+			return lens;
+		}
+		void setLens(int L) {
+			lens=L;
+		}
+
+		 float caculateFieldofView();
 
 		static Camera BuildPerspectiveCamera(const Vector3& pos, float pitch, float yaw, float fov, float near, float far);
 		static Camera BuildOrthoCamera(const Vector3& pos, float pitch, float yaw, float left, float right, float top, float bottom, float near, float far);

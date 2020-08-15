@@ -94,10 +94,10 @@ namespace NCL {
 		void   SetFov(float Fov) {
 			fov = Fov;
 		}
-		int getLens() {
+		float getLens() {
 			return lens;
 		}
-		void setLens(int L) {
+		void setLens(float L) {
 			lens=L;
 		}
 
@@ -126,7 +126,7 @@ namespace NCL {
 		float	yaw;
 		float	pitch;
 		
-		int lens;
+		float lens;
 
 		
 

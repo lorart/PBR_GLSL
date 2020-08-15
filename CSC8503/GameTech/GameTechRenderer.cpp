@@ -487,6 +487,7 @@ void GameTechRenderer::drawPosFullScreenQuad(OGLShader* shader, OGLTexture* tex)
 	}
 	
 	BindTextureToShader(tex, "mainTex", 0);
+	shader->setInt("lens", gameWorld.GetMainCamera()->getLens());
 
 
 	//Transform* parentTransform, OGLMesh* mesh, TextureBase* colourtex, ShaderBase* shader

@@ -2,6 +2,7 @@
 uniform sampler2D mainTex;
 uniform int texWide;
 uniform int texHight;
+uniform int lens;
 
 in Vertex
 {	
@@ -11,7 +12,6 @@ in Vertex
 
 out vec4 fragColor;
 
-vec2 LensDistortion(){
 /* 
 	Alpha1 and alpha2 are constants for the transformation 
 	equations, they will be small positive numbers
@@ -31,9 +31,61 @@ vec2 LensDistortion(){
    40mm     0.016  0.059
    50mm     0.006  0.03
 */
-float alphax = 0.02;
-float alphay = 0.075;
+float caculateAlphaX(){
+	//appropriate by the given alphaX Y 
+	
+	//35-40
+	if(lens<35){
+		return 0.02;
+
+	}
+	else if(lens>=35&&lens<=40){
+		return 0.02+(lens-35)/5*(0.016-0.02);
+
+	}
+	//40-50
+	else if(lens>40&&lens<=50){
+		return 0.016+(lens-40)/10*( 0.006- 0.16);
+	}
+	else{
+		return 0.006;
+	}
+}
+/*
+	Lens    alphax  alphay
+	35mm     0.02   0.075
+   40mm     0.016  0.059
+   50mm     0.006  0.03
+*/
+float caculateAlphaY(){
+	//appropriate by the given alphaX Y 
+	if(lens<35){
+		return 0.075;
+
+	}
+	//35-40
+	else if(lens>=35&&lens<=40){
+		return 0.075+(lens-35)/5*(0.059-0.075);
+
+	}
+
+	//40-50
+	else if(lens>40&&lens<=50){
+		return 0.059+(lens-40)/10*(0.03-0.059);
+	}
+	else{
+		return 0.03;
+	}
+}
+
+vec2 LensDistortion(){
+
+float alphax = caculateAlphaX();
+float alphay = caculateAlphaY();
 //tranform to NDC
+
+
+
 vec4 NDC_Cood=vec4(gl_FragCoord.x/texWide* 2.0 - 1.0,
 				 gl_FragCoord.y/texHight* 2.0 - 1.0  ,
 				 gl_FragCoord.z * 2.0 - 1.0, 1.0);

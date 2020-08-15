@@ -248,7 +248,7 @@ void TutorialGame::DrawDebugInformation()
 	temp = std::to_string(world->GetMainCamera()->GetFieldOfVision());
 	drawDebugString("Camera Field of View  " + temp,
 		                    LeftUpP - Vector2(0, debugScale * leftUp), renderer->isUsedCamPos); leftUp++;
-	
+
 	drawDebugString("",
 		LeftUpP - Vector2(0, debugScale * leftUp), renderer->isUsedCamPos); leftUp++;
 
@@ -300,15 +300,23 @@ void TutorialGame::ChangePossProcess()
 
 void TutorialGame::ChangeCameraFOVs()
 {
-	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::Y)) {
+	float scale = 0.3;
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::Y)) {
 		float temp = world->GetMainCamera()->getLens();
-		world->GetMainCamera()->setLens(temp+5);
-		world->GetMainCamera()->SetFov(world->GetMainCamera()->caculateFieldofView());
+		
+		if (temp<=50-scale) {
+			
+			world->GetMainCamera()->setLens(temp + scale);
+			std::cout << "lens=  " << world->GetMainCamera()->getLens() << std::endl;
+			world->GetMainCamera()->SetFov(world->GetMainCamera()->caculateFieldofView());
+		}
 	}
-	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::H)) {
+	if (Window::GetKeyboard()-> KeyDown(KeyboardKeys::H)) {
 		float temp = world->GetMainCamera()-> getLens();
-		world->GetMainCamera()->setLens(temp -5);
-		world->GetMainCamera()->SetFov(world->GetMainCamera()->caculateFieldofView());
+		if (temp >= 35+ scale) {
+			world->GetMainCamera()->setLens(temp - scale);
+			world->GetMainCamera()->SetFov(world->GetMainCamera()->caculateFieldofView());
+		}
 	}
 
 	 

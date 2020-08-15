@@ -250,9 +250,16 @@ void TutorialGame::DrawDebugInformation()
 	drawDebugString("Camera Field of View  " + temp,
 		                    LeftUpP - Vector2(0, debugScale * leftUp), renderer->isUsedCamPos); leftUp++;
 
+	drawDebugString("",
+		LeftUpP - Vector2(0, debugScale * leftUp), renderer->isUsedCamPos); leftUp++;
+
+
+	drawDebugString("lens projection:",
+		LeftUpP - Vector2(0, debugScale * leftUp), renderer->isUsedCamPos); leftUp++;
+
 	temp = std::to_string(world->GetMainCamera()->alphaX);
 	temp_2 = std::to_string(world->GetMainCamera()->alphaY);
-	drawDebugString(" lens projection:alphaX " + temp +"   alphaY"+ temp_2,
+	drawDebugString("alphaX " + temp +"   alphaY"+ temp_2,
 		LeftUpP - Vector2(0, debugScale * leftUp), renderer->isUsedCamPos); leftUp++;
 
 	drawDebugString("",

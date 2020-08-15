@@ -383,7 +383,8 @@ void NCL::CSC8503::GameTechRenderer::setupHDR(OGLHdr* hdrEnv)
 	RenderCubemaptoIrradianceMap();
 	RenderPerFilterMap();
 	//RenderBrdfLutMap();
-	//todo:test
+
+	//todo:delete
 	ClearHDRBuffers();
 }
 
@@ -405,13 +406,14 @@ void GameTechRenderer::RendercameraFrame()
 	//RenderBrdfLutMap();
 	
 	RenderCamera();
-	RenderHDRSkybox(HdrEnv->cubeTex, 10);
+	//RenderHDRSkybox(HdrEnv->cubeTex, 10);
 
 	
 
 
 	//todo::error***************
-//	RenderHDRSkybox(HdrEnv->irradianceMap,11);
+	//todo::delete
+   RenderHDRSkybox(HdrEnv->prefilterMap,11);
 
 }
 
@@ -762,14 +764,17 @@ void NCL::CSC8503::GameTechRenderer::RenderBrdfLutMap()
 void GameTechRenderer::RenderPerFilterMap()
 {
 	clear_Fbo_Rbo();
-	generate_bind_Fbo(HdrEnv->captureFBO_irr);
-	generate_bind_Rbo(HdrEnv->captureRBO_irr);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, HdrEnv->cubeIrradianceTexSize, HdrEnv->cubeIrradianceTexSize);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, HdrEnv->captureRBO_irr);
+	//generate_bind_Fbo(HdrEnv->captureFBO_irr);
+	//generate_bind_Rbo(HdrEnv->captureRBO_irr);
+	//glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, HdrEnv->cubeIrradianceTexSize, HdrEnv->cubeIrradianceTexSize);
+	//glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, HdrEnv->captureRBO_irr);
 
 
 	glBindFramebuffer(GL_FRAMEBUFFER, HdrEnv->captureFBO_pre);
 	glBindRenderbuffer(GL_RENDERBUFFER, HdrEnv->captureRBO_pre);
+	std::cout << "***HdrEnv->captureFBO_pre" << HdrEnv->captureFBO_pre << std::endl;
+	std::cout << "***HdrEnv->captureRBO_pre" << HdrEnv->captureRBO_pre << std::endl;
+
 	glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
 	glm::mat4 captureViews[] =
 	{
@@ -797,7 +802,7 @@ void GameTechRenderer::RenderPerFilterMap()
 		unsigned int mipWidth = HdrEnv->prefilterMapTexSize * std::pow(0.5, mip);
 		unsigned int mipHeight = HdrEnv->prefilterMapTexSize * std::pow(0.5, mip);
 
-		//glBindRenderbuffer(GL_RENDERBUFFER, HdrEnv->captureRBO_pre);
+		
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, mipWidth, mipHeight);
 		glViewport(0, 0, mipWidth, mipHeight);
 

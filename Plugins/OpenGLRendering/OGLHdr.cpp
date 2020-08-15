@@ -48,11 +48,13 @@ NCL::Rendering::OGLHdr::OGLHdr(std::string& HdrFilename)
 
 
 
-	/*generate_bind_Fbo(captureFBO_pre);
-	generate_bind_Rbo(captureRBO_pre);
+	glGenFramebuffers(1, &captureFBO_pre);
+	glBindFramebuffer(GL_FRAMEBUFFER, captureFBO_pre);
+	glGenRenderbuffers(1, &captureRBO_pre);
+	glBindRenderbuffer(GL_RENDERBUFFER, captureRBO_pre);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, prefilterMapTexSize, prefilterMapTexSize);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO_pre);
-	clear_Fbo_Rbo();*/
+	clear_Fbo_Rbo();
 
 
 	brdfLutTex = new OGLTexture();

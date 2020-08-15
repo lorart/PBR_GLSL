@@ -29,6 +29,8 @@ namespace NCL {
 			camType		= CameraType::Perspective;
 			this->nearDistance = 10;
 			this->farDistance = 10;
+			this->alphaX = 0.02;
+			this->alphaY = 0.075;
 		};
 
 		Camera(float pitch, float yaw, const Vector3& position) : Camera() {
@@ -44,6 +46,8 @@ namespace NCL {
 			this->nearDistance = 10;
 			this->farDistance = 10;
 			this->lens = 35;
+			this->alphaX = 0.02;
+			this->alphaY = 0.075;
 		}
 
 		~Camera(void) {};
@@ -102,6 +106,9 @@ namespace NCL {
 		}
 
 		 float caculateFieldofView();
+		 float caculateAlphaY();
+		 float caculateAlphaX();
+		 
 
 		static Camera BuildPerspectiveCamera(const Vector3& pos, float pitch, float yaw, float fov, float near, float far);
 		static Camera BuildOrthoCamera(const Vector3& pos, float pitch, float yaw, float left, float right, float top, float bottom, float near, float far);
@@ -111,6 +118,7 @@ namespace NCL {
 	public:
 		int nearDistance;
 		int farDistance;
+		float alphaX,alphaY;
 	
 	protected:
 		CameraType camType;

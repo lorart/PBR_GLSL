@@ -143,3 +143,46 @@ float Camera::caculateFieldofView()
 	
 	return(atan(43.3 / (2 * this->lens))*2*180/3.14159);
 }
+
+float  Camera::caculateAlphaY() {
+	//appropriate by the given alphaX Y 
+	if (this->lens < 35) {
+		return 0.075;
+
+	}
+	//35-40
+	else if (this->lens >= 35 && this->lens <= 40) {
+		return 0.075 + (this->lens - 35) / 5 * (0.059 - 0.075);
+
+	}
+
+	//40-50
+	else if (this->lens > 40 && this->lens <= 50) {
+		return 0.059 + (this->lens - 40) / 10 * (0.03 - 0.059);
+	}
+	else {
+		return 0.03;
+	}
+}
+
+float  Camera::caculateAlphaX() {
+	//appropriate by the given alphaX Y 
+
+	//35-40
+	if (this->lens < 35) {
+		return 0.02;
+
+	}
+	else if (this->lens >= 35 && this->lens <= 40) {
+		return 0.02 + (this->lens - 35) / 5 * (0.016 - 0.02);
+
+	}
+	//40-50
+	else if (this->lens > 40 && this->lens <= 50) {
+		
+		return 0.016 + (this->lens - 40) / 10 * (0.006 - 0.016);
+	}
+	else {
+		return 0.006;
+	}
+}

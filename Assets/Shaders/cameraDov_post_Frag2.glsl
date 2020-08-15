@@ -31,6 +31,7 @@ out vec4 fragColor;
    40mm     0.016  0.059
    50mm     0.006  0.03
 */
+
 float caculateAlphaX(){
 	//appropriate by the given alphaX Y 
 	
@@ -45,18 +46,13 @@ float caculateAlphaX(){
 	}
 	//40-50
 	else if(lens>40&&lens<=50){
-		return 0.016+(lens-40)/10*( 0.006- 0.16);
+		return 0.016+(lens-40)/10*( 0.006- 0.016);
 	}
 	else{
 		return 0.006;
 	}
 }
-/*
-	Lens    alphax  alphay
-	35mm     0.02   0.075
-   40mm     0.016  0.059
-   50mm     0.006  0.03
-*/
+
 float caculateAlphaY(){
 	//appropriate by the given alphaX Y 
 	if(lens<35){

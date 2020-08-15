@@ -212,6 +212,7 @@ void TutorialGame::DrawDebugInformation()
 	int debugScale=20;
 
 	string temp;
+	string temp_2;
 
 	/*left down */
 	Vector2 LeftDownP = Vector2(20,0);
@@ -248,6 +249,11 @@ void TutorialGame::DrawDebugInformation()
 	temp = std::to_string(world->GetMainCamera()->GetFieldOfVision());
 	drawDebugString("Camera Field of View  " + temp,
 		                    LeftUpP - Vector2(0, debugScale * leftUp), renderer->isUsedCamPos); leftUp++;
+
+	temp = std::to_string(world->GetMainCamera()->alphaX);
+	temp_2 = std::to_string(world->GetMainCamera()->alphaY);
+	drawDebugString(" lens projection:alphaX " + temp +"   alphaY"+ temp_2,
+		LeftUpP - Vector2(0, debugScale * leftUp), renderer->isUsedCamPos); leftUp++;
 
 	drawDebugString("",
 		LeftUpP - Vector2(0, debugScale * leftUp), renderer->isUsedCamPos); leftUp++;
@@ -309,6 +315,8 @@ void TutorialGame::ChangeCameraFOVs()
 			world->GetMainCamera()->setLens(temp + scale);
 			std::cout << "lens=  " << world->GetMainCamera()->getLens() << std::endl;
 			world->GetMainCamera()->SetFov(world->GetMainCamera()->caculateFieldofView());
+			world->GetMainCamera()->alphaX=world->GetMainCamera()->caculateAlphaX();
+			world->GetMainCamera()->alphaY=world->GetMainCamera()->caculateAlphaY();
 		}
 	}
 	if (Window::GetKeyboard()-> KeyDown(KeyboardKeys::H)) {
@@ -316,6 +324,9 @@ void TutorialGame::ChangeCameraFOVs()
 		if (temp >= 35+ scale) {
 			world->GetMainCamera()->setLens(temp - scale);
 			world->GetMainCamera()->SetFov(world->GetMainCamera()->caculateFieldofView());
+			world->GetMainCamera()->alphaX = world->GetMainCamera()->caculateAlphaX();
+			world->GetMainCamera()->alphaY = world->GetMainCamera()->caculateAlphaY();
+	
 		}
 	}
 

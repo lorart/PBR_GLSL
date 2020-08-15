@@ -1,10 +1,11 @@
 #version 400 core
 
 uniform sampler2D 	mainTex;
+uniform vec4 colour;
 
 in Vertex
 {
-	vec4 colour;
+	//vec4 colour;
 	vec2 texCoord;
 } IN;
 
@@ -13,7 +14,7 @@ out vec4 fragColor;
 void main(void)
 {
 	if(textureSize(mainTex, 0).x < 10) {
-		fragColor = IN.colour;
+		fragColor = colour;
 	}
 	else {
 		float alpha = texture(mainTex, IN.texCoord).r;
@@ -22,6 +23,6 @@ void main(void)
 			discard;
 		}
 		
-		fragColor = IN.colour * vec4(1,1,1,alpha);
+		fragColor = colour * vec4(1,1,1,alpha);
 	}
 }

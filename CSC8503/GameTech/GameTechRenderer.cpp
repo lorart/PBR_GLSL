@@ -406,14 +406,12 @@ void GameTechRenderer::RendercameraFrame()
 	//RenderBrdfLutMap();
 	
 	RenderCamera();
-	//RenderHDRSkybox(HdrEnv->cubeTex, 10);
-
 	
 
 
 	//todo::error***************
 	//todo::delete
-   RenderHDRSkybox(HdrEnv->prefilterMap,11);
+   RenderHDRSkybox(HdrEnv->cubeTex,11);
 
 }
 

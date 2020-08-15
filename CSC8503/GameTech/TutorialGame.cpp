@@ -344,7 +344,7 @@ void TutorialGame::ChangeCameraFOVs()
 void TutorialGame::drawDebugString(string debugString,Vector2 Spos ,bool condition)
 {
 	if (condition) {
-		Debug::Print(debugString, Spos);
+		Debug::Print(debugString, Spos, Vector4(1, 1, 1, 1));
 	}
 
 }

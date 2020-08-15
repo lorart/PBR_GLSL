@@ -96,7 +96,7 @@ void OGLRenderer::RenderFrame()		{
 }
 
 void OGLRenderer::EndFrame()		{
-	DrawDebugData();
+	DrawDebugData(Vector4(1,1,1,1));
 	::SwapBuffers(deviceContext);
 }
 
@@ -208,7 +208,7 @@ void OGLRenderer::DrawLine(const Vector3& start, const Vector3& end, const Vecto
 	debugLines.emplace_back(l);
 }
 
-void OGLRenderer::DrawDebugData() {
+void OGLRenderer::DrawDebugData(Vector4 colour) {
 	if (debugStrings.empty() && debugLines.empty()) {
 		return; //don't mess with OGL state if there's no point!
 	}
@@ -221,6 +221,7 @@ void OGLRenderer::DrawDebugData() {
 	}
 
 	int switchLocation = glGetUniformLocation(debugShader->GetProgramID(), "useMatrix");
+	debugShader->setVec4("colour", colour);
 
 	glUniform1i(switchLocation, 0);
 	DrawDebugStrings();

@@ -112,6 +112,10 @@ namespace NCL {
 				//glUniformMatrix4fv(projLocation, 1, false, (float*)&projMatrix);
 				glUniformMatrix4fv(glGetUniformLocation(programID, name.c_str()), 1, GL_FALSE, (float*)&modelMatrix);
 			}
+			void setVec4(const std::string& name, const Vector4 value) const
+			{
+				glUniform4fv(glGetUniformLocation(programID, name.c_str()), 1, (float*) &value);
+			}
 
 
 

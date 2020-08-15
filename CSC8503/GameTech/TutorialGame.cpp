@@ -209,13 +209,13 @@ void TutorialGame::DrawDebugInformation()
 	 int leftDown= 0;
 	 int rightUp=0;
 	 int rightDown=0;
-	int debugScale=20;
+	int debugScale=17;
 
 	string temp;
 	string temp_2;
 
 	/*left down */
-	Vector2 LeftDownP = Vector2(20,0);
+	Vector2 LeftDownP = Vector2(20,20);
 	drawDebugString("MOVE Light: I J K L ",				LeftDownP + Vector2(0, debugScale * leftDown),1);				leftDown++;
 	drawDebugString("MOVE Camera: S D Shift Space ",	LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
 	drawDebugString("Focal Lens: Y+ H-",				LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
@@ -247,7 +247,7 @@ void TutorialGame::DrawDebugInformation()
 		LeftUpP - Vector2(0, debugScale * leftUp), renderer->isUsedCamPos); leftUp++;
 
 	temp = std::to_string(world->GetMainCamera()->GetFieldOfVision());
-	drawDebugString("Camera Field of View  " + temp,
+	drawDebugString("Field of View  " + temp,
 		                    LeftUpP - Vector2(0, debugScale * leftUp), renderer->isUsedCamPos); leftUp++;
 
 	drawDebugString("",
@@ -259,7 +259,7 @@ void TutorialGame::DrawDebugInformation()
 
 	temp = std::to_string(world->GetMainCamera()->alphaX);
 	temp_2 = std::to_string(world->GetMainCamera()->alphaY);
-	drawDebugString("alphaX " + temp +"   alphaY"+ temp_2,
+	drawDebugString("alphaX " + temp +"   alphaY "+ temp_2,
 		LeftUpP - Vector2(0, debugScale * leftUp), renderer->isUsedCamPos); leftUp++;
 
 	drawDebugString("",

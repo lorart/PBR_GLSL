@@ -187,6 +187,7 @@ void OGLRenderer::BindTextureToShader(const TextureBase*t, const std::string& un
 	glUniform1i(slot, texUnit);
 }
 
+//string scale
 void OGLRenderer::DrawString(const std::string& text, const Vector2&pos, const Vector4& colour) {
 	DebugString s;
 	s.colour = colour;
@@ -194,7 +195,7 @@ void OGLRenderer::DrawString(const std::string& text, const Vector2&pos, const V
 	
 	s.ndcPos.x = (s.ndcPos.x * 2.0f) - 1.0f;
 	s.ndcPos.y = (s.ndcPos.y * 2.0f) - 1.0f;
-	s.size = 0.3f;
+	s.size = 0.05f;
 	s.text = text;
 	debugStrings.emplace_back(s);
 }

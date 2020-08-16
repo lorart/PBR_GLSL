@@ -25,6 +25,8 @@ out Vertex
 	vec3 tangent;
 	vec3 binormal;
 	vec3 worldPos;
+
+	float ViewDepth;
 } OUT;
 
 void main(void)
@@ -45,7 +47,17 @@ void main(void)
 	 OUT.tangent = normalize(normalMatrix * normalize(tangent));
 	 OUT.binormal = normalize(normalMatrix * normalize(binormal));
 	//OUT.binormal = normalize(normalMatrix *normalize(cross(normal, tangent)));
+
+
+
+
+//caculate camera DOV burring
+
 	
+
 	
 	gl_Position		= mvp * vec4(position, 1.0);
+	OUT.ViewDepth=gl_Position.z;
+
+	
 }

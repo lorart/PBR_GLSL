@@ -602,8 +602,8 @@ void GameTechRenderer::RenderDOVCamera()
 
 		if (isUsedCamPos)
 		{
-			
-			drawPosFullScreenQuad(posCamera->cameraDovPosShader_2,posCamera->cameraBufferTex[1]);//todo:
+			drawPosFullScreenQuad(posCamera->cameraDovShader, posCamera->cameraBufferTex[1]);//todo:
+			//drawPosFullScreenQuad(posCamera->cameraDistortionShader,posCamera->cameraBufferTex[1]);//todo:
 		}
 		else
 		{

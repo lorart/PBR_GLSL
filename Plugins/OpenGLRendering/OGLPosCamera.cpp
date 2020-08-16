@@ -7,15 +7,15 @@ NCL::Rendering::OGLPosCamera::OGLPosCamera(int currentWidth, int currentHeight, 
 	this->mutiNum = 8;
 
 	ScreenQuad = new Model(Assets::MESHDIR + "PLANE2" + ".obj", 0);
-	cameraDovPosShader = new OGLShader("ScreenQuad_Vert1.glsl", "cameraDov_post_Frag1.glsl");
-	cameraDovPosShader_2 = new OGLShader("ScreenQuad_Vert1.glsl", "cameraDov_post_Frag2.glsl");
+	cameraDovShader = new OGLShader("ScreenQuad_Vert1.glsl", "cameraDov_Frag.glsl");
+	cameraDistortionShader = new OGLShader("ScreenQuad_Vert1.glsl", "cameraDistortionShader_Frag.glsl");
 	ScreenQuadShader = new OGLShader("ScreenQuad_Vert1.glsl", "ScreenQuad_Frag1.glsl");
 
 	for (int i = 0; i < 2; i++)
 	{
 		cameraBufferTex[i] = new OGLTexture();
 		glBindTexture(GL_TEXTURE_2D, cameraBufferTex[i]->GetObjectID());
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, currentWidth, currentHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);  //why nullptr
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, currentWidth, currentHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);  //why nullptr
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -29,7 +29,7 @@ NCL::Rendering::OGLPosCamera::OGLPosCamera(int currentWidth, int currentHeight, 
 	glBindFramebuffer(GL_FRAMEBUFFER, cameraFBO);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cameraBufferTex[1]->GetObjectID(), 0);
 
-	/************/
+	/************/	
 	cameraDepBufferTex = new OGLTexture();
 	glBindTexture(GL_TEXTURE_2D, cameraDepBufferTex->GetObjectID());
 	//test
@@ -86,7 +86,7 @@ NCL::Rendering::OGLPosCamera::OGLPosCamera(int currentWidth, int currentHeight, 
 	cameraMsaa_mutiTex_col = new OGLTexture();
 	glBindFramebuffer(GL_FRAMEBUFFER, cameraMsaa_FBO);
 	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, cameraMsaa_mutiTex_col->GetObjectID());
-	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, mutiNum, GL_RGB8, currentWidth, currentHeight, GL_TRUE);
+	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, mutiNum, GL_RGBA, currentWidth, currentHeight, GL_TRUE);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, cameraMsaa_mutiTex_col->GetObjectID(), 0);
 	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 
@@ -138,8 +138,8 @@ NCL::Rendering::OGLPosCamera::~OGLPosCamera()
 	glDeleteFramebuffers(1, &cameraMsaa_FBO);
 
 
-	delete cameraDovPosShader_2;
-	delete cameraDovPosShader;
+	delete cameraDistortionShader;
+	delete cameraDovShader;
 	delete ScreenQuadShader;
 	delete cameraDepBufferTex;
 	delete cameraDepBufferTex;

@@ -1,6 +1,7 @@
 #version 330 core
 uniform sampler2D mainTex;
 
+
 in Vertex
 {	
 	vec2 texCoord;
@@ -10,8 +11,6 @@ in Vertex
 out vec4 fragColor;
 
 void main(void) {
-
-	fragColor = texture(mainTex,IN.texCoord);
+	fragColor.rgb = vec3(texture(mainTex,IN.texCoord).a);
 	
-	fragColor=fragColor*vec4(1,0.8,0.8,1);
 }

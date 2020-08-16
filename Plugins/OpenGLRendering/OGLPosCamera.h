@@ -25,8 +25,8 @@ namespace NCL {
 
 
 			OGLShader* ScreenQuadShader;
-			OGLShader* cameraDovPosShader;
-			OGLShader* cameraDovPosShader_2;
+			OGLShader* cameraDovShader;
+			OGLShader* cameraDistortionShader;
 			OGLTexture* cameraBufferTex[2];
 			OGLTexture* cameraDepBufferTex;
 			GLuint		cameraFBO;

@@ -25,6 +25,8 @@ out Vertex
 	vec3 tangent;
 	vec3 binormal;
 	vec3 worldPos;
+
+		float ViewDepth;
 } OUT;
 
 void main(void)
@@ -48,4 +50,13 @@ void main(void)
 	
 	
 	gl_Position		= mvp * vec4(position, 1.0);
+
+	//caculate camera DOV burring
+
+	
+
+	
+	gl_Position		= mvp * vec4(position, 1.0);
+	OUT.ViewDepth=gl_Position.z;
+
 }

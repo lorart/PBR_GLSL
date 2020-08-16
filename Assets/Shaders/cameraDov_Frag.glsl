@@ -3,7 +3,7 @@ uniform sampler2D mainTex;
 uniform int texWide;
 uniform int texHight;
 uniform int lens;
-
+uniform int IsUseFieldOfDepth;
 
 
 in Vertex
@@ -24,27 +24,40 @@ out vec4 fragColor;
 reference https://blog.csdn.net/ZJU_fish1996/article/details/82952866
 */
 	void main(void) {
-int kernelNum = 12;
-vec2 TwelveKernelBase[] =
-{
-    {1.0,0.0},{0.5,0.866},{-0.5,0.866},
-    {-1.0,0.0},{-0.5,-0.866},{0.5,-0.866},
-    {1.5,0.866},{0, 1.732},{-1.5,0.866},
-    {-1.5,0.866},{0,-1.732},{1.5,-0.866},
-};
- 
-    vec4 originalColour = texture(mainTex, IN.texCoord).rgba;
-   vec2 screenSize=vec2(texWide,texHight);
-    vec2 v4ScreenSize = screenSize / 5;
-    vec3 Blurred = vec3(0, 0, 0);
-    for(int i = 0; i < kernelNum; i++)
-    {
-       vec2 Offset = vec2(TwelveKernelBase[i].x / v4ScreenSize.x,
- TwelveKernelBase[i].y / v4ScreenSize.y);
-       vec4 currentColour = texture(mainTex, IN.texCoord + Offset);
-       Blurred += mix(originalColour.rgb, currentColour.rgb, originalColour.a);
-   }
-   fragColor = vec4 (Blurred / kernelNum , 1.0f);
+
+if(IsUseFieldOfDepth==0){
+              
+   vec4 originalColour = texture(mainTex, IN.texCoord).rgba;
+            fragColor = vec4(originalColour.rgb,1.0f);
+        }
+        else{
+           
+
+
+                      int kernelNum = 12;
+            vec2 TwelveKernelBase[] =
+            {
+                {1.0,0.0},{0.5,0.866},{-0.5,0.866},
+                {-1.0,0.0},{-0.5,-0.866},{0.5,-0.866},
+                {1.5,0.866},{0, 1.732},{-1.5,0.866},
+                {-1.5,0.866},{0,-1.732},{1.5,-0.866},
+            };
+            
+                vec4 originalColour = texture(mainTex, IN.texCoord).rgba;
+            vec2 screenSize=vec2(texWide,texHight);
+                vec2 v4ScreenSize = screenSize / 5;
+                vec3 Blurred = vec3(0, 0, 0);
+                for(int i = 0; i < kernelNum; i++)
+                {
+                vec2 Offset = vec2(TwelveKernelBase[i].x / v4ScreenSize.x,
+            TwelveKernelBase[i].y / v4ScreenSize.y);
+                vec4 currentColour = texture(mainTex, IN.texCoord + Offset);
+                Blurred += mix(originalColour.rgb, currentColour.rgb, originalColour.a);
+            }
+            fragColor = vec4 (Blurred / kernelNum , 1.0f);
+
+
+        }
 
 	
 }

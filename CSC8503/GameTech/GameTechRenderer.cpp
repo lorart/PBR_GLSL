@@ -55,7 +55,7 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	isUsedPBR = true;
 	isUsedCamPos = true;
 	isUsedMSAA = true;
-	//isUsedMSAA = false;
+	isUsedDov= true;
 
 	HdrEnv = nullptr;
 	float screenAspect = 0;
@@ -460,7 +460,7 @@ void GameTechRenderer::drawFullScreenQuad(OGLShader* shader, OGLTexture* tex)
 	DrawBoundMesh();
 }
 
-void GameTechRenderer::drawPosFullScreenQuad(OGLShader* shader, OGLTexture* tex)
+void GameTechRenderer::drawPosFullScreenQuad(OGLShader* shader, OGLTexture* tex,int IsUseLensDistortion,int IsUseFieldOfDepth)
 {
 	OGLShader* activeShader = nullptr;
 
@@ -484,11 +484,18 @@ void GameTechRenderer::drawPosFullScreenQuad(OGLShader* shader, OGLTexture* tex)
 		shader->setMat4("projMatrix", projMatrix);
 		shader->setInt("texWide", currentWidth);
 		shader->setInt("texHight", currentHeight);
+		/*
+		uniform int IsUseLensDistortion;
+uniform int IsUseFieldOfDepth;
+		*/
 	}
 	
 	BindTextureToShader(tex, "mainTex", 0);
 	shader->setInt("lens", gameWorld.GetMainCamera()->getLens());
+	shader->setInt("texHight", currentHeight);
 
+	shader->setInt("IsUseLensDistortion", IsUseLensDistortion);
+	shader->setInt("IsUseFieldOfDepth", IsUseFieldOfDepth);
 
 	//Transform* parentTransform, OGLMesh* mesh, TextureBase* colourtex, ShaderBase* shader
 	RenderObject* i = new RenderObject(quadtransform, posCamera->ScreenQuad->meshes[0], tex, shader);
@@ -598,18 +605,63 @@ void GameTechRenderer::RenderDOVCamera()
 
 		//glBindFramebuffer(GL_FRAMEBUFFER, posCamera->cameraFBO);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glDisable(GL_DEPTH_TEST);
 	}
 
-		if (isUsedCamPos)
-		{
-			drawPosFullScreenQuad(posCamera->cameraDovShader, posCamera->cameraBufferTex[1]);//todo:
-			//drawPosFullScreenQuad(posCamera->cameraDistortionShader,posCamera->cameraBufferTex[1]);//todo:
+	//*****************************************
+	glBindFramebuffer(GL_FRAMEBUFFER, posCamera->cameraDistortionFBO);
+	status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if (status != GL_FRAMEBUFFER_COMPLETE)
+	{
+
+		std::cout << status << "   The frame buffer status is not complete!" << std::endl;
+
+		if (status = GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT) {
+			std::cout << 1 << std::endl;
 		}
-		else
+		else if (status = GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT)
 		{
-			drawFullScreenQuad(posCamera->ScreenQuadShader, posCamera->cameraBufferTex[1]);
+			std::cout << 2 << std::endl;
 		}
-	
+		else if (status = GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER)
+		{
+			std::cout << 3 << std::endl;
+		}
+
+		else if (status = GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER)
+		{
+			std::cout << 4 << std::endl;
+		}
+
+		else if (status = GL_FRAMEBUFFER_UNSUPPORTED)
+		{
+			std::cout << 5 << std::endl;
+		}
+
+		return;
+	}
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		
+			if (isUsedDov) {
+				drawPosFullScreenQuad(posCamera->cameraDovShader, posCamera->cameraBufferTex[0], 1, 1);//todo:
+			}
+			else {
+				drawPosFullScreenQuad(posCamera->cameraDovShader, posCamera->cameraBufferTex[0], 1, 0);
+			}
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glDisable(GL_DEPTH_TEST);
+	//*****************************************
+	if (isUsedCamPos)
+	{
+		drawPosFullScreenQuad(posCamera->cameraDistortionShader, posCamera->cameraBufferTex[1], 1, 0);
+	}
+	else
+	{
+		drawPosFullScreenQuad(posCamera->cameraDistortionShader, posCamera->cameraBufferTex[1], 0, 0);
+	}
+		
+
+
 }
 void NCL::CSC8503::GameTechRenderer::CaculateViewPorjMat()
 {

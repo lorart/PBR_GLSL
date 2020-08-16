@@ -144,6 +144,7 @@ void TutorialGame::UpdateKeys() {
 	ChangePossProcess();
 	ChangeMsaa();
 	ChangeCameraFOVs();
+	ChangeDOF();
 	
 }
 
@@ -223,6 +224,7 @@ void TutorialGame::DrawDebugInformation()
 	drawDebugString("Change Shader: G",					LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
 	drawDebugString("Change Mesh: F",					LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
 	drawDebugString("Anti-Aliasing: T",					LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
+	drawDebugString("DEPTH of Field(only on Physic camera) : U",				LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
 
 	/*left up*/
 	Vector2 LeftUpP = Vector2(20, 650);
@@ -242,6 +244,11 @@ void TutorialGame::DrawDebugInformation()
 
 	drawDebugString("Full Frame Camrera",
 		LeftUpP - Vector2(0, debugScale * leftUp), renderer->isUsedCamPos); leftUp++;
+
+	drawDebugString_Switch("Depth of Field ON", "Depth of Field OFF", renderer->isUsedDov,
+		LeftUpP - Vector2(0, debugScale * leftUp)); leftUp++;
+	
+
 	temp = std::to_string(world->GetMainCamera()->getLens());
 	drawDebugString("Camera Lens  " + temp+" mm",
 		LeftUpP - Vector2(0, debugScale * leftUp), renderer->isUsedCamPos); leftUp++;
@@ -374,6 +381,15 @@ void NCL::CSC8503::TutorialGame::ChangeMsaa()
 	}
 
 
+}
+
+void TutorialGame::ChangeDOF()
+{
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::U)) {
+		//std::cout << "***R pressed " << std::endl;
+		renderer->isUsedDov = !renderer->isUsedDov;
+
+	}
 }
 
 void NCL::CSC8503::TutorialGame::LightMovement()

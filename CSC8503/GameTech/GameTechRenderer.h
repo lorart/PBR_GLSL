@@ -24,6 +24,7 @@ namespace NCL {
 			void setupHDR(OGLHdr* HdrEnv);
 			bool isUsedPBR;
 			bool isUsedCamPos;
+			bool isUsedDov;
 			bool isUsedMSAA;
 			//	OGLShader* CompareShader;
 			Camera* gameWorldCamera;
@@ -50,7 +51,7 @@ namespace NCL {
 			void drawFullScreenQuad(OGLShader* shader, OGLTexture* tex);
 			void drawFullScreenQuad(OGLShader* shader, OGLTexture* mutiTex, int sampleN);
 
-			void drawPosFullScreenQuad(OGLShader* shader, OGLTexture* tex);
+			void drawPosFullScreenQuad(OGLShader* shader, OGLTexture* tex, int IsUseLensDistortion, int IsUseFieldOfDepth);
 			
 
 

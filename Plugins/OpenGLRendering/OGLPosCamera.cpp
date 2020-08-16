@@ -27,9 +27,11 @@ NCL::Rendering::OGLPosCamera::OGLPosCamera(int currentWidth, int currentHeight, 
 
 	glGenFramebuffers(1, &cameraFBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, cameraFBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cameraBufferTex[1]->GetObjectID(), 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cameraBufferTex[0]->GetObjectID(), 0);
 
-	/************/	
+
+
+
 	cameraDepBufferTex = new OGLTexture();
 	glBindTexture(GL_TEXTURE_2D, cameraDepBufferTex->GetObjectID());
 	//test
@@ -73,9 +75,36 @@ NCL::Rendering::OGLPosCamera::OGLPosCamera(int currentWidth, int currentHeight, 
 	glClearColor(1, 1, 1, 1);
 
 	/******************/
-	glGenFramebuffers(1, &cameraPosFBO);
-	glBindFramebuffer(GL_FRAMEBUFFER, cameraPosFBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cameraBufferTex[2]->GetObjectID(), 0);
+	glGenFramebuffers(1, &cameraDistortionFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, cameraDistortionFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cameraBufferTex[1]->GetObjectID(), 0);
+
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+		auto status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+		if (status = GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT) {
+				std::cout << 1<< std::endl;
+			}
+			else if(status = GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT)
+			{
+				std::cout << 2 << std::endl;
+			}
+			else if (status = GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER)
+			{
+				std::cout << 3 << std::endl;
+			}
+
+			else if (status = GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER)
+			{
+				std::cout << 4<< std::endl;
+			}
+
+			else if (status = GL_FRAMEBUFFER_UNSUPPORTED)
+			{
+				std::cout << 5<< std::endl;
+			}
+	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	/******************/
@@ -134,7 +163,7 @@ NCL::Rendering::OGLPosCamera::~OGLPosCamera()
 	delete cameraBufferTex;
 
 	glDeleteFramebuffers(1, &cameraFBO);
-	glDeleteFramebuffers(1, &cameraPosFBO);
+	glDeleteFramebuffers(1, &cameraDistortionFBO);
 	glDeleteFramebuffers(1, &cameraMsaa_FBO);
 
 

@@ -3,6 +3,7 @@ uniform sampler2D mainTex;
 uniform int texWide;
 uniform int texHight;
 uniform int lens;
+uniform int IsUseLensDistortion;
 
 in Vertex
 {	
@@ -103,8 +104,14 @@ return DisTex_Cood;
 }
 
 void main(void) {
-vec2 disTex_Cood=LensDistortion();
-fragColor = texture(mainTex, disTex_Cood);
+	if(IsUseLensDistortion==0){
+	fragColor = texture(mainTex,IN.texCoord);
+	}
+	else{
+	vec2 disTex_Cood=LensDistortion();
+	fragColor = texture(mainTex, disTex_Cood);
+	}
+
 //fragColor.rg =disTex_Cood;
 
 }

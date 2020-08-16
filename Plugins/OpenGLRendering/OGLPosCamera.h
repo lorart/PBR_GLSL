@@ -35,7 +35,7 @@ namespace NCL {
 			OGLTexture* cameraMsaa_mutiTex_dep;
 
 
-			GLuint		cameraPosFBO;
+			GLuint		cameraDistortionFBO;
 			GLuint		mutiNum;
 
 

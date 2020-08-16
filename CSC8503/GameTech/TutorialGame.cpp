@@ -327,7 +327,7 @@ void TutorialGame::ChangeCameraFOVs()
 		if (temp<=50-scale) {
 			
 			world->GetMainCamera()->setLens(temp + scale);
-			std::cout << "lens=  " << world->GetMainCamera()->getLens() << std::endl;
+			//std::cout << "lens=  " << world->GetMainCamera()->getLens() << std::endl;
 			world->GetMainCamera()->SetFov(world->GetMainCamera()->caculateFieldofView());
 			world->GetMainCamera()->alphaX=world->GetMainCamera()->caculateAlphaX();
 			world->GetMainCamera()->alphaY=world->GetMainCamera()->caculateAlphaY();

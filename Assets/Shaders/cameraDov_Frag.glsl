@@ -45,7 +45,7 @@ if(IsUseFieldOfDepth==0){
             
                 vec4 originalColour = texture(mainTex, IN.texCoord).rgba;
             vec2 screenSize=vec2(texWide,texHight);
-                vec2 v4ScreenSize = screenSize / 5;
+                vec2 v4ScreenSize = screenSize / 3;
                 vec3 Blurred = vec3(0, 0, 0);
                 for(int i = 0; i < kernelNum; i++)
                 {

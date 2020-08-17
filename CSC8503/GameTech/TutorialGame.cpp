@@ -145,6 +145,7 @@ void TutorialGame::UpdateKeys() {
 	ChangeMsaa();
 	ChangeCameraFOVs();
 	ChangeDOF();
+	ChangeFocusDistance();
 	
 }
 
@@ -198,7 +199,7 @@ void  TutorialGame::LockedCameraMovement() {
 void TutorialGame::ChangeShader()
 {
 	
-	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::G)) {
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::B)) {
 		renderer->isUsedPBR = !renderer->isUsedPBR;
 		//model->meshes[i]->material->pbrTexArry[ALBEDO_MAP],
 	}
@@ -219,12 +220,13 @@ void TutorialGame::DrawDebugInformation()
 	Vector2 LeftDownP = Vector2(20,20);
 	drawDebugString("MOVE Light: I J K L ",				LeftDownP + Vector2(0, debugScale * leftDown),1);				leftDown++;
 	drawDebugString("MOVE Camera: S D Shift Space ",	LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
-	drawDebugString("Focal Lens: Y+ H-",				LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
+	drawDebugString("Camera Lens: Y+ H-",				LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
+	drawDebugString("Focus distance: T+ G-",			LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
 	drawDebugString("Change camera: R",					LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
-	drawDebugString("Change Shader: G",					LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
+	drawDebugString("Change Shader: B",					LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
 	drawDebugString("Change Mesh: F",					LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
-	drawDebugString("Anti-Aliasing: T",					LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
-	drawDebugString("DEPTH of Field(only on Physic camera) : U",				LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
+	drawDebugString("Anti-Aliasing: V",					LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
+	drawDebugString("DEPTH of View : U",				LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
 
 	/*left up*/
 	Vector2 LeftUpP = Vector2(20, 650);
@@ -245,7 +247,7 @@ void TutorialGame::DrawDebugInformation()
 	drawDebugString("Full Frame Camrera",
 		LeftUpP - Vector2(0, debugScale * leftUp), renderer->isUsedCamPos); leftUp++;
 
-	drawDebugString_Switch("Depth of Field ON", "Depth of Field OFF", renderer->isUsedDov,
+	drawDebugString_Switch("Depth of View ON", "Depth of View OFF", renderer->isUsedDov,
 		LeftUpP - Vector2(0, debugScale * leftUp)); leftUp++;
 	
 
@@ -255,13 +257,16 @@ void TutorialGame::DrawDebugInformation()
 
 	temp = std::to_string(world->GetMainCamera()->GetFieldOfVision());
 	drawDebugString("Field of View  " + temp,
-		                    LeftUpP - Vector2(0, debugScale * leftUp), renderer->isUsedCamPos); leftUp++;
+		LeftUpP - Vector2(0, debugScale * leftUp), renderer->isUsedCamPos); leftUp++;
 
-	drawDebugString("",
+	
+
+	temp = std::to_string(world->GetMainCamera()->focusDistance);
+	drawDebugString("Focus distance   " + temp, 
 		LeftUpP - Vector2(0, debugScale * leftUp), renderer->isUsedCamPos); leftUp++;
 
 
-	drawDebugString("lens projection:",
+	drawDebugString("lens projection:" ,
 		LeftUpP - Vector2(0, debugScale * leftUp), renderer->isUsedCamPos); leftUp++;
 
 	temp = std::to_string(world->GetMainCamera()->alphaX);
@@ -374,11 +379,27 @@ void TutorialGame::drawDebugString_Switch(string debugString1, string debugStrin
 
 void NCL::CSC8503::TutorialGame::ChangeMsaa()
 {
-	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::T)) {
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::V)) {
 		//std::cout << "***R pressed " << std::endl;
 		renderer->isUsedMSAA = !renderer->isUsedMSAA;
 		
 	}
+
+
+}
+
+void NCL::CSC8503::TutorialGame::ChangeFocusDistance()
+{
+	float scale = 10;
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::T)) {
+		world->GetMainCamera()->focusDistance= world->GetMainCamera()->focusDistance+ scale;
+	
+	}
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::G)) {
+		world->GetMainCamera()->focusDistance = world->GetMainCamera()->focusDistance - scale;
+
+	}
+
 
 
 }

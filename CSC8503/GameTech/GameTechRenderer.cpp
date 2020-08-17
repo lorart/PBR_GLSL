@@ -342,6 +342,9 @@ void GameTechRenderer::RenderCamera() {
 		Matrix4 fullShadowMat = shadowMatrix * modelMatrix;
 		glUniformMatrix4fv(shadowLocation, 1, false, (float*)&fullShadowMat);
 
+		shader->setFloat("cameraFocusDistance",gameWorld.GetMainCamera()->focusDistance);
+		shader->setFloat("lens", gameWorld.GetMainCamera()->getLens());
+
 		//TODO:
 		//glUniform4fv(colourLocation, 1, (float*)&i->GetColour());
 

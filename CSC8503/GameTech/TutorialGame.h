@@ -55,12 +55,15 @@ namespace NCL {
 			//void DebugObjectMovement();
 			void LockedObjectMovement();
 			void LockedCameraMovement();
+
 			void ChangeShader();
 			void ChangeModels();
 			void ChangeCameraFOVs();
 			void ChangePossProcess();
 			void ChangeMsaa();
 			void ChangeDOF();
+			void ChangeFocusDistance();
+
 			bool isShowSphereTest;
 			bool isShowCamreaPos;
 			

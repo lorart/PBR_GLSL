@@ -26,6 +26,8 @@ namespace NCL {
 
 			lens = 35;
 
+			this->focusDistance = 1000;
+
 			camType		= CameraType::Perspective;
 			this->nearDistance = 10;
 			this->farDistance = 10;
@@ -48,6 +50,8 @@ namespace NCL {
 			this->lens = 35;
 			this->alphaX = 0.02;
 			this->alphaY = 0.075;
+
+			this->focusDistance = 1000;
 		}
 
 		~Camera(void) {};
@@ -118,7 +122,8 @@ namespace NCL {
 	public:
 		int nearDistance;
 		int farDistance;
-		float alphaX,alphaY;
+		float alphaX, alphaY;
+		float focusDistance;
 	
 	protected:
 		CameraType camType;

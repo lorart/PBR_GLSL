@@ -189,7 +189,7 @@ float NdotL=max(dot(N,L),0.0);
    float blur = 0;
 
    float Coc=0.029;//Circle of confusion 35mm  0.029
-   float lens_aperture=1.4;
+   float lens_aperture=lens/1.8;
  
     //float near_distance = 10.0; // 近平面的模糊衰减范围
     //float far_distance = 10.0; // 远平面的模糊衰减范围
@@ -200,8 +200,12 @@ float NdotL=max(dot(N,L),0.0);
     float far_distance=(lens_aperture*Coc*cameraFocusDistance*cameraFocusDistance)/
                         (lens*lens-lens_aperture*Coc*cameraFocusDistance);                    
 
-    float near_plane = -20.0; // 近平面
-    float far_plane = -25.0; // 远平面
+   // float near_plane = -20.0; // 近平面
+   // float far_plane = -25.0; // 远平面
+
+     float near_plane = -30.0; // 近平面
+    float far_plane =-1000.0; // 远平面
+ 
  
     // 根据深度计算模糊因子
     if(IN.ViewDepth <= near_plane && IN.ViewDepth >= far_plane)

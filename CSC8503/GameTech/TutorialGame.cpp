@@ -403,6 +403,23 @@ void NCL::CSC8503::TutorialGame::ChangeFocusDistance()
 
 
 }
+//
+//
+//void NCL::CSC8503::TutorialGame::y()
+//{
+//	float scale = 10;
+//	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::T)) {
+//		world->GetMainCamera()->focusDistance = world->GetMainCamera()->focusDistance + scale;
+//
+//	}
+//	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::G)) {
+//		world->GetMainCamera()->focusDistance = world->GetMainCamera()->focusDistance - scale;
+//
+//	}
+//
+//
+//
+//}
 
 void TutorialGame::ChangeDOF()
 {
@@ -452,7 +469,7 @@ void TutorialGame::MoveSelectedObject() {
 
 void TutorialGame::InitCamera() {
 	world->GetMainCamera()->SetNearPlane(30.0f);
-	world->GetMainCamera()->SetFarPlane(5000.0f);
+	world->GetMainCamera()->SetFarPlane(1000.0f);
 	world->GetMainCamera()->SetPitch(-15.0f);
 	world->GetMainCamera()->SetYaw(315.0f);
 	world->GetMainCamera()->SetPosition(Vector3(-60, 40, 60));

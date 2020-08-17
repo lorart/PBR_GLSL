@@ -63,6 +63,7 @@ namespace NCL {
 			void ChangeMsaa();
 			void ChangeDOF();
 			void ChangeFocusDistance();
+			void ChangeLensAperture();
 
 			bool isShowSphereTest;
 			bool isShowCamreaPos;

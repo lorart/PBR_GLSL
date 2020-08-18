@@ -189,7 +189,7 @@ float NdotL=max(dot(N,L),0.0);
    float blur = 0;
     float lens_m=lens*0.001;
 	float Coc = 0.029;//Circle of confusion 35mm  0.029
-	float N1 = 1.8;
+	float N1 = 64;
 	float lens_aperture = lens / N1;
 
 	float CFD = cameraFocusDistance  + 0.001;

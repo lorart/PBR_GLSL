@@ -141,11 +141,14 @@ void TutorialGame::UpdateKeys() {
 	LightMovement();
 	ChangeShader();
 	ChangeModels();
-	ChangePossProcess();
+	ChangeCameraType();
 	ChangeMsaa();
 	ChangeCameraFOVs();
 	ChangeDOF();
 	ChangeFocusDistance();
+
+	//show debug;
+	ShowDebugDOV();
 	
 }
 
@@ -313,12 +316,22 @@ void TutorialGame::ChangeModels()
 	
 }
 
-void TutorialGame::ChangePossProcess()
+void TutorialGame::ChangeCameraType()
 {
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::R)) {
 		//std::cout << "***R pressed " << std::endl;
 		renderer->isUsedCamPos = !renderer->isUsedCamPos;
+		if (!renderer->isUsedCamPos)
+		{
+			renderer->isUsedDov = false;
+
+		}
+		else {
+			renderer->isUsedDov = true;
+
+		}
+		
 	}
 		
 }
@@ -390,7 +403,7 @@ void NCL::CSC8503::TutorialGame::ChangeMsaa()
 
 void NCL::CSC8503::TutorialGame::ChangeFocusDistance()
 {
-	float scale = 0.5;
+	float scale = 0.1;
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::T)) {
 		world->GetMainCamera()->focusDistance= world->GetMainCamera()->focusDistance+ scale;
 	
@@ -407,6 +420,45 @@ void NCL::CSC8503::TutorialGame::ChangeFocusDistance()
 
 
 }
+
+void TutorialGame::ShowDebugDOV()
+{
+	float lens = world->GetMainCamera()->getLens()*0.001;
+	float cameraFocusDistance = world->GetMainCamera()->focusDistance;
+	float Coc = 0.029;//Circle of confusion 35mm  0.029
+	float lens_aperture = lens / 1.8;
+
+	float CFD = cameraFocusDistance  + 0.001;
+	float near_Fplane = (lens_aperture * Coc * CFD * CFD) /
+		(lens * lens + lens_aperture * Coc * CFD);
+
+	float far_Fplane = (lens_aperture * Coc * CFD * CFD) /
+		(lens * lens - lens_aperture * Coc * CFD);
+
+	near_Fplane = -cameraFocusDistance + near_Fplane;//-z
+	far_Fplane = -cameraFocusDistance - far_Fplane;//-z
+
+
+	float near_distance = 0.7 * (0 - near_Fplane); // 
+	float far_distance = 0.7 * (0 - far_Fplane); //
+
+	drawDebugString("DebugDOV:",
+		 Vector2(600,600), renderer->isUsedCamPos); 
+
+	drawDebugString("near_Fplane:" + std::to_string(near_Fplane),
+		Vector2(600, 580), renderer->isUsedCamPos); ;
+	drawDebugString("far_Fplane:" + std::to_string(far_Fplane),
+		Vector2(600, 560), renderer->isUsedCamPos); ;
+
+
+	drawDebugString("near_distance:"+ std::to_string(near_distance),
+		Vector2(600, 540), renderer->isUsedCamPos); ;
+	drawDebugString("far_distance:" + std::to_string(far_distance),
+		Vector2(600, 520), renderer->isUsedCamPos); ;
+
+
+}
+
 //
 //
 //void NCL::CSC8503::TutorialGame::y()
@@ -427,7 +479,7 @@ void NCL::CSC8503::TutorialGame::ChangeFocusDistance()
 
 void TutorialGame::ChangeDOF()
 {
-	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::U)) {
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::U)&& renderer->isUsedPBR) {
 		//std::cout << "***R pressed " << std::endl;
 		renderer->isUsedDov = !renderer->isUsedDov;
 
@@ -477,7 +529,7 @@ void TutorialGame::InitCamera() {
 	world->GetMainCamera()->SetPitch(-15.0f);
 	world->GetMainCamera()->SetYaw(315.0f);
 	world->GetMainCamera()->SetPosition(Vector3(-60, 40, 60));
-	world->GetMainCamera()->focusDistance=30;
+	world->GetMainCamera()->focusDistance=1;
 	lockedObject = nullptr;
 }
 

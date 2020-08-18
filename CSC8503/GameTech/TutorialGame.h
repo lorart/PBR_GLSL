@@ -59,11 +59,13 @@ namespace NCL {
 			void ChangeShader();
 			void ChangeModels();
 			void ChangeCameraFOVs();
-			void ChangePossProcess();
+			void ChangeCameraType();
 			void ChangeMsaa();
 			void ChangeDOF();
 			void ChangeFocusDistance();
 			void ChangeLensAperture();
+
+			void ShowDebugDOV();
 
 			bool isShowSphereTest;
 			bool isShowCamreaPos;

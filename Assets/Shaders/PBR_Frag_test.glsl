@@ -187,25 +187,23 @@ float NdotL=max(dot(N,L),0.0);
 
 //camera projection
    float blur = 0;
+    float lens_m=lens*0.001;
+	float Coc = 0.029;//Circle of confusion 35mm  0.029
+	float lens_aperture = lens_m / 1.8;
 
-   float Coc=0.029;//Circle of confusion 35mm  0.029
-   float lens_aperture=lens/1.8;
+	float CFD = cameraFocusDistance  + 0.001;
+	float near_Fplane = (lens_aperture * Coc * CFD * CFD) /
+		(lens_m * lens_m + lens_aperture * Coc * CFD);
 
-    float CFD=cameraFocusDistance*100+0.001;
-    float near_Fplane=(lens_aperture*Coc*CFD*CFD)/
-                        (lens*lens+lens_aperture*Coc*CFD);
+	float far_Fplane = (lens_aperture * Coc * CFD * CFD) /
+		(lens_m * lens_m - lens_aperture * Coc * CFD);
 
-    float far_Fplane=(lens_aperture*Coc*CFD*CFD)/
-                        (lens*lens-lens_aperture*Coc*CFD); 
+	near_Fplane = -cameraFocusDistance + near_Fplane;//-z
+	far_Fplane = -cameraFocusDistance - far_Fplane;//-z
 
-    near_Fplane= -cameraFocusDistance+near_Fplane;//-z
-    far_Fplane= -cameraFocusDistance-far_Fplane;//-z
 
-     
-    float near_distance = 0.7*(0-near_Fplane); // 近平面的模糊衰减范围
-    float far_distance = 0.7*(0-far_Fplane); // 远平面的模糊衰减范围
-
-                        
+	float near_distance = 0.7 * (0 - near_Fplane); // 
+	float far_distance = 0.7 * (0 - far_Fplane); //
 
  
  

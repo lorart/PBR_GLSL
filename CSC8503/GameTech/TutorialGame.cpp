@@ -390,13 +390,17 @@ void NCL::CSC8503::TutorialGame::ChangeMsaa()
 
 void NCL::CSC8503::TutorialGame::ChangeFocusDistance()
 {
-	float scale = 10;
+	float scale = 0.5;
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::T)) {
 		world->GetMainCamera()->focusDistance= world->GetMainCamera()->focusDistance+ scale;
 	
 	}
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::G)) {
-		world->GetMainCamera()->focusDistance = world->GetMainCamera()->focusDistance - scale;
+		if (world->GetMainCamera()->focusDistance>= scale) {
+			world->GetMainCamera()->focusDistance = world->GetMainCamera()->focusDistance - scale;
+
+		}
+
 
 	}
 
@@ -473,6 +477,7 @@ void TutorialGame::InitCamera() {
 	world->GetMainCamera()->SetPitch(-15.0f);
 	world->GetMainCamera()->SetYaw(315.0f);
 	world->GetMainCamera()->SetPosition(Vector3(-60, 40, 60));
+	world->GetMainCamera()->focusDistance=30;
 	lockedObject = nullptr;
 }
 

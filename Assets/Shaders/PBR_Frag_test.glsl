@@ -98,6 +98,19 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
 {
     return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
 }
+
+vec3 fresnelCookTorrance( vec3 V,vec3 H, vec3 F0){
+    vec3 m=(1+sqrt(F0))/(1-sqrt(F0));
+    float c=dot(H, V);
+    vec3 g=sqrt(m*m+c*c-1);
+    vec3 GPC=g+c;
+    vec3 GMC=g-c;
+    vec3 F1=0.5*(GMC/GPC)*(GMC/GPC);
+      vec3 F2=(GPC*c-1)/(GMC*c+1);
+      F2=1+F2*F2;
+      return F1*F2;
+      }
+
 // ----------------------------------------------------------------------------
 void main()
 {		
@@ -132,10 +145,15 @@ float NdotL=max(dot(N,L),0.0);
       //  float attenuation = 1.0 / (distance * distance);
       //  vec3 radiance = lightColour.rgb * attenuation;
 
+
+
         // Cook-Torrance BRDF
         float NDF = DistributionGGX(N, H, roughnessValue);   
         float G   = GeometrySmith(N, V, L, roughnessValue);      
-        vec3 F    = fresnelSchlick(clamp(dot(H, V), 0.0, 1.0), F0);
+        //vec3 F    = fresnelSchlick(clamp(dot(H, V), 0.0, 1.0), F0);
+         vec3 F    =fresnelCookTorrance(  V, H,  F0);
+
+
            
         vec3 nominator    = NDF * G * F; 
         float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0);
@@ -179,12 +197,11 @@ float NdotL=max(dot(N,L),0.0);
     // gamma correct
     color = pow(color, vec3(1.0/2.2)); 
 
-   // fragColor = vec4(color, 1.0);
-  // fragColor.rgb=nominator;
+   
    fragColor.rgb=color  ;
- //  fragColor.rgb=ambient;
+  // fragColor.rgb=F;
 
-
+/*************************************************/
 //camera projection
    float blur = 0;
     float lens_m=lens*0.001;

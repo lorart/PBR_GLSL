@@ -423,27 +423,34 @@ void NCL::CSC8503::TutorialGame::ChangeFocusDistance()
 
 void TutorialGame::ShowDebugDOV()
 {
-	float lens = world->GetMainCamera()->getLens()*0.001;
+	float lens = world->GetMainCamera()->getLens();
+	float  lens_m = world->GetMainCamera()->getLens()*0.001;
 	float cameraFocusDistance = world->GetMainCamera()->focusDistance;
 	float Coc = 0.029;//Circle of confusion 35mm  0.029
-	float lens_aperture = lens / 1.8;
+	float N = 1.8;
+	float lens_aperture = lens / N;
 
 	float CFD = cameraFocusDistance  + 0.001;
-	float near_Fplane = (lens_aperture * Coc * CFD * CFD) /
-		(lens * lens + lens_aperture * Coc * CFD);
 
-	float far_Fplane = (lens_aperture * Coc * CFD * CFD) /
-		(lens * lens - lens_aperture * Coc * CFD);
+	
+	float H = (lens * lens / (N * Coc)+ lens)*0.001;
+	//float H = 6.25;
 
-	near_Fplane = -cameraFocusDistance + near_Fplane;//-z
-	far_Fplane = -cameraFocusDistance - far_Fplane;//-z
+
+	float near_Fplane = (H * CFD) / (H + CFD - lens_m);
+
+	float far_Fplane = (H * CFD) / (H -CFD - lens_m);
 
 
 	float near_distance = 0.7 * (0 - near_Fplane); // 
 	float far_distance = 0.7 * (0 - far_Fplane); //
+	
 
 	drawDebugString("DebugDOV:",
-		 Vector2(600,600), renderer->isUsedCamPos); 
+		 Vector2(600,620), renderer->isUsedCamPos); 
+
+	drawDebugString("H:" + std::to_string(H),
+		Vector2(600, 600), renderer->isUsedCamPos);
 
 	drawDebugString("near_Fplane:" + std::to_string(near_Fplane),
 		Vector2(600, 580), renderer->isUsedCamPos); ;

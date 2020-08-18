@@ -189,22 +189,24 @@ float NdotL=max(dot(N,L),0.0);
    float blur = 0;
     float lens_m=lens*0.001;
 	float Coc = 0.029;//Circle of confusion 35mm  0.029
-	float lens_aperture = lens_m / 1.8;
+	float N1 = 1.8;
+	float lens_aperture = lens / N1;
 
 	float CFD = cameraFocusDistance  + 0.001;
-	float near_Fplane = (lens_aperture * Coc * CFD * CFD) /
-		(lens_m * lens_m + lens_aperture * Coc * CFD);
 
-	float far_Fplane = (lens_aperture * Coc * CFD * CFD) /
-		(lens_m * lens_m - lens_aperture * Coc * CFD);
+	
+	float HDis = (lens * lens / (N1 * Coc)+ lens)*0.001;
+	//float H = 6.25;
 
-	near_Fplane = -cameraFocusDistance + near_Fplane;//-z
-	far_Fplane = -cameraFocusDistance - far_Fplane;//-z
+
+	float near_Fplane = (HDis * CFD) / (HDis + CFD - lens_m);
+
+	float far_Fplane = (HDis * CFD) / (HDis -CFD - lens_m);
 
 
 	float near_distance = 0.7 * (0 - near_Fplane); // 
 	float far_distance = 0.7 * (0 - far_Fplane); //
-
+	
  
  
     // 根据深度计算模糊因子

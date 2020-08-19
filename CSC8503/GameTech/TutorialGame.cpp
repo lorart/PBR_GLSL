@@ -617,7 +617,7 @@ void NCL::CSC8503::TutorialGame::testShaderBySpheres()
 
 	Vector3 clolor = Vector3(0, 0, 1);
 	//for (int depth = 0; depth < 2; depth++) {
-		for (int hight = 0; hight < column; hight++)
+		for (int hight = 0; hight <column; hight++)
 		{
 			tempValue = 0;
 

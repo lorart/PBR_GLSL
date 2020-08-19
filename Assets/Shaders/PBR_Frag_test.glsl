@@ -150,8 +150,8 @@ float NdotL=max(dot(N,L),0.0);
         // Cook-Torrance BRDF
         float NDF = DistributionGGX(N, H, roughnessValue);   
         float G   = GeometrySmith(N, V, L, roughnessValue);      
-        //vec3 F    = fresnelSchlick(clamp(dot(H, V), 0.0, 1.0), F0);
-         vec3 F    =fresnelCookTorrance(  V, H,  F0);
+        vec3 F    = fresnelSchlick(clamp(dot(H, V), 0.0, 1.0), F0);
+        // vec3 F    =fresnelCookTorrance(  V, H,  F0);
 
 
            
@@ -186,7 +186,7 @@ float NdotL=max(dot(N,L),0.0);
     vec2 brdf  = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughnessValue)).rg;//test
     vec3 specular1 = prefilteredColor * (F * brdf.x + brdf.y);//test
 
-    //vec3 ambient = (kD * diffuse + specular) * ao;
+    //vec3 ambient = (kD * diffuse + specular)*ao ;
     vec3 ambient = (kD * diffuse + specular1) ;
     vec3 color = ambient + Lo;
   
@@ -198,7 +198,7 @@ float NdotL=max(dot(N,L),0.0);
     color = pow(color, vec3(1.0/2.2)); 
 
    
-   fragColor.rgb=specular1;
+   fragColor.rgb=color;
   // fragColor.rgb=F;
 
 /*************************************************/

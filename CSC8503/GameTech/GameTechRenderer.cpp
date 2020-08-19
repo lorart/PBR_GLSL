@@ -259,7 +259,7 @@ void GameTechRenderer::RenderCamera() {
 					glBindTexture(GL_TEXTURE_CUBE_MAP, HdrEnv->prefilterMap->GetObjectID());
 					shader->setInt("prefilterMap", 6);
 
-					BindTextureToShader(HdrEnv->brdfLutTex_Load, "brdfLUT", 7);
+					BindTextureToShader(HdrEnv->brdfLutTex, "brdfLUT", 7);
 				}
 
 
@@ -385,7 +385,7 @@ void NCL::CSC8503::GameTechRenderer::setupHDR(OGLHdr* hdrEnv)
 	RenderHDRtoCubemap();
 	RenderCubemaptoIrradianceMap();
 	RenderPerFilterMap();
-	//RenderBrdfLutMap();
+	RenderBrdfLutMap();
 
 	//todo:delete
 	ClearHDRBuffers();

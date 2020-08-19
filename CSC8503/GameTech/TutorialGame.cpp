@@ -611,21 +611,25 @@ void NCL::CSC8503::TutorialGame::testShaderBySpheres()
 {
 	float tempValue = 0;
 	int length=15;
+
+	int column=5;
+	int row = 6;
+
 	Vector3 clolor = Vector3(0, 0, 1);
 	//for (int depth = 0; depth < 2; depth++) {
-		for (int hight = 0; hight < 4; hight++)
+		for (int hight = 0; hight < column; hight++)
 		{
 			tempValue = 0;
 
 
-			for (int wide = 0; wide <= 5; wide++)
+			for (int wide = 0; wide <row; wide++)
 			{
 				sphere = new Model(Assets::MESHDIR + "sphere" + ".obj", 0);
 				testShaderModelVector.push_back(sphere);
-				tempValue = wide * (1.0 / 5.0);
+				tempValue = wide * (1.0 / row);
 				senceSphere = AddModelToWorld(sphere, Vector3(-hight * length, wide * length, 1), Vector3(5, 5, 5), IsUsePBRshader);
 
-				sphere->meshes[0]->material->metallicValue = hight * (1.0 / 5.0);
+				sphere->meshes[0]->material->metallicValue = hight * (1.0 / column);
 
 				sphere->meshes[0]->material->roughnessValue = tempValue;
 				//std::cout << "  hight=" << hight << "  wide=" << wide << "  tempValue=" << tempValue << "  wide* 1 /5=" << wide * 1 / 5 << std::endl;

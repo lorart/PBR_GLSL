@@ -285,9 +285,9 @@ void GameTechRenderer::RenderCamera() {
 			auto tempMaterial = (*i).GetOGLMaterial();
 			if ((*i).GetIsPBR()) {
 				//albedoValueLocation = glGetUniformLocation(shader->GetProgramID(), "albedoValue");
-				metallicValueLocation = glGetUniformLocation(shader->GetProgramID(), "metallicValue");
-				roughnessValueLocation = glGetUniformLocation(shader->GetProgramID(), "roughnessValue");
-				aoValueLocation = glGetUniformLocation(shader->GetProgramID(), "aoValue");
+				metallicValueLocation = glGetUniformLocation(shader->GetProgramID(), "metallic");
+				roughnessValueLocation = glGetUniformLocation(shader->GetProgramID(), "roughness");
+				aoValueLocation = glGetUniformLocation(shader->GetProgramID(), "ao");
 
 				//glUniform3fv(albedoValueLocation, 1, (float*)&(tempMaterial->albedoValue));
 				glUniform1f(metallicValueLocation, tempMaterial->metallicValue);
@@ -297,7 +297,7 @@ void GameTechRenderer::RenderCamera() {
 				glUniform1f(aoValueLocation, tempMaterial->aoValue);
 			}
 
-			albedoValueLocation = glGetUniformLocation(shader->GetProgramID(), "albedoValue");
+			albedoValueLocation = glGetUniformLocation(shader->GetProgramID(), "albedo");
 			glUniform3fv(albedoValueLocation, 1, (float*)&(tempMaterial->albedoValue));
 
 			projLocation = glGetUniformLocation(shader->GetProgramID(), "projMatrix");

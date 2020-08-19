@@ -68,8 +68,13 @@ NCL::Rendering::OGLHdr::OGLHdr(std::string& HdrFilename)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	generate_bind_Fbo(captureFBO_lut);
-	generate_bind_Rbo(captureRBO_lut);
+	//generate_bind_Fbo(captureFBO_lut);
+	//generate_bind_Rbo(captureRBO_lut);
+
+	glGenFramebuffers(1, &captureFBO_lut);
+	glBindFramebuffer(GL_FRAMEBUFFER, captureFBO_lut);
+	glGenRenderbuffers(1, &captureRBO_lut);
+	glBindRenderbuffer(GL_RENDERBUFFER, captureRBO_lut);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, brdfLutTexSize, brdfLutTexSize);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, brdfLutTex->GetObjectID(), 0);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO_lut);

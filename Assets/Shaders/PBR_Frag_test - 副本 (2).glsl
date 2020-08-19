@@ -19,10 +19,10 @@ uniform float	lens;
 
 uniform bool hasTexture;
 
-uniform vec3 albedo;
-uniform float metallic;
-uniform float roughness;
-uniform float ao;
+uniform vec3 albedoValue;
+uniform float metallicValue;
+uniform float roughnessValue;
+uniform float aoValue;
 
 
 uniform sampler2D albedo_map;
@@ -115,10 +115,10 @@ vec3 fresnelCookTorrance( vec3 V,vec3 H, vec3 F0){
 void main()
 {		
 vec3 N=caculateNormal();
-vec3 albedoValue=texture(albedo_map, IN.texCoord).rgb+albedo;
-float metallicValue=texture(metallic_map,IN.texCoord).r+metallic;
-float roughnessValue=texture(roughness_map,IN.texCoord).r+roughness;
-float aoValue=texture(ao_map,IN.texCoord).r+ao;
+vec3 albedoValue=texture(albedo_map, IN.texCoord).rgb+albedoValue;
+float metallicValue=texture(metallic_map,IN.texCoord).r+metallicValue;
+float roughnessValue=texture(roughness_map,IN.texCoord).r+roughnessValue;
+float aoValue=texture(ao_map,IN.texCoord).r+aoValue;
 
 vec3 L = normalize(lightPos - IN.worldPos);
 vec3 V = normalize(cameraPos - IN.worldPos);
@@ -183,8 +183,8 @@ float NdotL=max(dot(N,L),0.0);
     const float MAX_REFLECTION_LOD = 4.0;
      vec3 R = reflect(-V, N); 
     vec3 prefilteredColor = textureLod(prefilterMap, R,  roughnessValue * MAX_REFLECTION_LOD).rgb;    
-    vec2 brdf  = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughnessValue)).rg;//test
-    vec3 specular1 = prefilteredColor * (F * brdf.x + brdf.y);//test
+    vec2 brdf  = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughnessValue)).rg;
+    vec3 specular1 = prefilteredColor * (F * brdf.x + brdf.y);
 
     //vec3 ambient = (kD * diffuse + specular) * ao;
     vec3 ambient = (kD * diffuse + specular1) ;
@@ -198,7 +198,7 @@ float NdotL=max(dot(N,L),0.0);
     color = pow(color, vec3(1.0/2.2)); 
 
    
-   fragColor.rgb=specular1;
+   fragColor.rgb=color  ;
   // fragColor.rgb=F;
 
 /*************************************************/

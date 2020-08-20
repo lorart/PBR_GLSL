@@ -9,26 +9,38 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "OGLFbo.h"
 #include "OGLRenderer.h"
-
+#include "OGLShader.h"
 namespace NCL {
 	namespace Rendering {
+		enum DefferTex
+		{
+			VERTEX_POSITION_TEX,
+			DIFFUSE_TEX,
+			NORMAL_DEPTH_TEX,
+			LIGHT_TEX,
+			MAX_TEX
+
+		}; 
+
+		
 		class OGLDeferRenderer
 		{
 		public:
-			OGLDeferRenderer();
+			OGLDeferRenderer(int currentWidth, int currentHeight);
 			~OGLDeferRenderer();
 
-			OGLTexture* vertexPositionTex;
-			OGLTexture* diffuseTex;
-			OGLTexture* normalTex;
-			OGLTexture* depthTex;
+			/*	OGLTexture* vertexPositionTex;
+				OGLTexture* diffuseTex;
+				OGLTexture* normalTex;
+				OGLTexture* depthTex;*/
+
+			OGLTexture* deferTexArry[MAX_TEX];
 
 			GLuint deferRenderFBO;
-
-
-			OGLTexture* lightTex;
 			GLuint lightFbo;
+			GLuint deferRenderRBO;
 
+			OGLShader* GbufferShader;
 
 
 		

@@ -155,6 +155,7 @@
     <ClInclude Include="OGLMesh.h" />
     <ClInclude Include="OGLRenderer.h" />
     <ClInclude Include="OGLShader.h" />
+    <ClInclude Include="OGLShadowMap.h" />
     <ClInclude Include="OGLTexture.h" />
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +170,7 @@
     <ClCompile Include="OGLMesh.cpp" />
     <ClCompile Include="OGLRenderer.cpp" />
     <ClCompile Include="OGLShader.cpp" />
+    <ClCompile Include="OGLShadowMap.cpp" />
     <ClCompile Include="OGLTexture.cpp" />
   </ItemGroup>
   <ItemGroup>

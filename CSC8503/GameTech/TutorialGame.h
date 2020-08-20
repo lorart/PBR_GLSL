@@ -64,6 +64,7 @@ namespace NCL {
 			void ChangeDOF();
 			void ChangeFocusDistance();
 			void ChangeLensAperture();
+			void ChangeRenderType();
 
 			void ShowDebugDOV();
 

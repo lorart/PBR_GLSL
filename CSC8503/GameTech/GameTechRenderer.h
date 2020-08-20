@@ -7,6 +7,8 @@
 #include "../../Plugins/OpenGLRendering/OGLLight.h"
 #include "../../Plugins/OpenGLRendering/OGLHdr.h"
 #include "../../Plugins/OpenGLRendering/OGLPosCamera.h"
+#include "../../Plugins/OpenGLRendering/OGLDeferRenderer.h"
+#include "../../Plugins/OpenGLRendering/OGLShadowMap.h"
 
 
 namespace NCL {
@@ -26,13 +28,16 @@ namespace NCL {
 			bool isUsedCamPos;
 			bool isUsedDov;
 			bool isUsedMSAA;
+			bool isUsedDeferRender;
 			//	OGLShader* CompareShader;
 			Camera* gameWorldCamera;
 
 			OGLTexture* tempTex;
 		protected:
 			void RenderFrame()	override;
+
 			void RendercameraFrame_forward();
+			void RendercameraFrame_deferred();
 
 			OGLShader* defaultShader;
 
@@ -41,10 +46,17 @@ namespace NCL {
 			void BuildObjectList();
 			void SortObjectList();
 			void RenderShadowMap();
+
 			void RenderCamera();
 			void RenderCamera_forward();
+			void RenderCamera_defered();
+
+
 			void CaculateViewPorjMat();
+
 			void RenderDOVCamera_forward();
+			void RenderDOVCamera_deferred();
+
 			void caculateDovCamera();
 
 			void drawQuad(OGLShader* shader);
@@ -61,10 +73,7 @@ namespace NCL {
 			vector<const RenderObject*> activeObjects;
 
 
-			OGLShader* shadowShader;
-			GLuint		shadowFBO;
-			Matrix4     shadowMatrix;
-			OGLTexture* shadowTex;
+			
 
 			OGLPosCamera* posCamera;
 
@@ -88,6 +97,10 @@ namespace NCL {
 			Matrix4 viewMatrix;
 			Matrix4 projMatrix;
 
+			OGLDeferRenderer* deferRenderer;
+
+			OGLShadowMap* shadowMap;
+			
 
 
 		};

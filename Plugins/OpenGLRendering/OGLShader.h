@@ -83,6 +83,10 @@ namespace NCL {
 			{
 				glUniform3f(glGetUniformLocation(programID, name.c_str()), x, y, z);
 			}
+			void setVec3(const std::string& name, const Vector3 value) const
+			{
+				glUniform3fv(glGetUniformLocation(programID, name.c_str()), 1,(float*)&value);
+			}
 			// ------------------------------------------------------------------------
 			void setVec4(const std::string& name, const glm::vec4& value) const
 			{

@@ -17,71 +17,39 @@ Matrix4 biasMatrix = Matrix4::Translation(Vector3(0.5, 0.5, 0.5)) * Matrix4::Sca
 GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetWindow()), gameWorld(world) {
 #pragma region shadowmap
 	glEnable(GL_DEPTH_TEST);
-	//todo
-
-	//todo:check
-	shadowShader = new OGLShader("GameTechShadowVert.glsl", "GameTechShadowFrag.glsl");
-
-	/*glGenTextures(1, &shadowTex);
-	glBindTexture(GL_TEXTURE_2D, shadowTex);*/
-	shadowTex = new OGLTexture();
-	glBindTexture(GL_TEXTURE_2D, shadowTex->GetObjectID());
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
-		SHADOWSIZE, SHADOWSIZE, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	glGenFramebuffers(1, &shadowFBO);
-	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowTex->GetObjectID(), 0);
-	glDrawBuffer(GL_NONE);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-#pragma endregion
-
-#pragma region  camera
 
 
-
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-#pragma endregion
 
 	isUsedPBR = true;
 	isUsedCamPos = true;
 	isUsedMSAA = true;
 	isUsedDov= true;
+	isUsedDeferRender = true;
 
 	HdrEnv = nullptr;
 	float screenAspect = 0;
 	Matrix4 viewMatrix;
 	Matrix4 projMatrix;
-
-
 	cubeTexture = 0;
-
 
 	gameWorldCamera = world.GetMainCamera();
 	posCamera = new OGLPosCamera(currentWidth, currentHeight, gameWorldCamera);
 	tempTex = (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
+	deferRenderer = new OGLDeferRenderer(currentWidth, currentHeight);
+	shadowMap = new OGLShadowMap(SHADOWSIZE);
 }
 
 GameTechRenderer::~GameTechRenderer() {
 
 	delete posCamera;
 	//	glDeleteTextures(1, &shadowTex);
-	delete shadowTex;
-	glDeleteFramebuffers(1, &shadowFBO);
+
 	//todo:check
 	delete HdrEnv;
-
-
+	delete deferRenderer;
+	
 	delete tempTex;
+	delete shadowMap;
 
 	for (auto& i : lightArry) {
 		delete i;
@@ -94,8 +62,17 @@ void GameTechRenderer::RenderFrame() {
 	glEnable(GL_CULL_FACE);
 	glClearColor(1, 1, 1, 1);
 
+	
+	if (isUsedDeferRender)
+	{
+		RenderDOVCamera_deferred();
+		
+	} 
+	else
+	{
+		RenderDOVCamera_forward();
+	}
 
-	RenderDOVCamera_forward();
 
 
 	glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
@@ -130,7 +107,7 @@ void GameTechRenderer::RenderShadowMap() {
 	glDepthFunc(GL_LESS);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, shadowMap->shadowFBO);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 	glViewport(0, 0, SHADOWSIZE, SHADOWSIZE);
@@ -141,8 +118,8 @@ void GameTechRenderer::RenderShadowMap() {
 	glEnable(GL_POLYGON_OFFSET_FILL);
 	glPolygonOffset(-1.5f, -2.0f);
 
-	BindShader(shadowShader);
-	int mvpLocation = glGetUniformLocation(shadowShader->GetProgramID(), "mvpMatrix");
+	BindShader(shadowMap->shadowShader);
+	int mvpLocation = glGetUniformLocation(shadowMap->shadowShader->GetProgramID(), "mvpMatrix");
 
 	//todo:check***********
 	Matrix4 shadowViewMatrix = Matrix4::BuildViewMatrix(lightArry[0]->lightPosition, Vector3(0, 0, 0), Vector3(0, 1, 0));
@@ -151,7 +128,7 @@ void GameTechRenderer::RenderShadowMap() {
 
 	Matrix4 mvMatrix = shadowProjMatrix * shadowViewMatrix;
 
-	shadowMatrix = biasMatrix * mvMatrix; //we'll use this one later on
+	shadowMap->shadowMatrix = biasMatrix * mvMatrix; //we'll use this one later on
 
 	for (const auto& i : activeObjects) {
 		Matrix4 modelMatrix = (*i).GetTransform()->GetWorldMatrix();
@@ -173,6 +150,55 @@ void GameTechRenderer::RenderShadowMap() {
 
 
 	glCullFace(GL_BACK);
+}
+
+void GameTechRenderer::RenderCamera_defered()
+{
+	OGLShader* activeShader = nullptr;
+	int projLocation = 0;
+	int viewLocation = 0;
+	int modelLocation = 0;
+
+	int cameraLocation = 0;
+
+	//for (const auto& i : activeObjects) {
+	for (size_t l = 0; l < activeObjects.size(); l++)
+	{
+		OGLShader* shader;
+		const auto i = activeObjects[l];
+		shader =deferRenderer->GbufferShader;
+
+		BindShader(shader);
+		auto tempMaterial = (*i).GetOGLMaterial();
+		if (activeShader != shader) {
+			OGLTexture* tempAlbedo = (OGLTexture*)tempMaterial->pbrTexArry[TextureType::ALBEDO_MAP];
+			OGLTexture* tempNormal = (OGLTexture*)tempMaterial->pbrTexArry[TextureType::NORMAL_MAP];
+			BindTextureToShader(tempAlbedo, "albedo_map", 0);
+			BindTextureToShader(tempNormal, "normal_map", 1);
+
+			shader->setVec3("albedo", tempMaterial->albedoValue);
+		
+
+		}
+		
+		projLocation = glGetUniformLocation(shader->GetProgramID(), "projMatrix");
+		viewLocation = glGetUniformLocation(shader->GetProgramID(), "viewMatrix");
+		modelLocation = glGetUniformLocation(shader->GetProgramID(), "modelMatrix");
+	
+	
+
+		cameraLocation = glGetUniformLocation(shader->GetProgramID(), "cameraPos");
+		glUniform3fv(cameraLocation, 1, (float*)&gameWorld.GetMainCamera()->GetPosition());
+
+		glUniformMatrix4fv(projLocation, 1, false, (float*)&projMatrix);
+		glUniformMatrix4fv(viewLocation, 1, false, (float*)&viewMatrix);
+
+		BindMesh((*i).GetMesh());
+		DrawBoundMesh();
+	
+	}
+
+
 }
 
 
@@ -204,7 +230,7 @@ void GameTechRenderer::RenderCamera_forward() {
 
 	//TODO - PUT IN FUNCTION
 	glActiveTexture(GL_TEXTURE0 + 14);
-	glBindTexture(GL_TEXTURE_2D, shadowTex->GetObjectID());
+	glBindTexture(GL_TEXTURE_2D, shadowMap->shadowTex->GetObjectID());
 
 	//for (const auto& i : activeObjects) {
 	for (size_t l = 0; l < activeObjects.size(); l++)
@@ -339,7 +365,7 @@ void GameTechRenderer::RenderCamera_forward() {
 		Matrix4 modelMatrix = (*i).GetTransform()->GetWorldMatrix();
 		glUniformMatrix4fv(modelLocation, 1, false, (float*)&modelMatrix);
 
-		Matrix4 fullShadowMat = shadowMatrix * modelMatrix;
+		Matrix4 fullShadowMat = shadowMap->shadowMatrix * modelMatrix;
 		glUniformMatrix4fv(shadowLocation, 1, false, (float*)&fullShadowMat);
 
 		shader->setFloat("cameraFocusDistance",gameWorld.GetMainCamera()->focusDistance);
@@ -390,6 +416,25 @@ void NCL::CSC8503::GameTechRenderer::setupHDR(OGLHdr* hdrEnv)
 	//todo:delete
 	ClearHDRBuffers();
 }
+void GameTechRenderer::RendercameraFrame_deferred()
+{
+	BuildObjectList();
+	SortObjectList();
+	//RenderShadowMap();
+	//if (isUsedMSAA) {
+	//	glBindFramebuffer(GL_FRAMEBUFFER, posCamera->cameraMsaa_FBO);
+	//}
+	//else {
+	//	glBindFramebuffer(GL_FRAMEBUFFER, posCamera->cameraFBO);
+	//}
+
+
+
+	RenderCamera_defered();
+
+}
+
+
 
 void GameTechRenderer::RendercameraFrame_forward()
 {
@@ -544,6 +589,19 @@ void GameTechRenderer::caculateDovCamera()
 
 
 }
+void GameTechRenderer::RenderDOVCamera_deferred()
+{
+	glEnable(GL_DEPTH_TEST);
+	//glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glViewport(0, 0, currentWidth, currentHeight);
+
+	RendercameraFrame_deferred();
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glDisable(GL_DEPTH_TEST);
+}
+
 
 void GameTechRenderer::RenderDOVCamera_forward()
 {
@@ -667,10 +725,7 @@ void GameTechRenderer::RenderDOVCamera_forward()
 
 }
 
-void GameTechRenderer::RenderCamera()
-{
-	RenderCamera_forward();
-}
+
 
 void NCL::CSC8503::GameTechRenderer::CaculateViewPorjMat()
 {

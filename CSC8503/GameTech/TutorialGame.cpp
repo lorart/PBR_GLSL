@@ -146,7 +146,7 @@ void TutorialGame::UpdateKeys() {
 	ChangeCameraFOVs();
 	ChangeDOF();
 	ChangeFocusDistance();
-
+	ChangeRenderType();
 	//show debug;
 	ShowDebugDOV();
 	
@@ -229,7 +229,8 @@ void TutorialGame::DrawDebugInformation()
 	drawDebugString("Change Shader: B",					LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
 	drawDebugString("Change Mesh: F",					LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
 	drawDebugString("Anti-Aliasing: V",					LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
-	drawDebugString("DEPTH of View : U",				LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
+	drawDebugString("Depth of View : U",				LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
+	drawDebugString("Render Pipeline: N",				LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
 
 	/*left up*/
 	Vector2 LeftUpP = Vector2(20, 650);
@@ -418,6 +419,16 @@ void NCL::CSC8503::TutorialGame::ChangeFocusDistance()
 	}
 
 
+
+}
+
+void TutorialGame::ChangeRenderType()
+{
+
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::N)) {
+		renderer->isUsedDeferRender = !renderer->isUsedDeferRender;
+
+	}
 
 }
 

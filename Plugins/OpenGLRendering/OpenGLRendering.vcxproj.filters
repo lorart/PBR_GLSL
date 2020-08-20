@@ -54,6 +54,9 @@
     <ClInclude Include="OGLPosCamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="OGLDeferRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OGLRenderer.cpp">
@@ -87,6 +90,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OGLPosCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLDeferRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

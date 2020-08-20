@@ -145,6 +145,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Model.h" />
+    <ClInclude Include="OGLDeferRenderer.h" />
     <ClInclude Include="OGLPosCamera.h" />
     <ClInclude Include="OGLComputeShader.h" />
     <ClInclude Include="OGLFbo.h" />
@@ -159,6 +160,7 @@
   <ItemGroup>
     <ClCompile Include="glad.c" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="OGLDeferRenderer.cpp" />
     <ClCompile Include="OGLPosCamera.cpp" />
     <ClCompile Include="OGLComputeShader.cpp" />
     <ClCompile Include="OGLHdr.cpp" />

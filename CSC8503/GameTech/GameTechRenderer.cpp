@@ -95,7 +95,7 @@ void GameTechRenderer::RenderFrame() {
 	glClearColor(1, 1, 1, 1);
 
 
-	RenderDOVCamera();
+	RenderDOVCamera_forward();
 
 
 	glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
@@ -176,7 +176,7 @@ void GameTechRenderer::RenderShadowMap() {
 }
 
 
-void GameTechRenderer::RenderCamera() {
+void GameTechRenderer::RenderCamera_forward() {
 	//float screenAspect = (float)currentWidth / (float)currentHeight;
 	//Matrix4 viewMatrix = gameWorld.GetMainCamera()->BuildViewMatrix();
 	//Matrix4 projMatrix = gameWorld.GetMainCamera()->BuildProjectionMatrix(screenAspect);
@@ -391,7 +391,7 @@ void NCL::CSC8503::GameTechRenderer::setupHDR(OGLHdr* hdrEnv)
 	ClearHDRBuffers();
 }
 
-void GameTechRenderer::RendercameraFrame()
+void GameTechRenderer::RendercameraFrame_forward()
 {
 	BuildObjectList();
 	SortObjectList();
@@ -408,7 +408,7 @@ void GameTechRenderer::RendercameraFrame()
 	//RenderPerFilterMap();
 	//RenderBrdfLutMap();
 	
-	RenderCamera();
+	RenderCamera_forward();
 	
 
 
@@ -545,7 +545,7 @@ void GameTechRenderer::caculateDovCamera()
 
 }
 
-void GameTechRenderer::RenderDOVCamera()
+void GameTechRenderer::RenderDOVCamera_forward()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	if (isUsedMSAA) {
@@ -570,7 +570,7 @@ void GameTechRenderer::RenderDOVCamera()
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glViewport(0, 0, currentWidth, currentHeight);
 
-	RendercameraFrame();
+	RendercameraFrame_forward();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glDisable(GL_DEPTH_TEST);
@@ -666,6 +666,12 @@ void GameTechRenderer::RenderDOVCamera()
 
 
 }
+
+void GameTechRenderer::RenderCamera()
+{
+	RenderCamera_forward();
+}
+
 void NCL::CSC8503::GameTechRenderer::CaculateViewPorjMat()
 {
 	screenAspect = (float)currentWidth / (float)currentHeight;

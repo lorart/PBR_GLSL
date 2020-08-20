@@ -32,7 +32,7 @@ namespace NCL {
 			OGLTexture* tempTex;
 		protected:
 			void RenderFrame()	override;
-			void RendercameraFrame();
+			void RendercameraFrame_forward();
 
 			OGLShader* defaultShader;
 
@@ -42,8 +42,9 @@ namespace NCL {
 			void SortObjectList();
 			void RenderShadowMap();
 			void RenderCamera();
+			void RenderCamera_forward();
 			void CaculateViewPorjMat();
-			void RenderDOVCamera();
+			void RenderDOVCamera_forward();
 			void caculateDovCamera();
 
 			void drawQuad(OGLShader* shader);

@@ -107,6 +107,7 @@ namespace NCL {
 
 			
 			Model* testmodel = nullptr;
+			Model* rabbitmodel = nullptr;
 			Model* sphere = nullptr;
 			vector<Model*> testShaderModelVector;
 

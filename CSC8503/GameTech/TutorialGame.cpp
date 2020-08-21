@@ -51,6 +51,9 @@ void TutorialGame::InitialiseAssets() {
 	//loadFunc("cube.msh"	 , &cubeMesh);
 	string modelname = "apple";
 	testmodel = new Model(Assets::MESHDIR + modelname + ".obj", 0);
+	rabbitmodel = new Model(Assets::MESHDIR + "bunny" + ".obj", 0);
+
+
 
 	basicTex = (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
 	//basicShader = new OGLShader("PBR_Vert.glsl", "PBR_Frag.glsl");
@@ -81,6 +84,7 @@ TutorialGame::~TutorialGame()	{
 
 	
 	delete testmodel;
+	delete rabbitmodel;
 	for (auto& i:testShaderModelVector)
 	{
 		delete i;
@@ -303,6 +307,11 @@ void TutorialGame::ChangeModels()
 	//	std::cout << "***AddModelToWorld" << std::endl;
 		bool isPBR = true;
 		senceModel=	AddModelToWorld(testmodel, Vector3(0, 0, 0), Vector3(2, 2, 2), isPBR);
+		rabbitmodel->meshes[0]->material->albedoValue = Vector3(0.2, 0.2, 0.2);
+		rabbitmodel->meshes[0]->material->metallicValue = 0.9;
+		rabbitmodel->meshes[0]->material->roughnessValue =0.1;
+		auto temp = AddModelToWorld(rabbitmodel, Vector3(-40, 0, -40), Vector3(30, 30, 30), isPBR);
+		senceModel.insert(senceModel.end(),temp.begin(), temp.end());
 		for (auto& i :senceSphereArry)
 		{
 			for (auto& j : i) {
@@ -613,19 +622,21 @@ void NCL::CSC8503::TutorialGame::testShaderBySpheres()
 	int length=15;
 	Vector3 clolor = Vector3(0, 0, 1);
 	//for (int depth = 0; depth < 2; depth++) {
-		for (int hight = 0; hight < 4; hight++)
+	int hightNum = 4;
+	int wideNum = 5;
+		for (int hight = 0; hight <= hightNum; hight++)
 		{
 			tempValue = 0;
 
 
-			for (int wide = 0; wide <= 5; wide++)
+			for (int wide = 0; wide <= wideNum; wide++)
 			{
 				sphere = new Model(Assets::MESHDIR + "sphere" + ".obj", 0);
 				testShaderModelVector.push_back(sphere);
-				tempValue = wide * (1.0 / 5.0);
+				tempValue = wide * (1.0 / wideNum);
 				senceSphere = AddModelToWorld(sphere, Vector3(-hight * length, wide * length, 1), Vector3(5, 5, 5), IsUsePBRshader);
 
-				sphere->meshes[0]->material->metallicValue = hight * (1.0 / 5.0);
+				sphere->meshes[0]->material->metallicValue = hight * (1.0 / wideNum);
 
 				sphere->meshes[0]->material->roughnessValue = tempValue;
 				//std::cout << "  hight=" << hight << "  wide=" << wide << "  tempValue=" << tempValue << "  wide* 1 /5=" << wide * 1 / 5 << std::endl;

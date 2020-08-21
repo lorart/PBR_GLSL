@@ -98,6 +98,16 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
 {
     return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
 }
+
+float fresnelSchlick_1(float LdotH, float F0)
+{
+  	float dotLH5 = pow (1.0 - LdotH, 5.0);
+	float F = F0 + (1.0 - F0)*(dotLH5);
+    return F;
+}
+	
+
+
 // ----------------------------------------------------------------------------
 void main()
 {		
@@ -115,11 +125,12 @@ float NdotH=max(dot(N,H),0.0);
 float NdotV=max(dot(N,V),0.0);
 float HdotV=max(dot(H,V),0.0);
 float NdotL=max(dot(N,L),0.0);
-
+//float LdotH=max(dot(L,H),0.0);
+float LdotH=clamp(dot(L,H),0.0,1.0);
 
  
-    vec3 F0 = vec3(0.04); 
-    F0 = mix(F0, albedoValue, metallicValue);
+    float F0 =0.2; 
+   // F0 = mix(F0, metallicValue);
 
     vec3 Lo = vec3(0.0);
    // for(int i = 0; i < 4; ++i) 
@@ -135,20 +146,21 @@ float NdotL=max(dot(N,L),0.0);
         // Cook-Torrance BRDF
         float NDF = DistributionGGX(N, H, roughnessValue);   
         float G   = GeometrySmith(N, V, L, roughnessValue);      
-        vec3 F    = fresnelSchlick(clamp(dot(H, V), 0.0, 1.0), F0);
-           
-        vec3 nominator    = NDF * G * F; 
-      //  float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0);
-       // vec3 specular = nominator / max(denominator, 0.001); // prevent divide by zero for NdotV=0.0 or NdotL=0.0
-      vec3  specular=nominator;
+       // vec3 F    = fresnelSchlick(clamp(dot(H, V), 0.0, 1.0), F0);
+           float F    =  fresnelSchlick_1(LdotH,  F0);
+
+        float nominator    = NDF * G * F; 
+        float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0);
+        float specular = nominator / max(denominator, 0.001); // prevent divide by zero for NdotV=0.0 or NdotL=0.0
+        specular = nominator;
         
         
         // kS is equal to Fresnel
-         vec3 kS = F;
+         float kS = F;
         // for energy conservation, the diffuse and specular light can't
         // be above 1.0 (unless the surface emits light); to preserve this
         // relationship the diffuse component (kD) should equal 1.0 - kS.
-        vec3 kD = vec3(1.0) - kS;
+        float kD =1.0 - kS;
         // multiply kD by the inverse metalness such that only non-metals 
         // have diffuse lighting, or a linear blend if partly metal (pure metals
         // have no diffuse light).
@@ -179,10 +191,10 @@ float NdotL=max(dot(N,L),0.0);
     // gamma correct
     color = pow(color, vec3(1.0/2.2)); 
 
-   // fragColor = vec4(color, 1.0);
-  // fragColor.rgb=nominator;
-   fragColor.rgb=  color;
- //  fragColor.rgb=ambient;
+
+   fragColor.rgb=vec3(color);
+  // fragColor.rgb=color  ;
+
 
 
 //camera projection

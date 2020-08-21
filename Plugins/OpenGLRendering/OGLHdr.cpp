@@ -14,7 +14,7 @@ NCL::Rendering::OGLHdr::OGLHdr(std::string& HdrFilename)
 	cubeTex = (OGLTexture*)NCL::Rendering::OGLTexture::AllocateCubeTexture(cubeTexSize);
 	irradianceMap= (OGLTexture*)NCL::Rendering::OGLTexture::AllocateCubeTexture(cubeIrradianceTexSize);
 
-    prefilterMap= (OGLTexture*)NCL::Rendering::OGLTexture::AllocateCubeTexture(prefilterMapTexSize);
+    prefilterMap= (OGLTexture*)NCL::Rendering::OGLTexture::AllocateCubeTexture_Midmap(prefilterMapTexSize);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, prefilterMap->GetObjectID());
 	glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);

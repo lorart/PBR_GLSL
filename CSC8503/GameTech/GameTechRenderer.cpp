@@ -345,6 +345,17 @@ void GameTechRenderer::RenderCamera() {
 		shader->setFloat("cameraFocusDistance",gameWorld.GetMainCamera()->focusDistance);
 		shader->setFloat("lens", gameWorld.GetMainCamera()->getLens());
 
+		//******************************
+		//clear coat
+		/*
+		uniform int isUseClearcoat;
+		uniform float Clearcoat;
+		uniform float clearCoatPerceptualRoughness;*/
+		shader->setFloat("isUseClearcoat", 1);
+		shader->setFloat("clearCoat", 1);
+		shader->setFloat("clearCoatPerceptualRoughness", 0.5);
+
+
 		//TODO:
 		//glUniform4fv(colourLocation, 1, (float*)&i->GetColour());
 

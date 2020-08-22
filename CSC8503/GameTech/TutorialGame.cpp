@@ -58,8 +58,8 @@ void TutorialGame::InitialiseAssets() {
 	basicTex = (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
 	//basicShader = new OGLShader("PBR_Vert.glsl", "PBR_Frag.glsl");
 	basicVertName = "PBR_Vert.glsl";
-	//basicFragName = "PBR_Frag.glsl";
-	basicFragName = "PBR_Frag_test.glsl";
+	//basicFragName = "PBR_Frag_test.glsl";
+	basicFragName = "PBR_Frag_ClearCoat.glsl";
 	basicShader = new OGLShader(basicVertName, basicFragName);
 
 	CompareVertName = "Feng_Vert.glsl";

@@ -351,9 +351,9 @@ void GameTechRenderer::RenderCamera() {
 		uniform int isUseClearcoat;
 		uniform float Clearcoat;
 		uniform float clearCoatPerceptualRoughness;*/
-		shader->setFloat("isUseClearcoat", 1);
+		shader->setInt("isUseClearcoat", 1);
 		shader->setFloat("clearCoat", 1);
-		shader->setFloat("clearCoatPerceptualRoughness", 0.5);
+		shader->setFloat("clearCoatPerceptualRoughness", 0.1);
 
 
 		//TODO:

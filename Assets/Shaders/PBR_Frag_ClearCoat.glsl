@@ -181,10 +181,18 @@ float LdotH=max(dot(L,H),0.0);
         // add to outgoing radiance Lo
         Lo += (kD * albedoValue / PI + specular) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
  //   }   
-  
+
+//clearcoat
+    float  clearCoat_NoV= NdotV;
+    vec3 color ;
+if(isUseClearcoat !=0){
+    
+    float Fc = F_Schlick(0.04, 1.0, clearCoat_NoV) * clearCoat;
   
     vec3 irradiance = texture(irradianceMap, N).rgb;
     vec3 diffuse      = irradiance * albedoValue;
+    //clear coat
+    diffuse*=1.0 - Fc;
 
     const float MAX_REFLECTION_LOD = 4.0;
      vec3 R = reflect(-V, N); 
@@ -192,22 +200,48 @@ float LdotH=max(dot(L,H),0.0);
     vec2 brdf  = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughnessValue)).rg;
     vec3 specular1 = prefilteredColor * (F * brdf.x + brdf.y);
 
-    //vec3 ambient = (kD * diffuse + specular) * ao;
+    specular1 *=1.0 - Fc;
+        float clearCoatPerceptualRoughness1 = mix(0.089, 1.0, clearCoatPerceptualRoughness);
+    //  float  clearCoatPerceptualRoughness1 = clamp(clearCoatPerceptualRoughness, 0.089, 1.0);
+     vec3 prefilteredColor_c = textureLod(prefilterMap, R,  clearCoatPerceptualRoughness1 * MAX_REFLECTION_LOD).rgb; 
+    specular1 +=prefilteredColor_c* (F * brdf.x + brdf.y) * Fc;
+    
+   //vec3 ambient = (kD * diffuse + specular) * ao;
     vec3 ambient = (kD * diffuse + specular1) ;
-    vec3 color = ambient + Lo;
-  
-//--------------------------------------------------------------------
-//clear coat
+    color = ambient + Lo;
 
-    float clearCoatPerceptualRoughness1 = mix(0.089, 0.6, clearCoatPerceptualRoughness);
-    float clearCoatRoughness2 = clearCoatPerceptualRoughness1 * clearCoatPerceptualRoughnes1;
+  //  float clearCoatPerceptualRoughness1 = mix(0.089, 1.0, clearCoatPerceptualRoughness);
+    float clearCoatRoughness2 = clearCoatPerceptualRoughness1*clearCoatPerceptualRoughness1;
     float  Dc = DistributionGGX(N,H,clearCoatRoughness2);
     float  Vc = V_Kelemen(LdotH );
-    float  clearCoat_NoV= NdotV;
-    float Fc = F_Schlick(0.04, 1.0, clearCoat_NoV) * clearCoat;
-    float Frc = (Dc * Vc) * Fc;
 
-//--------------------------------------------------------------------
+    float Frc = (Dc * Vc) * Fc;
+      color =color * ((ambient + specular * (1.0 - Fc)) * (1.0 - Fc) + Frc);
+     // color=vec3(Fc);
+
+}
+else{
+  
+    vec3 irradiance = texture(irradianceMap, N).rgb;
+    vec3 diffuse      = irradiance * albedoValue;
+   
+   
+    const float MAX_REFLECTION_LOD = 4.0;
+     vec3 R = reflect(-V, N); 
+    vec3 prefilteredColor = textureLod(prefilterMap, R,  roughnessValue * MAX_REFLECTION_LOD).rgb;    
+    vec2 brdf  = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughnessValue)).rg;
+    vec3 specular1 = prefilteredColor * (F * brdf.x + brdf.y);
+
+//vec3 ambient = (kD * diffuse + specular) * ao;
+    vec3 ambient = (kD * diffuse + specular1) ;
+    color = ambient + Lo;
+}
+
+   
+
+
+
+
     // HDR tonemapping
     color = color / (color + vec3(1.0));
     // gamma correct
@@ -215,7 +249,7 @@ float LdotH=max(dot(L,H),0.0);
 
 
   // fragColor.rgb=  color;
-   fragColor.rgb=vec3(clearCoatRoughness2);
+   fragColor.rgb=color;
 
 
 //camera projection

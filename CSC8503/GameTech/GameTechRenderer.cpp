@@ -469,13 +469,16 @@ void GameTechRenderer::drawFullScreenQuad(OGLShader* shader, OGLTexture* tex)
 		shader->setMat4("projMatrix", projMatrix);
 	}
 	BindTextureToShader(tex, "mainTex", 0);
+	
 
 
 	//Transform* parentTransform, OGLMesh* mesh, TextureBase* colourtex, ShaderBase* shader
 	RenderObject* i = new RenderObject(quadtransform, posCamera->ScreenQuad->meshes[0], tex, shader);
 	BindMesh((*i).GetMesh());
 	DrawBoundMesh();
+	glUseProgram(0);
 }
+
 
 void GameTechRenderer::drawPosFullScreenQuad(OGLShader* shader, OGLTexture* tex,int IsUseLensDistortion,int IsUseFieldOfDepth)
 {
@@ -507,7 +510,12 @@ uniform int IsUseFieldOfDepth;
 		*/
 	}
 	
-	BindTextureToShader(tex, "mainTex", 0);
+	//BindTextureToShader(tex, "mainTex", 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, tex->GetObjectID());
+	shader->setInt("mainTex", 0);
+
+
 	shader->setInt("lens", gameWorld.GetMainCamera()->getLens());
 	shader->setInt("texHight", currentHeight);
 
@@ -519,6 +527,7 @@ uniform int IsUseFieldOfDepth;
 	BindMesh((*i).GetMesh());
 	DrawBoundMesh();
 	activeShader = shader;
+	glUseProgram(0);
 }
 
 

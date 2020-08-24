@@ -7,8 +7,8 @@ NCL::Rendering::OGLPosCamera::OGLPosCamera(int currentWidth, int currentHeight, 
 	this->mutiNum = 8;
 
 	ScreenQuad = new Model(Assets::MESHDIR + "PLANE2" + ".obj", 0);
-	cameraDovShader = new OGLShader("ScreenQuad_Vert1.glsl", "cameraDov_Frag.glsl");
-	cameraDistortionShader = new OGLShader("ScreenQuad_Vert1.glsl", "cameraDistortionShader_Frag.glsl");
+	cameraDovShader = new OGLShader("ScreenQuad_Vert1.glsl", "cameraDov_Frag1.glsl");
+	cameraDistortionShader = new OGLShader("ScreenQuad_Vert2.glsl", "cameraDistortionShader_Frag.glsl");
 	ScreenQuadShader = new OGLShader("ScreenQuad_Vert1.glsl", "ScreenQuad_Frag1.glsl");
 
 	for (int i = 0; i < 2; i++)

@@ -667,11 +667,11 @@ void NCL::CSC8503::TutorialGame::testShaderBySpheres()
 			tempValue = 0;
 
 
-			for (int wide = 0; wide <= wideNum; wide++)
+			for (int wide = 0; wide <wideNum; wide++)
 			{
 				sphere = new Model(Assets::MESHDIR + "sphere" + ".obj", 0);
 				testShaderModelVector.push_back(sphere);
-				tempValue = wide * (1.0 / wideNum);
+				tempValue = (wide) * (1.0 / wideNum);
 				senceSphere = AddModelToWorld(sphere, Vector3(-hight * length, wide * length, 1), Vector3(5, 5, 5), IsUsePBRshader);
 
 				sphere->meshes[0]->material->metallicValue = hight * (1.0 / wideNum);
@@ -688,15 +688,15 @@ void NCL::CSC8503::TutorialGame::testShaderBySpheres()
 	}
 	
 		//clear coat
-		for (int wide = 0; wide <= wideNum; wide++)
+		for (int wide = 0; wide < wideNum; wide++)
 		{
 			sphere = new Model(Assets::MESHDIR + "sphere" + ".obj", 0);
 			testShaderModelVector.push_back(sphere);
 
 			senceSphere = AddModelToWorld(sphere, Vector3(-(hightNum+2) * length, wide * length, 1), Vector3(5, 5, 5), IsUsePBRshader);
 
-			sphere->meshes[0]->material->metallicValue = 0;
-			sphere->meshes[0]->material->roughnessValue =0;
+			sphere->meshes[0]->material->metallicValue = 0.1;
+			sphere->meshes[0]->material->roughnessValue = 0.2;
 
 			sphere->meshes[0]->material->isUseClearcoat =1;
 			sphere->meshes[0]->material->clearCoatPerceptualRoughness = wide * (1.0 / wideNum);

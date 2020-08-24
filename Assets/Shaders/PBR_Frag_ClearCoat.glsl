@@ -216,8 +216,8 @@ if(isUseClearcoat !=0){
     float  Vc = V_Kelemen(LdotH );
 
     float Frc = (Dc * Vc) * Fc;
-      color =color * ((ambient + specular * (1.0 - Fc)) * (1.0 - Fc) + Frc);
-     // color=vec3(Fc);
+      color =color * ((ambient ) * (1.0 - Fc) + Frc);
+     // color=specular1;
 
 }
 else{

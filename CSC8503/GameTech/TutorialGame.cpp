@@ -109,7 +109,7 @@ void TutorialGame::UpdateGame(float dt) {
 	if (lockedObject != nullptr) {
 		LockedCameraMovement();
 	}
-
+	//frameRate=CaculateFrameRate(dt);
 	UpdateKeys();
 #pragma region
 	//if (useGravity) {
@@ -152,7 +152,7 @@ void TutorialGame::UpdateKeys() {
 	ChangeFocusDistance();
 
 	//show debug;
-	ShowDebugDOV();
+	//ShowDebugDOV();
 	
 }
 
@@ -236,7 +236,7 @@ void TutorialGame::DrawDebugInformation()
 	drawDebugString("DEPTH of View : U",				LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
 
 	/*left up*/
-	Vector2 LeftUpP = Vector2(20, 650);
+	Vector2 LeftUpP = Vector2(20, 630);
 	drawDebugString_Switch("PBR shader", "Bilin-pohng shader", renderer->isUsedPBR, 
 							LeftUpP - Vector2(0, debugScale * leftUp)); leftUp++;
 
@@ -284,6 +284,12 @@ void TutorialGame::DrawDebugInformation()
 	drawDebugString("",
 		LeftUpP - Vector2(0, debugScale * leftUp), renderer->isUsedCamPos); leftUp++;
 
+	
+	Vector2 rightUpP = Vector2(650, 650);
+
+	/*temp = std::to_string(frameRate);
+	drawDebugString("Frame rate" + temp ,
+		rightUpP - Vector2(0, debugScale * rightUp), renderer->isUsedCamPos); rightUp++;*/
 
 	
 	
@@ -441,6 +447,25 @@ void NCL::CSC8503::TutorialGame::ChangeFocusDistance()
 
 
 
+}
+
+int TutorialGame::CaculateFrameRate(float deltaTime)
+{
+	static float temp = 0;
+	static float count = 0;
+	static int oldtime = 0;
+if (count<30)
+{
+	temp += deltaTime;
+	count++;
+}
+else {
+	oldtime = static_cast<int>(1.f / (deltaTime/30));
+	count = 0;
+	return oldtime;
+}
+	
+return oldtime;
 }
 
 void TutorialGame::ShowDebugDOV()
@@ -675,7 +700,7 @@ void NCL::CSC8503::TutorialGame::testShaderBySpheres()
 
 			sphere->meshes[0]->material->isUseClearcoat =1;
 			sphere->meshes[0]->material->clearCoatPerceptualRoughness = wide * (1.0 / wideNum);
-			std::cout << "----clearCoatPerceptualRoughness  " << wide * (1.0 / wideNum) << std::endl;
+			//std::cout << "----clearCoatPerceptualRoughness  " << wide * (1.0 / wideNum) << std::endl;
 
 			sphere->meshes[0]->material->clearCoat =1;
 			//sphere->meshes[0]->material->roughnessValue = tempValue;

@@ -63,7 +63,8 @@ namespace NCL {
 			void ChangeMsaa();
 			void ChangeDOF();
 			void ChangeFocusDistance();
-			void ChangeLensAperture();
+			//void ChangeLensAperture();
+			int TutorialGame::CaculateFrameRate(float deltaTime); //todo:fix
 
 			void ShowDebugDOV();
 
@@ -125,6 +126,8 @@ namespace NCL {
 
 			string CompareFragName;
 			string CompareVertName;
+
+			int frameRate;
 			
 		
 

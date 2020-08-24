@@ -31,7 +31,7 @@ hide or show the
 
 */
 int main() {
-	Window*w = Window::CreateGameWindow("CSC8503 Game technology!", 1280, 720);
+	Window*w = Window::CreateGameWindow("PBR", 1280, 720);
 
 	if (!w->HasInitialised()) {
 		return -1;
@@ -59,7 +59,7 @@ int main() {
 		}
 
 
-		w->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
+		w->SetTitle("PBR frame time:" + std::to_string(1000.0f * dt));
 
 		g->UpdateGame(dt);
 	}

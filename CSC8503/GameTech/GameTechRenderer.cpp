@@ -92,7 +92,7 @@ GameTechRenderer::~GameTechRenderer() {
 void GameTechRenderer::RenderFrame() {
 	CaculateViewPorjMat();
 	glEnable(GL_CULL_FACE);
-	glClearColor(1, 1, 1, 1);
+//	glClearColor(1, 1, 1, 1);
 
 
 	RenderDOVCamera();

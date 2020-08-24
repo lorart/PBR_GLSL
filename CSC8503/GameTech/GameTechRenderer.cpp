@@ -295,6 +295,18 @@ void GameTechRenderer::RenderCamera() {
 				//todo:delete
 				//std::cout << "tempMaterial->roughnessValue=" << tempMaterial->roughnessValue << std::endl;
 				glUniform1f(aoValueLocation, tempMaterial->aoValue);
+
+				//******************************
+				//clear coat
+				/*
+				uniform int isUseClearcoat;
+				uniform float Clearcoat;
+				uniform float clearCoatPerceptualRoughness;*/
+				shader->setInt("isUseClearcoat", tempMaterial->isUseClearcoat);
+				shader->setFloat("clearCoat", tempMaterial->clearCoat);
+				shader->setFloat("clearCoatPerceptualRoughness", tempMaterial->clearCoatPerceptualRoughness);
+
+
 			}
 
 			albedoValueLocation = glGetUniformLocation(shader->GetProgramID(), "albedoValue");
@@ -345,16 +357,7 @@ void GameTechRenderer::RenderCamera() {
 		shader->setFloat("cameraFocusDistance",gameWorld.GetMainCamera()->focusDistance);
 		shader->setFloat("lens", gameWorld.GetMainCamera()->getLens());
 
-		//******************************
-		//clear coat
-		/*
-		uniform int isUseClearcoat;
-		uniform float Clearcoat;
-		uniform float clearCoatPerceptualRoughness;*/
-		shader->setInt("isUseClearcoat", 1);
-		shader->setFloat("clearCoat", 1);
-		shader->setFloat("clearCoatPerceptualRoughness", 0.1);
-
+	
 
 		//TODO:
 		//glUniform4fv(colourLocation, 1, (float*)&i->GetColour());

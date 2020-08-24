@@ -312,6 +312,19 @@ void TutorialGame::ChangeModels()
 		rabbitmodel->meshes[0]->material->roughnessValue =0.1;
 		auto temp = AddModelToWorld(rabbitmodel, Vector3(-40, 0, -40), Vector3(30, 30, 30), isPBR);
 		senceModel.insert(senceModel.end(),temp.begin(), temp.end());
+
+		rabbitmodel = new Model(Assets::MESHDIR + "bunny" + ".obj", 0);
+		rabbitmodel->meshes[0]->material->albedoValue = Vector3(0.2, 0.2, 0.2);
+		rabbitmodel->meshes[0]->material->metallicValue = 0.9;
+		rabbitmodel->meshes[0]->material->roughnessValue = 0.1;
+		rabbitmodel->meshes[0]->material->clearCoat=1;
+		rabbitmodel->meshes[0]->material->isUseClearcoat = 1;
+		rabbitmodel->meshes[0]->material->clearCoatPerceptualRoughness = 0.2;
+
+
+		 temp = AddModelToWorld(rabbitmodel, Vector3(-60, 0, -20), Vector3(30, 30, 30), isPBR);
+		senceModel.insert(senceModel.end(), temp.begin(), temp.end());
+
 		for (auto& i :senceSphereArry)
 		{
 			for (auto& j : i) {
@@ -649,6 +662,30 @@ void NCL::CSC8503::TutorialGame::testShaderBySpheres()
 		//}
 	}
 	
+		//clear coat
+		for (int wide = 0; wide <= wideNum; wide++)
+		{
+			sphere = new Model(Assets::MESHDIR + "sphere" + ".obj", 0);
+			testShaderModelVector.push_back(sphere);
+
+			senceSphere = AddModelToWorld(sphere, Vector3(-(hightNum+2) * length, wide * length, 1), Vector3(5, 5, 5), IsUsePBRshader);
+
+			sphere->meshes[0]->material->metallicValue = 0;
+			sphere->meshes[0]->material->roughnessValue =0;
+
+			sphere->meshes[0]->material->isUseClearcoat =1;
+			sphere->meshes[0]->material->clearCoatPerceptualRoughness = wide * (1.0 / wideNum);
+			std::cout << "----clearCoatPerceptualRoughness  " << wide * (1.0 / wideNum) << std::endl;
+
+			sphere->meshes[0]->material->clearCoat =1;
+			//sphere->meshes[0]->material->roughnessValue = tempValue;
+			//std::cout << "  hight=" << hight << "  wide=" << wide << "  tempValue=" << tempValue << "  wide* 1 /5=" << wide * 1 / 5 << std::endl;
+
+			sphere->meshes[0]->material->albedoValue = clolor;
+			senceSphereArry.push_back(senceSphere);
+
+
+		}
 
 }
 

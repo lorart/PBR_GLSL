@@ -12,6 +12,10 @@ NCL::Rendering::OGLMaterial::OGLMaterial(std::vector<OGLTexture*> pbrTexArry, Ve
 	this->matShader = nullptr;
 	this->FengShader = nullptr;
 
+	this->isUseClearcoat=0;
+	this->clearCoat=0;
+	this->clearCoatPerceptualRoughness=0;
+
 }
 
 
@@ -27,6 +31,10 @@ NCL::Rendering::OGLMaterial::OGLMaterial(std::vector<OGLTexture*> pbrTexArry
 	this->aoValue = 0;
 	this->matShader = nullptr;
 	this->FengShader = nullptr;
+
+	this->isUseClearcoat = 0;
+	this->clearCoat = 0;
+	this->clearCoatPerceptualRoughness = 0;
 
 
 }

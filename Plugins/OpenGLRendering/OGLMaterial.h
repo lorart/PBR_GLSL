@@ -18,6 +18,14 @@ namespace NCL {
 			float metallicValue = 0;
 			float roughnessValue = 0;
 			float aoValue = 0;
+
+			
+			 int isUseClearcoat;
+			 float clearCoat;
+			 float clearCoatPerceptualRoughness;
+
+
+
 			OGLShader* matShader;
 			OGLShader* FengShader;
 		};

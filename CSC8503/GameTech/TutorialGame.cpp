@@ -150,7 +150,7 @@ void TutorialGame::UpdateKeys() {
 	ChangeCameraFOVs();
 	ChangeDOF();
 	ChangeFocusDistance();
-	ChangeShowShadowMap();
+	//ChangeShowShadowMap();
 
 	//show debug;
 	//ShowDebugDOV();
@@ -235,7 +235,7 @@ void TutorialGame::DrawDebugInformation()
 	drawDebugString("Change Mesh: F",					LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
 	drawDebugString("Anti-Aliasing: V",					LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
 	drawDebugString("DEPTH of View : U",				LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
-	drawDebugString("ShadowMap : N",					LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
+	//drawDebugString("ShadowMap : N",					LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
 
 	/*left up*/
 	Vector2 LeftUpP = Vector2(20, 630);

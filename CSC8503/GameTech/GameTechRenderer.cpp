@@ -56,7 +56,7 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	isUsedCamPos = true;
 	isUsedMSAA = true;
 	isUsedDov= true;
-
+	isUsedShadowMap = false;
 	HdrEnv = nullptr;
 	float screenAspect = 0;
 	Matrix4 viewMatrix;
@@ -351,8 +351,17 @@ void GameTechRenderer::RenderCamera() {
 		Matrix4 modelMatrix = (*i).GetTransform()->GetWorldMatrix();
 		glUniformMatrix4fv(modelLocation, 1, false, (float*)&modelMatrix);
 
-		Matrix4 fullShadowMat = shadowMatrix * modelMatrix;
-		glUniformMatrix4fv(shadowLocation, 1, false, (float*)&fullShadowMat);
+	
+		if (isUsedShadowMap) {
+			shader->setInt("isUsedShadowMap", 1);
+
+			Matrix4 fullShadowMat = shadowMatrix * modelMatrix;
+			glUniformMatrix4fv(shadowLocation, 1, false, (float*)&fullShadowMat);
+		}
+		else
+		{
+			shader->setInt("isUsedShadowMap", 0);
+		}
 
 		shader->setFloat("cameraFocusDistance",gameWorld.GetMainCamera()->focusDistance);
 		shader->setFloat("lens", gameWorld.GetMainCamera()->getLens());

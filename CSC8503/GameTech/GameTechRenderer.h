@@ -26,6 +26,7 @@ namespace NCL {
 			bool isUsedCamPos;
 			bool isUsedDov;
 			bool isUsedMSAA;
+			bool isUsedShadowMap;
 			//	OGLShader* CompareShader;
 			Camera* gameWorldCamera;
 

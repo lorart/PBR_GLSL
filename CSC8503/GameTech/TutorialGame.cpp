@@ -150,6 +150,7 @@ void TutorialGame::UpdateKeys() {
 	ChangeCameraFOVs();
 	ChangeDOF();
 	ChangeFocusDistance();
+	ChangeShowShadowMap();
 
 	//show debug;
 	//ShowDebugDOV();
@@ -234,6 +235,7 @@ void TutorialGame::DrawDebugInformation()
 	drawDebugString("Change Mesh: F",					LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
 	drawDebugString("Anti-Aliasing: V",					LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
 	drawDebugString("DEPTH of View : U",				LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
+	drawDebugString("ShadowMap : N",					LeftDownP + Vector2(0, debugScale * leftDown), 1);				leftDown++;
 
 	/*left up*/
 	Vector2 LeftUpP = Vector2(20, 630);
@@ -316,6 +318,10 @@ void TutorialGame::ChangeModels()
 		rabbitmodel->meshes[0]->material->albedoValue = Vector3(0.2, 0.2, 0.2);
 		rabbitmodel->meshes[0]->material->metallicValue = 0.9;
 		rabbitmodel->meshes[0]->material->roughnessValue =0.1;
+		rabbitmodel->meshes[0]->material->clearCoat = 0;
+		rabbitmodel->meshes[0]->material->isUseClearcoat = 0;
+		rabbitmodel->meshes[0]->material->clearCoatPerceptualRoughness =0;
+
 		auto temp = AddModelToWorld(rabbitmodel, Vector3(-40, 0, -40), Vector3(30, 30, 30), isPBR);
 		senceModel.insert(senceModel.end(),temp.begin(), temp.end());
 
@@ -446,6 +452,16 @@ void NCL::CSC8503::TutorialGame::ChangeFocusDistance()
 	}
 
 
+
+}
+
+void NCL::CSC8503::TutorialGame::ChangeShowShadowMap()
+{
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::N)) {
+		//std::cout << "***R pressed " << std::endl;
+		renderer->isUsedShadowMap = !renderer->isUsedShadowMap;
+
+	}
 
 }
 

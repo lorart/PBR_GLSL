@@ -274,7 +274,11 @@ else{
 	float near_distance = 0.7 * (0 - near_Fplane); // 
 	float far_distance = 0.7 * (0 - far_Fplane); //
 	
- 
+    near_Fplane=near_Fplane*10;
+    far_Fplane=far_Fplane*10;
+    near_distance=near_distance*10;
+    far_distance=far_distance*10;
+
  
     // 根据深度计算模糊因子
     if(IN.ViewDepth <= near_Fplane && IN.ViewDepth >= far_Fplane)

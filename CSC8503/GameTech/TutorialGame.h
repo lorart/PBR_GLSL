@@ -63,6 +63,9 @@ namespace NCL {
 			void ChangeMsaa();
 			void ChangeDOF();
 			void ChangeFocusDistance();
+			void ChangeShowShadowMap();
+
+
 			//void ChangeLensAperture();
 			int TutorialGame::CaculateFrameRate(float deltaTime); //todo:fix
 
